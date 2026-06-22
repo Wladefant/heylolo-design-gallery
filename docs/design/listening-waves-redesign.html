@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LoLo · Listening — audio-reactive wave redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================= *
+   *  REAL elumi-kids tokens (src/shared/config/palette.ts)         *
+   * ============================================================= */
+  :root{
+    --blue-lagoon:#037B83;  --blue-chill:#0E8B93;  --paradiso:#3C9094;
+    --fountain:#5EBCC1;     --gothic:#6B9EA8;      --smalt:#5A8994;
+    --ziggurat:#C2DDDE;     --onahau:#CAF8FF;      --anakiwa:#A2F3FF;
+    --aqua-spring:#E8F4F8;  --black-squeeze:#E9F6F6;--light-cyan:#F5FAFB;
+    --disc-a:#CDF0F2; --disc-b:#DEF4F6; --disc-c:#F5FBFB;
+    --font-display:'Nunito',sans-serif;
+    --font-num:'DM Sans',sans-serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--font-display);
+    color:#dfeef0;
+    background:
+      radial-gradient(1100px 700px at 18% -10%, #0a3034 0%, rgba(10,48,52,0) 60%),
+      radial-gradient(900px 600px at 110% 10%, #07252a 0%, rgba(7,37,42,0) 55%),
+      #07181b;
+    min-height:100vh;
+    padding:34px clamp(16px,4vw,56px) 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* faint grain for atmosphere (not flat) */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:.04;z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;}
+
+  /* ---------- header ---------- */
+  header{margin-bottom:26px;}
+  .eyebrow{
+    font-family:var(--font-num);font-weight:700;font-size:12px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--fountain);margin-bottom:10px;
+  }
+  h1{
+    font-weight:900;font-size:clamp(28px,4vw,44px);line-height:1.02;letter-spacing:-.015em;
+    color:#f3fbfb;margin-bottom:12px;
+  }
+  h1 .soft{color:var(--anakiwa);}
+  .lede{max-width:680px;font-weight:500;font-size:15.5px;line-height:1.6;color:#a8c6cb;}
+
+  /* ---------- control bar ---------- */
+  .controls{
+    display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;
+    margin:24px 0 30px;padding:16px 18px;border-radius:18px;
+    background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);
+    backdrop-filter:blur(6px);
+  }
+  .ctl{display:flex;flex-direction:column;gap:7px;}
+  .ctl > span{font-family:var(--font-num);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#7fa3a9;}
+  .seg{display:inline-flex;background:rgba(0,0,0,.28);border-radius:11px;padding:3px;gap:2px;}
+  .seg button{
+    font-family:var(--font-display);font-weight:700;font-size:13px;color:#9fc0c6;
+    border:0;background:transparent;padding:7px 13px;border-radius:8px;cursor:pointer;
+    transition:.18s ease;white-space:nowrap;
+  }
+  .seg button:hover{color:#dff3f5;}
+  .seg button[aria-pressed="true"]{background:var(--blue-lagoon);color:#eafcff;box-shadow:0 4px 14px rgba(3,123,131,.45);}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:148px;height:5px;border-radius:5px;cursor:pointer;
+    background:linear-gradient(90deg,var(--fountain),var(--anakiwa));
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#eafcff;
+    border:2px solid var(--blue-lagoon);box-shadow:0 2px 8px rgba(0,0,0,.4);
+  }
+  .micbtn{
+    font-family:var(--font-display);font-weight:800;font-size:13px;cursor:pointer;
+    border:1px solid rgba(162,243,255,.35);background:rgba(162,243,255,.08);color:var(--anakiwa);
+    padding:9px 15px;border-radius:11px;display:inline-flex;align-items:center;gap:8px;transition:.18s;
+  }
+  .micbtn:hover{background:rgba(162,243,255,.16);}
+  .micbtn.live{background:var(--blue-lagoon);color:#eafcff;border-color:transparent;}
+  .micdot{width:8px;height:8px;border-radius:50%;background:currentColor;}
+  .micbtn.live .micdot{animation:blink 1s steps(2) infinite;}
+  @keyframes blink{50%{opacity:.25}}
+
+  /* ---------- stage: two phones ---------- */
+  .stage{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(20px,4vw,48px);align-items:start;}
+  @media (max-width:840px){.stage{grid-template-columns:1fr;}}
+
+  .col{display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .col h2{font-family:var(--font-num);font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#86a8ae;}
+
+  .phone{
+    position:relative;width:300px;height:620px;border-radius:46px;overflow:hidden;
+    box-shadow:0 40px 90px rgba(0,0,0,.55),0 0 0 10px #0c1d20,0 0 0 11px rgba(255,255,255,.05);
+  }
+  /* dark screen — deep teal, premium (Shazam/Roku energy, our teal not purple) */
+  .screen.dark{
+    background:
+      radial-gradient(120% 80% at 50% 18%, #0b545b 0%, #073c43 38%, #042a30 70%, #021c20 100%);
+  }
+  /* light screen — a genuine re-think: soft tide-pool aqua, not invert */
+  .screen.light{
+    background:
+      radial-gradient(120% 85% at 50% 16%, #ffffff 0%, var(--light-cyan) 30%, var(--aqua-spring) 64%, #d6ecf0 100%);
+  }
+  .screen{position:absolute;inset:0;}
+
+  /* status bar */
+  .statusbar{position:absolute;top:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-family:var(--font-num);font-weight:700;font-size:13px;z-index:6;}
+  .dark .statusbar{color:#cfeef1;}
+  .light .statusbar{color:#1d4248;}
+  .statusbar .dots{display:flex;gap:5px;align-items:center;opacity:.85;}
+  .statusbar .dots i{display:block;width:15px;height:10px;border-radius:2px;background:currentColor;opacity:.5;}
+  .statusbar .dots i:last-child{width:22px;opacity:.9;border-radius:3px;}
+
+  /* canvas holds the reactive waves, centered on the disc */
+  .wavecanvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;}
+
+  /* the stack that holds disc + badge, vertically centered low-ish like the app */
+  .center{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;z-index:4;pointer-events:none;}
+  .badge{
+    position:absolute;bottom:calc(50% + 92px);
+    font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:.01em;
+    padding:9px 18px;border-radius:999px;display:inline-flex;align-items:center;gap:9px;
+    transition:.3s ease;white-space:nowrap;
+  }
+  .dark .badge{background:rgba(2,28,32,.5);color:#dff7f9;border:1px solid rgba(162,243,255,.18);backdrop-filter:blur(8px);}
+  .light .badge{background:rgba(255,255,255,.7);color:var(--blue-lagoon);border:1px solid rgba(3,123,131,.12);backdrop-filter:blur(8px);box-shadow:0 8px 22px rgba(94,188,193,.18);}
+  .badge .pip{width:7px;height:7px;border-radius:50%;background:var(--fountain);box-shadow:0 0 0 0 var(--fountain);animation:pip 1.6s ease-out infinite;}
+  @keyframes pip{0%{box-shadow:0 0 0 0 rgba(94,188,193,.55)}70%{box-shadow:0 0 0 8px rgba(94,188,193,0)}100%{box-shadow:0 0 0 0 rgba(94,188,193,0)}}
+
+  /* the disc — real token gradient #CDF0F2 -> #DEF4F6 -> #F5FBFB */
+  .disc{
+    position:relative;width:100px;height:100px;border-radius:50%;
+    background:radial-gradient(circle at 38% 30%, var(--disc-c) 0%, var(--disc-b) 42%, var(--disc-a) 100%);
+    border:6px solid rgba(255,255,255,.55);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 14px 30px rgba(3,123,131,.45), inset 0 2px 6px rgba(255,255,255,.7);
+    transition:transform .25s cubic-bezier(.2,1.4,.4,1);
+  }
+  .disc svg{width:42px;height:42px;}
+  .disc .mic{stroke:var(--blue-lagoon);}
+  .disc .speak{stroke:var(--blue-lagoon);display:none;}
+  .speaking .disc .mic{display:none;}
+  .speaking .disc .speak{display:block;}
+
+  /* flanking buttons (faint, to keep the real screen recognizable) */
+  .side{position:absolute;bottom:calc(50% - 18px);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:5;transition:.25s;}
+  .side.left{left:38px;}.side.right{right:38px;}
+  .dark .side{background:rgba(255,255,255,.1);}
+  .light .side{background:rgba(255,255,255,.6);box-shadow:0 6px 16px rgba(94,188,193,.16);}
+  .side svg{width:22px;height:22px;}
+  .speaking .side{opacity:0;transform:scale(.7);}
+
+  .ortype{position:absolute;bottom:78px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:700;font-size:14px;z-index:5;transition:.25s;}
+  .dark .ortype{color:#7fb3ba;}.light .ortype{color:var(--smalt);}
+  .speaking .ortype{opacity:0;}
+  .ortype svg{width:20px;height:20px;}
+
+  /* ---------- idea legend ---------- */
+  .legend{margin-top:42px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media (max-width:840px){.legend{grid-template-columns:1fr;}}
+  .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:20px 20px 22px;}
+  .card .tag{font-family:var(--font-num);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--fountain);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .card .tag b{display:inline-flex;width:20px;height:20px;border-radius:6px;background:var(--blue-lagoon);color:#eafcff;align-items:center;justify-content:center;font-size:11px;font-family:var(--font-display);font-weight:900;}
+  .card h3{font-weight:800;font-size:17px;color:#eef9fa;margin-bottom:8px;}
+  .card p{font-weight:500;font-size:13.5px;line-height:1.55;color:#9fbcc1;}
+  .card .src{margin-top:12px;font-family:var(--font-num);font-weight:500;font-size:12px;color:#6f9197;}
+  .card .src a{color:var(--anakiwa);text-decoration:none;border-bottom:1px solid rgba(162,243,255,.3);}
+  .card.rec{border-color:rgba(162,243,255,.35);background:linear-gradient(180deg,rgba(94,188,193,.12),rgba(255,255,255,.03));}
+  .card.rec .tag{color:var(--anakiwa);}
+  .pickrec{display:inline-block;margin-left:8px;font-size:10px;font-family:var(--font-num);font-weight:700;letter-spacing:.1em;background:var(--anakiwa);color:#053238;padding:2px 7px;border-radius:5px;}
+
+  footer{margin-top:40px;font-weight:500;font-size:13px;line-height:1.6;color:#7c9aa0;max-width:740px;}
+  footer code{font-family:var(--font-num);background:rgba(255,255,255,.07);padding:2px 6px;border-radius:5px;color:var(--anakiwa);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">LoLo · Voice listening surface</div>
+    <h1>Waves that actually <span class="soft">hear</span> the child.</h1>
+    <p class="lede">A light redesign on a strong baseline. Today the Shazam-style rings only dim with volume — the geometry is on a fixed timer. This makes them <b>surge, deform, and bloom with the real voice</b>, in our teal palette. Pick a state and a wave style; drive it with the slider, or grant the mic and talk to it.</p>
+  </header>
+
+  <div class="controls">
+    <div class="ctl">
+      <span>State</span>
+      <div class="seg" id="seg-state">
+        <button data-v="idle">Idle</button>
+        <button data-v="listening" aria-pressed="true">Listening</button>
+        <button data-v="speaking">LoLo speaks</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span>Wave style</span>
+      <div class="seg" id="seg-variant">
+        <button data-v="ripples">Reactive ripples</button>
+        <button data-v="voiceprint" aria-pressed="true">Voiceprint halo</button>
+        <button data-v="aurora">Aurora bloom</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span>Voice level (sim)</span>
+      <input id="amp" type="range" min="0" max="100" value="55" />
+    </div>
+    <div class="ctl">
+      <span>Real audio</span>
+      <button class="micbtn" id="micbtn"><span class="micdot"></span>Use my mic</button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="col">
+      <h2>Dark · premium</h2>
+      <div class="phone"><div class="screen dark" id="screen-dark">
+        <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+        <canvas class="wavecanvas" data-theme="dark"></canvas>
+        <div class="side left">__BIN__</div>
+        <div class="side right">__KEY__</div>
+        <div class="ortype">__KEY__ or type</div>
+        <div class="center">
+          <div class="badge"><span class="pip"></span><span class="badge-txt">I'm listening…</span></div>
+          <div class="disc">__MIC____SPEAK__</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="col">
+      <h2>Light · tide-pool</h2>
+      <div class="phone"><div class="screen light" id="screen-light">
+        <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i></span></div>
+        <canvas class="wavecanvas" data-theme="light"></canvas>
+        <div class="side left">__BIN__</div>
+        <div class="side right">__KEY__</div>
+        <div class="ortype">__KEY__ or type</div>
+        <div class="center">
+          <div class="badge"><span class="pip"></span><span class="badge-txt">I'm listening…</span></div>
+          <div class="disc">__MIC____SPEAK__</div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="card">
+      <div class="tag"><b>A</b>Reactive ripples · lowest risk</div>
+      <h3>Shazam rings that surge</h3>
+      <p>The existing 4–5 concentric rings, but radius, speed and density now scale with live amplitude — quiet = a slow ambient breath, talking = rings shoot out further and brighter. A ~10-line change to the ring we already ship.</p>
+      <div class="src">ref · <a href="https://mobbin.com/screens/dbaaabb8-3e1a-42b3-b08a-742054c4924c">Shazam listening</a></div>
+    </div>
+    <div class="card rec">
+      <div class="tag"><b>B</b>Voiceprint halo <span class="pickrec">RECOMMENDED</span></div>
+      <h3>A halo that deforms to the voice</h3>
+      <p>A ring of soft bars hugging the disc rim, each driven by a frequency band — so the child literally sees their voice shape the halo. Fuses Shazam's calm ring with Character-AI's honest reactivity. Falls back to the ambient ripple when quiet.</p>
+      <div class="src">ref · <a href="https://mobbin.com/screens/d3f2b2f8-70f1-42c0-b587-fb3956e1a90e">Character AI</a> · <a href="https://mobbin.com/screens/662cf573-e7fc-438b-bf03-5c74b5d9b4be">CVS voice</a></div>
+    </div>
+    <div class="card">
+      <div class="tag"><b>C</b>Aurora bloom · most premium</div>
+      <h3>A living teal aurora</h3>
+      <p>A blurred blob breathes and wobbles behind the disc, swelling with amplitude — the Siri/Meta-AI orb feel, re-tinted to our tide-pool teal instead of the purple cliché. Highest polish, needs Skia for a clean blur on device.</p>
+      <div class="src">ref · <a href="https://mobbin.com/screens/6474d2b9-3803-4bd3-90ee-143cf9dda044">Meta AI</a> · <a href="https://mobbin.com/screens/9fc48322-f53d-463a-bde8-f2a5a92825d3">Roku</a></div>
+    </div>
+  </div>
+
+  <footer>
+    Prototype only — nothing ported yet. Real tokens from <code>src/shared/config/palette.ts</code> + the live disc gradient; fonts are the app's Nunito / DM&nbsp;Sans. The production reactivity (FFT bands → shared value at frame rate, Skia vs Reanimated) is being researched by two background subagents writing to <code>docs/_session/shazam-waves-redesign/</code>.
+  </footer>
+</div>
+
+<script>
+/* ---------------- inline SVG glyphs (stroke only, no emoji) ---------------- */
+const G = {
+  mic:'<svg class="mic" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  speak:'<svg class="speak" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg>',
+  bin:'<svg viewBox="0 0 24 24" fill="none" stroke="#0E8B93" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="9" r="2.4"/><circle cx="18" cy="9" r="2.4"/><circle cx="6" cy="9" r="2.4" transform="translate(0 6)"/><circle cx="18" cy="9" r="2.4" transform="translate(0 6)"/><path d="M8.4 9h7.2M8.4 15h7.2"/></svg>',
+  key:'<svg viewBox="0 0 24 24" fill="none" stroke="#5A8994" stroke-width="2" stroke-linecap="round"><rect x="3" y="6" width="18" height="12" rx="2.4"/><path d="M7 10h0M11 10h0M15 10h0M8 14h8"/></svg>'
+};
+document.body.innerHTML = document.body.innerHTML
+  .replaceAll('__MIC__',G.mic).replaceAll('__SPEAK__',G.speak)
+  .replaceAll('__BIN__',G.bin).replaceAll('__KEY__',G.key);
+
+/* ---------------- theme palettes for the canvas ---------------- */
+const THEMES = {
+  dark:{ ring:[178,243,255], glow:[162,243,255], bar0:[94,188,193], bar1:[162,243,255], aurora:[16,139,147], ringAlpha:1, blurAlpha:.9 },
+  light:{ ring:[14,139,147], glow:[3,123,131], bar0:[3,123,131], bar1:[94,188,193], aurora:[94,188,193], ringAlpha:.85, blurAlpha:.55 }
+};
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+
+/* ---------------- shared reactive state ---------------- */
+let STATE='listening', VARIANT='voiceprint';
+let micOn=false, analyser=null, freq=null;
+const NB=40;                       // frequency bars
+let bands=new Float32Array(NB);    // 0..1 per band
+let amp=0;                          // smoothed envelope 0..1
+let sliderAmp=0.55;
+
+/* speech-like simulator: word envelope x syllable flutter */
+function speechSim(t){
+  const word=Math.max(0,Math.sin(t*1.7));
+  const syll=0.5+0.5*Math.sin(t*11.0);
+  const breath=0.6+0.4*Math.sin(t*0.5);
+  return word*word*(0.32+0.68*syll)*breath;
+}
+
+/* ---------------- canvases ---------------- */
+const canvases=[...document.querySelectorAll('.wavecanvas')].map(c=>{
+  return {el:c, theme:c.dataset.theme, ctx:c.getContext('2d')};
+});
+function sizeCanvases(){
+  const dpr=Math.min(window.devicePixelRatio||1,2.5);
+  canvases.forEach(c=>{
+    const r=c.el.getBoundingClientRect();
+    c.el.width=r.width*dpr; c.el.height=r.height*dpr;
+    c.ctx.setTransform(dpr,0,0,dpr,0,0);
+    c.w=r.width; c.h=r.height;
+  });
+}
+window.addEventListener('resize',sizeCanvases);
+
+/* ---------------- drawing ---------------- */
+function discCenter(c){ return {cx:c.w/2, cy:c.h/2, disc:50}; }
+
+function drawRipples(c,t,a){
+  const {ctx}=c, {cx,cy,disc}=discCenter(c), T=THEMES[c.theme];
+  const rings=5, maxR=(disc+18)+ (118)*(0.55+0.55*a);
+  for(let i=0;i<rings;i++){
+    let p=((t*(0.18+a*0.5))+i/rings)%1;
+    const r=disc+8 + p*(maxR-(disc+8));
+    const fade=Math.max(0, Math.sin(Math.min(p,1)*Math.PI))*(0.18+0.62*a);
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.lineWidth=2.2; ctx.strokeStyle=rgba(T.ring, fade*T.ringAlpha);
+    ctx.shadowColor=rgba(T.glow,fade*0.8); ctx.shadowBlur=14*a+4;
+    ctx.stroke(); ctx.shadowBlur=0;
+  }
+}
+
+function drawVoiceprint(c,t,a){
+  const {ctx}=c, {cx,cy,disc}=discCenter(c), T=THEMES[c.theme];
+  // soft ambient ring underneath (so quiet still reads as "listening")
+  const breathe=disc+14+6*Math.sin(t*1.6);
+  ctx.beginPath(); ctx.arc(cx,cy,breathe,0,Math.PI*2);
+  ctx.lineWidth=1.4; ctx.strokeStyle=rgba(T.ring,(0.10+0.10*Math.sin(t*1.6))*T.ringAlpha); ctx.stroke();
+
+  const bars=NB*2, rim=disc+10;
+  for(let i=0;i<bars;i++){
+    const ang=(i/bars)*Math.PI*2 - Math.PI/2;
+    const k=Math.min(NB-1, Math.round(Math.abs((i%NB))));     // mirror left/right
+    const band=micOn? bands[k] : (0.35+0.65*Math.abs(Math.sin(t*6+i*0.5)))*speechSim(t+i*0.02);
+    const len=(7 + band*54*(0.4+a))*(STATE==='idle'?0.2:1);
+    const r0=rim, r1=rim+len;
+    const x0=cx+Math.cos(ang)*r0, y0=cy+Math.sin(ang)*r0;
+    const x1=cx+Math.cos(ang)*r1, y1=cy+Math.sin(ang)*r1;
+    const mix=band; const col=[
+      Math.round(T.bar0[0]+(T.bar1[0]-T.bar0[0])*mix),
+      Math.round(T.bar0[1]+(T.bar1[1]-T.bar0[1])*mix),
+      Math.round(T.bar0[2]+(T.bar1[2]-T.bar0[2])*mix)];
+    ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1);
+    ctx.lineCap='round'; ctx.lineWidth=3.1;
+    ctx.strokeStyle=rgba(col,(0.45+0.5*band)*T.ringAlpha);
+    ctx.shadowColor=rgba(T.glow,0.5*a); ctx.shadowBlur=8*a;
+    ctx.stroke(); ctx.shadowBlur=0;
+  }
+}
+
+function drawAurora(c,t,a){
+  const {ctx}=c, {cx,cy,disc}=discCenter(c), T=THEMES[c.theme];
+  ctx.save();
+  for(let layer=0;layer<2;layer++){
+    const base=disc+30+layer*16, swell=base*(0.9+a*0.55+0.06*Math.sin(t*1.4+layer));
+    ctx.beginPath();
+    const steps=80;
+    for(let s=0;s<=steps;s++){
+      const ang=(s/steps)*Math.PI*2;
+      const wob=1 + 0.13*Math.sin(3*ang+t*1.3+layer) + 0.09*Math.sin(5*ang - t*0.9) + a*0.12*Math.sin(7*ang+t*2);
+      const r=swell*wob;
+      const x=cx+Math.cos(ang)*r, y=cy+Math.sin(ang)*r;
+      s===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    const g=ctx.createRadialGradient(cx,cy,disc*0.4,cx,cy,swell*1.25);
+    g.addColorStop(0,rgba(T.aurora,(0.34+0.3*a)*T.blurAlpha));
+    g.addColorStop(0.6,rgba(T.aurora,0.14*T.blurAlpha));
+    g.addColorStop(1,rgba(T.aurora,0));
+    ctx.fillStyle=g; ctx.filter='blur(10px)'; ctx.fill();
+  }
+  ctx.restore();
+}
+
+const DRAW={ripples:drawRipples, voiceprint:drawVoiceprint, aurora:drawAurora};
+
+/* ---------------- mic ---------------- */
+async function toggleMic(){
+  const btn=document.getElementById('micbtn');
+  if(micOn){ micOn=false; btn.classList.remove('live'); btn.lastChild.textContent='Use my mic'; return; }
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const actx=new (window.AudioContext||window.webkitAudioContext)();
+    const src=actx.createMediaStreamSource(stream);
+    analyser=actx.createAnalyser(); analyser.fftSize=128; analyser.smoothingTimeConstant=0.75;
+    freq=new Uint8Array(analyser.frequencyBinCount);
+    src.connect(analyser);
+    micOn=true; btn.classList.add('live'); btn.lastChild.textContent='Mic live · talk!';
+  }catch(e){ alert('Mic blocked — using the slider instead.'); }
+}
+document.getElementById('micbtn').addEventListener('click',toggleMic);
+
+function readMic(){
+  if(!micOn||!analyser) return 0;
+  analyser.getByteFrequencyData(freq);
+  const bins=freq.length; let sum=0;
+  for(let i=0;i<NB;i++){
+    const idx=Math.floor(i/NB*bins);
+    const v=freq[idx]/255; bands[i]=bands[i]*0.6+v*0.4;       // light smoothing per band
+    sum+=v;
+  }
+  return Math.min(1, sum/NB*1.7);
+}
+
+/* ---------------- loop ---------------- */
+let last=performance.now();
+function frame(now){
+  const t=now/1000; last=now;
+  // target amplitude by state
+  let target;
+  if(STATE==='idle') target=0.04;
+  else if(STATE==='speaking') target=0.42+0.22*Math.sin(t*2.1);   // LoLo's steady breath
+  else target= micOn? readMic() : sliderAmp*speechSim(t);
+  // envelope follower: fast attack, slow release (alive, not smeared)
+  amp += (target-amp)*(target>amp?0.45:0.09);
+
+  canvases.forEach(c=>{
+    c.ctx.clearRect(0,0,c.w,c.h);
+    DRAW[VARIANT](c,t,Math.max(amp,STATE==='idle'?0.02:0.04));
+  });
+  // disc breath
+  const sc=1+(STATE==='idle'?0.01:amp*0.07);
+  document.querySelectorAll('.disc').forEach(d=>d.style.transform=`scale(${sc})`);
+  requestAnimationFrame(frame);
+}
+
+/* ---------------- controls ---------------- */
+function wireSeg(id,cb){
+  const seg=document.getElementById(id);
+  seg.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b)return;
+    [...seg.children].forEach(x=>x.setAttribute('aria-pressed', x===b));
+    cb(b.dataset.v);
+  });
+}
+wireSeg('seg-state',v=>{
+  STATE=v;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('speaking',v==='speaking'));
+  const txt=v==='speaking'?'Tap anywhere to interrupt':v==='idle'?'Tap to talk to LoLo':"I'm listening…";
+  document.querySelectorAll('.badge-txt').forEach(e=>e.textContent=txt);
+});
+wireSeg('seg-variant',v=>VARIANT=v);
+document.getElementById('amp').addEventListener('input',e=>sliderAmp=e.target.value/100);
+
+sizeCanvases();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

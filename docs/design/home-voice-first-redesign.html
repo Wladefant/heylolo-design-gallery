@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HeyLolo — Home (voice-first) redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ---- real tokens (src/shared/config/palette.ts) ---- */
+  :root {
+    --blue-lagoon: #037B83;   /* primary teal, disc shadow, strong ink */
+    --blue-chill:  #0E8B93;
+    --paradiso:    #3C9094;
+    --fountain:    #5EBCC1;
+    --gothic:      #6B9EA8;
+    --smalt:       #5A8994;   /* secondary text on light */
+    --ziggurat:    #C2DDDE;
+    --anakiwa:     #A2F3FF;
+    --onahau:      #CAF8FF;
+    --aqua-spring: #E8F4F8;
+    --black-squeeze:#E9F6F6;
+    --lgc:         #F5FAFB;   /* lightest surface */
+    --burnt:       #E36843;   /* warm accent (sparingly) */
+    --pizazz:      #FF9500;   /* warm accent (sparingly) */
+    --manatee:     #8F9098;   /* placeholder grey */
+    --white:       #FFFFFF;
+
+    /* disc gradient (listening-avatar.tsx) */
+    --disc-a: #CDF0F2;
+    --disc-b: #DEF4F6;
+    --disc-c: #F5FBFB;
+
+    --ink-strong: var(--blue-lagoon);
+    --ink-body:   #3a5a60;
+    --ink-soft:   var(--smalt);
+
+    --radius-card: 22px;
+    --radius-tile: 24px;
+    --shadow-soft: 0 10px 28px -12px rgba(3,123,131,.18);
+    --shadow-tile: 0 8px 22px -14px rgba(3,123,131,.22);
+  }
+
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "DM Sans", sans-serif;
+    /* page chrome is intentionally a calm warm-neutral, NOT teal, so the phones read as the product */
+    background:
+      radial-gradient(1100px 700px at 50% -8%, #f3fbfc 0%, #eef6f7 38%, #e9f1f2 100%);
+    color: #28484e;
+    min-height: 100vh;
+    padding: 56px 28px 88px;
+  }
+
+  /* ---------- page header ---------- */
+  .page-head { max-width: 1180px; margin: 0 auto 42px; }
+  .page-head .kicker {
+    font-family: "Nunito", sans-serif;
+    font-weight: 800; font-size: 13px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--blue-chill);
+    margin: 0 0 10px;
+  }
+  .page-head h1 {
+    font-family: "Nunito", sans-serif;
+    font-weight: 900; font-size: 34px; line-height: 1.1;
+    margin: 0 0 12px; color: #1f3d42; letter-spacing: -.01em;
+  }
+  .page-head p {
+    margin: 0; max-width: 760px; font-size: 16px; line-height: 1.55;
+    color: #4d6b70; font-weight: 500;
+  }
+
+  /* ---------- phone row ---------- */
+  .stage {
+    max-width: 1180px; margin: 0 auto;
+    display: flex; gap: 40px; flex-wrap: wrap;
+    justify-content: center; align-items: flex-start;
+  }
+  .device-col { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .device-label {
+    font-family: "Nunito", sans-serif; font-weight: 800; font-size: 15px;
+    color: #2b4d52;
+  }
+  .device-sub {
+    font-size: 13px; color: var(--ink-soft); font-weight: 500;
+    margin-top: -12px; text-align: center; max-width: 290px; line-height: 1.45;
+  }
+
+  /* iPhone frame */
+  .phone {
+    width: 320px; height: 692px;
+    border-radius: 52px;
+    background: #0e2b2f;
+    padding: 11px;
+    box-shadow:
+      0 2px 0 1px rgba(255,255,255,.5) inset,
+      0 40px 70px -34px rgba(8,52,57,.5),
+      0 14px 30px -20px rgba(8,52,57,.4);
+    position: relative;
+  }
+  .screen {
+    position: relative;
+    width: 100%; height: 100%;
+    border-radius: 42px;
+    overflow: hidden;
+    /* the home surface: warm aqua wash that lifts toward the hero mascot */
+    background:
+      radial-gradient(150% 70% at 50% -6%, #d7f1f4 0%, #e6f5f6 34%, #f1f9fa 60%, #f7fcfc 100%);
+    display: flex; flex-direction: column;
+  }
+  .notch {
+    position: absolute; top: 9px; left: 50%; transform: translateX(-50%);
+    width: 112px; height: 26px; background: #0e2b2f; border-radius: 0 0 16px 16px;
+    z-index: 40;
+  }
+
+  /* status bar */
+  .status {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 24px 4px; font-family: "DM Sans"; font-weight: 600;
+    font-size: 13px; color: #234a4f; z-index: 30;
+  }
+  .status .dots { display: flex; gap: 5px; align-items: center; }
+  .status .dots svg { display: block; }
+
+  /* top bar (back + history) */
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 20px 0; z-index: 30;
+  }
+  .icon-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(255,255,255,.62);
+    border: 1px solid rgba(255,255,255,.85);
+    box-shadow: 0 6px 14px -10px rgba(3,123,131,.4);
+    color: var(--blue-lagoon);
+    cursor: pointer;
+  }
+
+  /* hero mascot */
+  .hero {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 10px 0 2px;
+  }
+  .mascot {
+    width: 96px; height: 78px; position: relative;
+    animation: float 5.5s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+  .greeting {
+    text-align: center; margin-top: 6px; padding: 0 24px;
+  }
+  .greeting h2 {
+    font-family: "Nunito"; font-weight: 800; font-size: 22px; margin: 0;
+    color: var(--blue-lagoon); letter-spacing: -.01em;
+  }
+  .greeting p {
+    margin: 5px 0 0; font-size: 13.5px; color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  /* mode grid */
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    padding: 16px 18px 6px;
+  }
+  .tile {
+    background: var(--white);
+    border-radius: var(--radius-tile);
+    padding: 14px 14px 13px;
+    box-shadow: var(--shadow-tile);
+    border: 1px solid rgba(94,188,193,.10);
+    cursor: pointer;
+    transition: transform .16s ease, box-shadow .16s ease;
+    display: flex; flex-direction: column; gap: 9px;
+    position: relative;
+  }
+  .tile:active, .tile.pressed {
+    transform: scale(.965);
+    box-shadow: 0 4px 14px -10px rgba(3,123,131,.3);
+  }
+  .tile .blob {
+    width: 46px; height: 46px; border-radius: 16px;
+    display: grid; place-items: center;
+    background: var(--lgc);
+    border: 1px solid rgba(94,188,193,.14);
+  }
+  .tile.t-explore .blob { background: #eaf7f1; }
+  .tile.t-stories .blob { background: #fff3ee; }   /* a whisper of warm */
+  .tile.t-numbers .blob { background: #eef6fb; }
+  .tile.t-how .blob    { background: var(--black-squeeze); }
+  .tile .label {
+    font-family: "Nunito"; font-weight: 700; font-size: 14px;
+    color: #2c4f54; line-height: 1.2;
+  }
+  .tile .sub {
+    font-size: 11.5px; color: var(--ink-soft); font-weight: 500;
+    margin-top: -3px;
+  }
+
+  /* ---------- voice dock (bottom) ---------- */
+  .dock {
+    margin-top: auto;
+    padding: 8px 0 26px;
+    display: flex; flex-direction: column; align-items: center;
+    position: relative;
+  }
+
+  /* the disc — signature element */
+  .disc-wrap {
+    position: relative; width: 124px; height: 124px;
+    display: grid; place-items: center;
+  }
+  /* breathe rings (resting) — opacity only, scale held gentle (a11y) */
+  .ring {
+    position: absolute; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.7);
+    pointer-events: none;
+  }
+  .ring.r1 { width: 124px; height: 124px; }
+  .ring.r2 { width: 150px; height: 150px; }
+  .ring.r3 { width: 178px; height: 178px; }
+
+  .disc {
+    width: 104px; height: 104px; border-radius: 50%;
+    background:
+      radial-gradient(120% 120% at 30% 24%, var(--disc-c) 0%, var(--disc-b) 42%, var(--disc-a) 100%);
+    border: 6px solid rgba(255,255,255,.55);
+    box-shadow: 0 12px 24px -2px rgba(3,123,131,.16);
+    display: grid; place-items: center;
+    cursor: pointer; position: relative; z-index: 5;
+    transition: transform .42s cubic-bezier(.2,1.3,.4,1), box-shadow .42s ease;
+    color: var(--blue-lagoon);
+  }
+  .disc:active { transform: scale(.96); }
+
+  .or-type {
+    margin-top: 14px;
+    display: inline-flex; align-items: center; gap: 7px;
+    color: var(--smalt); font-family: "Nunito"; font-weight: 600;
+    font-size: 14px; cursor: pointer;
+    padding: 7px 4px;
+  }
+  .or-type svg { color: var(--gothic); }
+
+  /* 3-button row variant (state C) */
+  .dock-row {
+    display: flex; align-items: center; justify-content: center; gap: 34px;
+  }
+  .mini {
+    width: 50px; height: 50px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(255,255,255,.5);
+    border: 1px solid rgba(255,255,255,.8);
+    box-shadow: 0 8px 18px -12px rgba(3,123,131,.35);
+    color: var(--blue-chill); cursor: pointer;
+    transition: transform .16s ease;
+  }
+  .mini:active { transform: scale(.92); }
+
+  /* ============ STATE B — listening / waking ============ */
+  .screen.listening .disc {
+    transform: scale(1.07);
+    box-shadow: 0 16px 34px -2px rgba(3,123,131,.4);
+  }
+  .screen.listening .ring { animation: wave 2.4s ease-out infinite; opacity: 0; }
+  .screen.listening .ring.r1 { animation-delay: 0s; }
+  .screen.listening .ring.r2 { animation-delay: .8s; }
+  .screen.listening .ring.r3 { animation-delay: 1.6s; }
+  /* reactive bars float over the disc when listening */
+  @keyframes wave {
+    0%   { transform: scale(.86); opacity: .55; }
+    70%  { opacity: .12; }
+    100% { transform: scale(1.18); opacity: 0; }
+  }
+  .bars { display: flex; align-items: center; gap: 4px; height: 34px; }
+  .bars i {
+    width: 4px; border-radius: 99px; background: var(--blue-lagoon);
+    display: block;
+  }
+  .screen.listening .bars i { animation: vu .9s ease-in-out infinite; }
+  .bars i:nth-child(1){height:12px;animation-delay:0s}
+  .bars i:nth-child(2){height:24px;animation-delay:.12s}
+  .bars i:nth-child(3){height:34px;animation-delay:.24s}
+  .bars i:nth-child(4){height:20px;animation-delay:.36s}
+  .bars i:nth-child(5){height:28px;animation-delay:.18s}
+  .bars i:nth-child(6){height:14px;animation-delay:.30s}
+  @keyframes vu { 0%,100%{transform:scaleY(.5)} 50%{transform:scaleY(1.15)} }
+
+  /* listening badge above disc */
+  .listen-badge {
+    position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--white); color: var(--blue-lagoon);
+    font-family: "Nunito"; font-weight: 700; font-size: 12.5px;
+    padding: 7px 14px; border-radius: 99px;
+    box-shadow: var(--shadow-soft);
+    white-space: nowrap;
+  }
+  .listen-badge .pip {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--burnt);
+    animation: pip 1.3s ease-in-out infinite;
+  }
+  @keyframes pip { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  /* when listening, dim the grid slightly to bring focus to the disc */
+  .screen.listening .grid { opacity: .5; transition: opacity .35s ease; }
+  .screen.listening .greeting h2 { opacity: .8; }
+
+  /* hide/show by state */
+  .only-rest { display: flex; }
+  .only-listen { display: none; }
+  .screen.listening .only-rest { display: none; }
+  .screen.listening .only-listen { display: flex; }
+
+  /* legend / annotations */
+  .legend {
+    max-width: 1180px; margin: 52px auto 0;
+    border-top: 1px solid rgba(94,188,193,.25);
+    padding-top: 26px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px;
+  }
+  .legend h3 {
+    font-family: "Nunito"; font-weight: 800; font-size: 15px;
+    margin: 0 0 8px; color: #234a4f;
+  }
+  .legend p { margin: 0; font-size: 13.5px; line-height: 1.55; color: #50696e; font-weight: 500; }
+  .legend .ref { color: var(--blue-chill); font-weight: 700; }
+
+  @media (max-width: 720px) {
+    .legend { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="page-head">
+    <p class="kicker">HeyLolo · voice-first home</p>
+    <h1>The home is the disc.</h1>
+    <p>
+      A light-only, warm-teal landing screen for a kids' voice companion. The mascot welcomes,
+      the four mode tiles invite, and the signature mic disc anchors the bottom — calm at rest,
+      alive the instant a child taps it. Three states shown: resting, listening, and the
+      full talk-or-explore dock.
+    </p>
+  </header>
+
+  <main class="stage">
+
+    <!-- ============ STATE A — resting home ============ -->
+    <div class="device-col">
+      <div class="device-label">Resting home</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen" id="screenA">
+          <div class="status">
+            <span>9:41</span>
+            <span class="dots">
+              <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="5" y="3.5" width="3" height="7.5" rx="1"/><rect x="10" y="1.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 4.2C4.6 1.3 11.4 1.3 15 4.2M3.4 6.7C5.9 4.8 10.1 4.8 12.6 6.7M6 9.1c1.2-.9 2.8-.9 4 0"/></svg>
+              <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="currentColor" stroke-width="1.3"/><rect x="2.6" y="2.6" width="15" height="6.8" rx="1.6" fill="currentColor"/><rect x="22" y="4" width="1.6" height="4" rx="1" fill="currentColor"/></svg>
+            </span>
+          </div>
+
+          <div class="topbar">
+            <div class="icon-btn" title="back">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+            </div>
+            <div class="icon-btn" title="history">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+            </div>
+          </div>
+
+          <div class="hero">
+            <div class="mascot">
+              <!-- friendly cloud mascot, inline SVG (no emoji) -->
+              <svg viewBox="0 0 110 90" width="96" height="78">
+                <defs>
+                  <radialGradient id="cloudA" cx="38%" cy="30%" r="80%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="70%" stop-color="#f1fbfc"/>
+                    <stop offset="100%" stop-color="#d9f1f4"/>
+                  </radialGradient>
+                </defs>
+                <!-- propeller cap -->
+                <ellipse cx="55" cy="14" rx="10" ry="3" fill="#5EBCC1"/>
+                <rect x="53.5" y="4" width="3" height="9" rx="1.5" fill="#3C9094"/>
+                <circle cx="55" cy="5" r="3.4" fill="#FF9500"/>
+                <!-- body -->
+                <path d="M30 64c-12 0-19-9-15-19 2-12 14-17 24-13 4-11 24-12 30-1 12-2 22 7 18 18-2 9-11 13-20 13H30z" fill="url(#cloudA)" stroke="#cdeef0" stroke-width="1.5"/>
+                <!-- eyes -->
+                <circle cx="46" cy="44" r="4.4" fill="#234a4f"/>
+                <circle cx="64" cy="44" r="4.4" fill="#234a4f"/>
+                <circle cx="47.4" cy="42.6" r="1.4" fill="#fff"/>
+                <circle cx="65.4" cy="42.6" r="1.4" fill="#fff"/>
+                <!-- cheeks + smile -->
+                <circle cx="40" cy="51" r="3" fill="#FFD2C4" opacity=".8"/>
+                <circle cx="70" cy="51" r="3" fill="#FFD2C4" opacity=".8"/>
+                <path d="M48 52c3 4 11 4 14 0" fill="none" stroke="#234a4f" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="greeting">
+              <h2>Hi Paul! I'm HeyLolo</h2>
+              <p>What would you like to explore today?</p>
+            </div>
+          </div>
+
+          <div class="grid" id="gridA">
+            <div class="tile t-how" data-press>
+              <div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5A8994" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.3a2.7 2.7 0 1 1 4 2.3c-.8.5-1.3 1-1.3 2"/><circle cx="12" cy="17" r=".6" fill="#5A8994" stroke="none"/></svg></div>
+              <div class="label">How things work</div>
+              <div class="sub">curious questions</div>
+            </div>
+            <div class="tile t-numbers" data-press>
+              <div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3C9094" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 9h2M8 12h2M8 15h2M14 9h2M14 15h2"/></svg></div>
+              <div class="label">Numbers &amp; puzzles</div>
+              <div class="sub">count &amp; solve</div>
+            </div>
+            <div class="tile t-explore" data-press>
+              <div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E8B93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 12h17M12 3.2c2.6 2.4 2.6 15.2 0 17.6M12 3.2C9.4 5.6 9.4 18.4 12 20.8"/></svg></div>
+              <div class="label">Explore the world</div>
+              <div class="sub">places &amp; animals</div>
+            </div>
+            <div class="tile t-stories" data-press>
+              <div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E36843" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C5.5 4.5 9 4.5 12 6c3-1.5 6.5-1.5 8 0v12c-1.5-1.5-5-1.5-8 0-3-1.5-6.5-1.5-8 0v-12z"/><path d="M12 6v12"/></svg></div>
+              <div class="label">Stories &amp; ideas</div>
+              <div class="sub">imagine &amp; create</div>
+            </div>
+          </div>
+
+          <div class="dock">
+            <div class="disc-wrap">
+              <span class="ring r3"></span>
+              <span class="ring r2"></span>
+              <span class="ring r1"></span>
+              <div class="disc" onclick="wake('screenA')" title="tap to talk">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="3" width="6" height="11" rx="3"/>
+                  <path d="M6 11a6 6 0 0 0 12 0"/>
+                  <path d="M12 17v3.5M9 20.5h6"/>
+                </svg>
+              </div>
+            </div>
+            <div class="or-type" onclick="alert('opens the minimal “Ask me anything” pill (S2)')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 13.5h.01M18 13.5h.01M9 13.5h6"/></svg>
+              <span>or type</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="device-sub">Calm by default — rings breathe, mascot drifts. <strong>Tap the disc</strong> to wake it.</div>
+    </div>
+
+    <!-- ============ STATE B — listening ============ -->
+    <div class="device-col">
+      <div class="device-label">Listening</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen listening" id="screenB">
+          <div class="status">
+            <span>9:41</span>
+            <span class="dots">
+              <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="5" y="3.5" width="3" height="7.5" rx="1"/><rect x="10" y="1.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 4.2C4.6 1.3 11.4 1.3 15 4.2M3.4 6.7C5.9 4.8 10.1 4.8 12.6 6.7M6 9.1c1.2-.9 2.8-.9 4 0"/></svg>
+              <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="currentColor" stroke-width="1.3"/><rect x="2.6" y="2.6" width="15" height="6.8" rx="1.6" fill="currentColor"/><rect x="22" y="4" width="1.6" height="4" rx="1" fill="currentColor"/></svg>
+            </span>
+          </div>
+
+          <div class="topbar">
+            <div class="icon-btn" title="back">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+            </div>
+            <div class="icon-btn" title="history">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+            </div>
+          </div>
+
+          <div class="hero">
+            <div class="mascot">
+              <svg viewBox="0 0 110 90" width="96" height="78">
+                <defs>
+                  <radialGradient id="cloudB" cx="38%" cy="30%" r="80%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="70%" stop-color="#f1fbfc"/>
+                    <stop offset="100%" stop-color="#d9f1f4"/>
+                  </radialGradient>
+                </defs>
+                <ellipse cx="55" cy="14" rx="10" ry="3" fill="#5EBCC1"/>
+                <rect x="53.5" y="4" width="3" height="9" rx="1.5" fill="#3C9094"/>
+                <circle cx="55" cy="5" r="3.4" fill="#FF9500"/>
+                <path d="M30 64c-12 0-19-9-15-19 2-12 14-17 24-13 4-11 24-12 30-1 12-2 22 7 18 18-2 9-11 13-20 13H30z" fill="url(#cloudB)" stroke="#cdeef0" stroke-width="1.5"/>
+                <circle cx="46" cy="44" r="4.4" fill="#234a4f"/>
+                <circle cx="64" cy="44" r="4.4" fill="#234a4f"/>
+                <circle cx="47.4" cy="42.6" r="1.4" fill="#fff"/>
+                <circle cx="65.4" cy="42.6" r="1.4" fill="#fff"/>
+                <circle cx="40" cy="51" r="3" fill="#FFD2C4" opacity=".8"/>
+                <circle cx="70" cy="51" r="3" fill="#FFD2C4" opacity=".8"/>
+                <path d="M48 53c3 3 11 3 14 0" fill="none" stroke="#234a4f" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="greeting">
+              <h2>I'm listening…</h2>
+              <p>Say anything — I'm all ears.</p>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="tile t-how"><div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5A8994" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.3a2.7 2.7 0 1 1 4 2.3c-.8.5-1.3 1-1.3 2"/><circle cx="12" cy="17" r=".6" fill="#5A8994" stroke="none"/></svg></div><div class="label">How things work</div><div class="sub">curious questions</div></div>
+            <div class="tile t-numbers"><div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3C9094" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 9h2M8 12h2M8 15h2M14 9h2M14 15h2"/></svg></div><div class="label">Numbers &amp; puzzles</div><div class="sub">count &amp; solve</div></div>
+            <div class="tile t-explore"><div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E8B93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 12h17M12 3.2c2.6 2.4 2.6 15.2 0 17.6M12 3.2C9.4 5.6 9.4 18.4 12 20.8"/></svg></div><div class="label">Explore the world</div><div class="sub">places &amp; animals</div></div>
+            <div class="tile t-stories"><div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E36843" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C5.5 4.5 9 4.5 12 6c3-1.5 6.5-1.5 8 0v12c-1.5-1.5-5-1.5-8 0-3-1.5-6.5-1.5-8 0v-12z"/><path d="M12 6v12"/></svg></div><div class="label">Stories &amp; ideas</div><div class="sub">imagine &amp; create</div></div>
+          </div>
+
+          <div class="dock">
+            <div class="disc-wrap" style="margin-top:18px">
+              <div class="listen-badge"><span class="pip"></span> Listening</div>
+              <span class="ring r3"></span>
+              <span class="ring r2"></span>
+              <span class="ring r1"></span>
+              <div class="disc" onclick="sleep('screenB')" title="tap to stop">
+                <div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              </div>
+            </div>
+            <div class="or-type" style="margin-top:26px" onclick="sleep('screenB')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>
+              <span>Tap to stop</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="device-sub">Disc swells, VU bars pulse, ripples bloom outward, grid recedes. <strong>Tap to stop.</strong></div>
+    </div>
+
+    <!-- ============ STATE C — talk-or-explore dock ============ -->
+    <div class="device-col">
+      <div class="device-label">Talk or explore</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen" id="screenC">
+          <div class="status">
+            <span>9:41</span>
+            <span class="dots">
+              <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="5" y="3.5" width="3" height="7.5" rx="1"/><rect x="10" y="1.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 4.2C4.6 1.3 11.4 1.3 15 4.2M3.4 6.7C5.9 4.8 10.1 4.8 12.6 6.7M6 9.1c1.2-.9 2.8-.9 4 0"/></svg>
+              <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="currentColor" stroke-width="1.3"/><rect x="2.6" y="2.6" width="15" height="6.8" rx="1.6" fill="currentColor"/><rect x="22" y="4" width="1.6" height="4" rx="1" fill="currentColor"/></svg>
+            </span>
+          </div>
+
+          <div class="topbar">
+            <div class="icon-btn" title="back">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+            </div>
+            <div class="icon-btn" title="history">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+            </div>
+          </div>
+
+          <div class="hero">
+            <div class="mascot">
+              <svg viewBox="0 0 110 90" width="96" height="78">
+                <defs>
+                  <radialGradient id="cloudC" cx="38%" cy="30%" r="80%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="70%" stop-color="#f1fbfc"/>
+                    <stop offset="100%" stop-color="#d9f1f4"/>
+                  </radialGradient>
+                </defs>
+                <ellipse cx="55" cy="14" rx="10" ry="3" fill="#5EBCC1"/>
+                <rect x="53.5" y="4" width="3" height="9" rx="1.5" fill="#3C9094"/>
+                <circle cx="55" cy="5" r="3.4" fill="#FF9500"/>
+                <path d="M30 64c-12 0-19-9-15-19 2-12 14-17 24-13 4-11 24-12 30-1 12-2 22 7 18 18-2 9-11 13-20 13H30z" fill="url(#cloudC)" stroke="#cdeef0" stroke-width="1.5"/>
+                <circle cx="46" cy="44" r="4.4" fill="#234a4f"/>
+                <circle cx="64" cy="44" r="4.4" fill="#234a4f"/>
+                <circle cx="47.4" cy="42.6" r="1.4" fill="#fff"/>
+                <circle cx="65.4" cy="42.6" r="1.4" fill="#fff"/>
+                <circle cx="40" cy="51" r="3" fill="#FFD2C4" opacity=".8"/>
+                <circle cx="70" cy="51" r="3" fill="#FFD2C4" opacity=".8"/>
+                <path d="M48 52c3 4 11 4 14 0" fill="none" stroke="#234a4f" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="greeting">
+              <h2>Hi Paul! I'm HeyLolo</h2>
+              <p>Tap to talk, or wander with Explorer.</p>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="tile t-how" data-press><div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5A8994" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.3a2.7 2.7 0 1 1 4 2.3c-.8.5-1.3 1-1.3 2"/><circle cx="12" cy="17" r=".6" fill="#5A8994" stroke="none"/></svg></div><div class="label">How things work</div><div class="sub">curious questions</div></div>
+            <div class="tile t-numbers" data-press><div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3C9094" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 9h2M8 12h2M8 15h2M14 9h2M14 15h2"/></svg></div><div class="label">Numbers &amp; puzzles</div><div class="sub">count &amp; solve</div></div>
+            <div class="tile t-explore" data-press><div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E8B93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 12h17M12 3.2c2.6 2.4 2.6 15.2 0 17.6M12 3.2C9.4 5.6 9.4 18.4 12 20.8"/></svg></div><div class="label">Explore the world</div><div class="sub">places &amp; animals</div></div>
+            <div class="tile t-stories" data-press><div class="blob"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E36843" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C5.5 4.5 9 4.5 12 6c3-1.5 6.5-1.5 8 0v12c-1.5-1.5-5-1.5-8 0-3-1.5-6.5-1.5-8 0v-12z"/><path d="M12 6v12"/></svg></div><div class="label">Stories &amp; ideas</div><div class="sub">imagine &amp; create</div></div>
+          </div>
+
+          <div class="dock">
+            <div class="dock-row">
+              <div class="mini" title="add a photo" onclick="alert('Attachment — gallery / camera')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v12M6 12h12"/></svg>
+              </div>
+              <div class="disc-wrap" style="width:112px;height:112px">
+                <span class="ring r1" style="width:112px;height:112px"></span>
+                <span class="ring r2" style="width:136px;height:136px"></span>
+                <div class="disc" onclick="wake('screenC')" title="tap to talk">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="3" width="6" height="11" rx="3"/>
+                    <path d="M6 11a6 6 0 0 0 12 0"/>
+                    <path d="M12 17v3.5M9 20.5h6"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="mini" title="Explorer mode" onclick="alert('Explorer — live Gemini voice mode')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="14" r="3.4"/><circle cx="17" cy="14" r="3.4"/><path d="M10.2 13c.9-.7 2.7-.7 3.6 0M5 11l1.4-3.4a1.6 1.6 0 0 1 1.5-1h1M19 11l-1.4-3.4a1.6 1.6 0 0 0-1.5-1h-1"/></svg>
+              </div>
+            </div>
+            <div class="or-type" onclick="alert('opens the minimal “Ask me anything” pill (S2)')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 13.5h.01M18 13.5h.01M9 13.5h6"/></svg>
+              <span>or type</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="device-sub">The fuller dock: <strong>+</strong> adds a photo, the disc talks, <strong>binoculars</strong> opens Explorer (live voice).</div>
+    </div>
+
+  </main>
+
+  <section class="legend">
+    <div>
+      <h3>Disc-as-anchor, calm then alive</h3>
+      <p>The pale-teal mic disc holds its position in every state — only its energy changes. At rest the white rings breathe on opacity; on tap it springs to <span class="ref">scale 1.07</span>, VU bars pulse, ripples bloom and the grid recedes. Pattern from <span class="ref">Duolingo ABC</span> (pip-in-halo) + <span class="ref">Meta AI</span> (the single voice orb that wakes).</p>
+    </div>
+    <div>
+      <h3>Soft tinted tiles, not heavy cards</h3>
+      <p>Four mode tiles on white with a whisper-tinted icon blob each — teal for explore, a warm hint for stories. Calm, rounded, low-contrast borders rather than boxed-in cards. Tile feel from <span class="ref">Wysa</span> (soft 2×2) and <span class="ref">Grok voice</span> (leading-icon mode row).</p>
+    </div>
+    <div>
+      <h3>One dock, two depths</h3>
+      <p>Resting home shows just the disc + "or type." The richer state fans the dock to <span class="ref">+ · disc · Explorer</span> so talk, attach, and live-explore live side by side — without ever burying the disc. "Tap to speak" label clarity borrowed from <span class="ref">Duolingo</span>.</p>
+    </div>
+  </section>
+
+<script>
+  // wake the disc (resting -> listening) on a given screen
+  function wake(id) {
+    const s = document.getElementById(id);
+    s.classList.add('listening');
+    // swap the mic glyph for VU bars + badge on the fly
+    refreshDisc(s, true);
+  }
+  function sleep(id) {
+    const s = document.getElementById(id);
+    s.classList.remove('listening');
+    refreshDisc(s, false);
+  }
+  function refreshDisc(scope, on) {
+    const disc = scope.querySelector('.dock .disc');
+    if (!disc) return;
+    if (on) {
+      disc.innerHTML = '<div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>';
+      disc.setAttribute('onclick', `sleep('${scope.id}')`);
+      // badge
+      if (!scope.querySelector('.listen-badge')) {
+        const b = document.createElement('div');
+        b.className = 'listen-badge';
+        b.innerHTML = '<span class="pip"></span> Listening';
+        disc.closest('.disc-wrap').prepend(b);
+      }
+    } else {
+      disc.innerHTML = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v3.5M9 20.5h6"/></svg>';
+      disc.setAttribute('onclick', `wake('${scope.id}')`);
+      const b = scope.querySelector('.listen-badge');
+      if (b) b.remove();
+    }
+  }
+
+  // tile press feedback
+  document.querySelectorAll('[data-press]').forEach(t => {
+    t.addEventListener('click', () => {
+      t.classList.add('pressed');
+      setTimeout(() => t.classList.remove('pressed'), 220);
+    });
+  });
+</script>
+</body>
+</html>

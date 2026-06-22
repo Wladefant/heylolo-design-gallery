@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HeyLolo — Parent Dashboard redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900&family=DM+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+<style>
+  /* ───────── real elumi-kids tokens (src/shared/config/palette.ts) ───────── */
+  :root {
+    --blue-lagoon:   #037B83;  /* primary teal, strong text-on-light */
+    --blue-chill:    #0E8B93;  /* primary teal lighter */
+    --paradiso:      #3C9094;  /* mid teal */
+    --fountain-blue: #5EBCC1;  /* bright teal accent / pip */
+    --gothic:        #6B9EA8;  /* muted teal-grey */
+    --smalt-blue:    #5A8994;  /* secondary text on light */
+    --ziggurat:      #C2DDDE;  /* soft teal fill */
+    --anakiwa:       #A2F3FF;  /* pale highlight aqua */
+    --aqua-spring:   #E8F4F8;  /* light surface */
+    --black-squeeze: #E9F6F6;  /* light surface */
+    --lgc:           #F5FAFB;  /* lightest surface */
+    --burnt-sienna:  #E36843;  /* warm accent */
+    --pizazz:        #FF9500;  /* warm accent */
+    --emerald:       #34C759;  /* positive stat */
+
+    --ink:        #0C3A3E;   /* primary text — deep teal-ink, not pure black */
+    --ink-dim:    #45727A;   /* dim ink — readable secondary (AA) */
+    --hairline:   #DCEDEF;   /* divider on light */
+    --page-top:   #EAF6F7;   /* page gradient top */
+    --page-bot:   #F4FBFB;   /* page gradient bottom */
+    --shadow:     rgba(3,123,131,.14);
+    --shadow-soft:rgba(3,123,131,.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background:
+      radial-gradient(120% 90% at 12% -8%, #EAFBFC 0%, transparent 55%),
+      linear-gradient(180deg, #F3F8F7 0%, #EAF1F1 100%);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 56px 32px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .num { font-family: 'DM Sans', sans-serif; font-feature-settings: 'tnum' 1; }
+
+  /* ───────── page intro ───────── */
+  .intro { max-width: 1180px; margin: 0 auto 44px; }
+  .intro .kicker {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--blue-chill); margin-bottom: 12px;
+  }
+  .intro h1 {
+    font-weight: 800; font-size: 34px; letter-spacing: -.01em;
+    color: var(--ink); line-height: 1.1; margin-bottom: 12px;
+  }
+  .intro p {
+    font-size: 16px; line-height: 1.55; color: var(--ink-dim); max-width: 760px;
+  }
+  .intro .legend {
+    margin-top: 18px; display: flex; gap: 22px; flex-wrap: wrap;
+    font-size: 13.5px; color: var(--ink-dim);
+  }
+  .intro .legend b { color: var(--blue-lagoon); font-weight: 700; }
+
+  /* ───────── phone rail ───────── */
+  .rail {
+    display: flex; gap: 48px; justify-content: center; align-items: flex-start;
+    flex-wrap: wrap; max-width: 1180px; margin: 0 auto;
+  }
+  .device { width: 340px; }
+  .device .cap {
+    text-align: center; margin-bottom: 18px;
+  }
+  .device .cap .state {
+    font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px;
+    letter-spacing: .04em; color: var(--blue-lagoon);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .device .cap .state::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--fountain-blue);
+  }
+  .device .cap .sub { font-size: 13px; color: var(--gothic); margin-top: 4px; }
+
+  .phone {
+    position: relative; width: 340px; height: 720px;
+    background: #fff; border-radius: 46px;
+    padding: 12px;
+    box-shadow:
+      0 2px 4px rgba(3,123,131,.05),
+      0 24px 60px -18px rgba(3,123,131,.30),
+      0 0 0 1px rgba(3,123,131,.06);
+  }
+  .screen {
+    position: relative; width: 100%; height: 100%;
+    border-radius: 36px; overflow: hidden;
+    background: linear-gradient(180deg, var(--page-top) 0%, var(--page-bot) 42%, #FFFFFF 100%);
+    display: flex; flex-direction: column;
+  }
+  /* notch */
+  .screen::before {
+    content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 116px; height: 26px; background: #fff; border-radius: 16px; z-index: 40;
+    box-shadow: inset 0 0 0 1px rgba(3,123,131,.05);
+  }
+  .statusbar {
+    position: relative; z-index: 41; height: 44px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 26px; font-family: 'DM Sans', sans-serif; font-weight: 700;
+    font-size: 13px; color: var(--ink);
+  }
+  .statusbar .glyphs { display: flex; gap: 6px; align-items: center; }
+  .statusbar .glyphs svg { display: block; }
+
+  .scroll {
+    flex: 1; overflow: hidden; position: relative;
+    padding: 4px 18px 0;
+  }
+  .scroll-inner { display: flex; flex-direction: column; gap: 16px; }
+
+  /* ───────── header ───────── */
+  .ph-head { padding: 6px 4px 0; display: flex; align-items: center; justify-content: space-between; }
+  .ph-greet .small {
+    font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 600;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--gothic);
+  }
+  .ph-greet h2 {
+    font-weight: 800; font-size: 23px; color: var(--ink); letter-spacing: -.01em; margin-top: 1px;
+  }
+  .child-pill {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: #fff; border: 1.5px solid var(--hairline);
+    padding: 6px 13px 6px 6px; border-radius: 999px; cursor: pointer;
+    box-shadow: 0 2px 8px var(--shadow-soft);
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .child-pill:hover { border-color: var(--fountain-blue); box-shadow: 0 4px 14px var(--shadow); }
+  .child-pill .av {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .child-pill .nm { font-weight: 700; font-size: 14.5px; color: var(--ink); }
+  .child-pill .caret { color: var(--gothic); display: flex; }
+
+  /* avatar gradients per child */
+  .av-paul { background: linear-gradient(135deg, var(--fountain-blue), var(--blue-chill)); }
+  .av-mia  { background: linear-gradient(135deg, var(--pizazz), var(--burnt-sienna)); }
+  .av-leo  { background: linear-gradient(135deg, var(--paradiso), var(--blue-lagoon)); }
+
+  /* ───────── mood / week hero (flat, no nested card) ───────── */
+  .week {
+    background: #fff; border-radius: 26px; padding: 20px 20px 8px;
+    box-shadow: 0 6px 22px var(--shadow-soft);
+  }
+  .week-top { display: flex; align-items: center; gap: 14px; }
+  .mood-face {
+    width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+    background:
+      radial-gradient(circle at 32% 28%, #FFFFFF 0%, #DEF4F6 46%, #CDF0F2 100%);
+    border: 4px solid rgba(255,255,255,.7);
+    box-shadow: 0 4px 14px var(--shadow);
+    display: grid; place-items: center;
+  }
+  .week-top .lbl .ek {
+    font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--smalt-blue);
+  }
+  .week-top .lbl .hd {
+    font-weight: 800; font-size: 19px; color: var(--blue-lagoon); margin-top: 1px; letter-spacing: -.01em;
+  }
+
+  .chart { margin-top: 14px; padding: 0 2px; }
+  .chart svg { width: 100%; height: 88px; display: block; overflow: visible; }
+  .dow {
+    display: flex; justify-content: space-between; margin-top: 6px; padding: 0 2px;
+    font-family: 'DM Sans', sans-serif; font-size: 10.5px; font-weight: 600; color: var(--gothic);
+  }
+  .dow span { width: 30px; text-align: center; }
+
+  .concern {
+    margin: 14px -20px 0; padding: 13px 20px;
+    border-top: 1px solid var(--hairline);
+    display: flex; align-items: center; gap: 11px; cursor: pointer;
+  }
+  .concern .ic {
+    width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0;
+    background: rgba(52,199,89,.12); display: grid; place-items: center; color: var(--emerald);
+  }
+  .concern .tx .t { font-weight: 700; font-size: 14px; color: var(--ink); }
+  .concern .tx .s { font-size: 12px; color: var(--ink-dim); margin-top: 1px; }
+  .concern .link {
+    margin-left: auto; font-family:'DM Sans',sans-serif; font-weight: 600;
+    font-size: 12.5px; color: var(--blue-chill); text-decoration: none;
+  }
+  .concern:hover .link { text-decoration: underline; }
+
+  /* ───────── stat duo (companion / usage) — flat tiles, no nesting ───────── */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .tile {
+    background: #fff; border-radius: 22px; padding: 16px;
+    box-shadow: 0 6px 22px var(--shadow-soft);
+    display: flex; flex-direction: column; min-height: 132px;
+  }
+  .tile .ek {
+    font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--smalt-blue);
+  }
+  .tile .companion-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  .tile .mode-face {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, #FFF 0%, #DEF4F6 50%, #CDF0F2 100%);
+    border: 3px solid rgba(255,255,255,.7); box-shadow: 0 3px 10px var(--shadow);
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .tile .mode-name { font-weight: 800; font-size: 15px; color: var(--ink); }
+  .tile .mode-desc { font-size: 11.5px; color: var(--ink-dim); }
+  .tile .big {
+    font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 32px;
+    color: var(--ink); margin-top: auto; letter-spacing: -.02em; line-height: 1;
+  }
+  .tile .big .u { font-size: 17px; font-weight: 600; color: var(--gothic); margin-left: 1px; }
+  .tile .foot {
+    margin-top: 10px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .tile .foot a {
+    font-family:'DM Sans',sans-serif; font-weight: 600; font-size: 12px;
+    color: var(--blue-chill); text-decoration: none;
+  }
+  .tile:hover .foot a { text-decoration: underline; }
+  .spark { margin-top: auto; }
+  .spark svg { width: 100%; height: 30px; display: block; }
+
+  /* ───────── insight (flat section, rule not card) ───────── */
+  .insight {
+    background: #fff; border-radius: 24px; padding: 18px 20px;
+    box-shadow: 0 6px 22px var(--shadow-soft);
+  }
+  .insight .hd-row { display: flex; align-items: center; gap: 11px; }
+  .insight .ic {
+    width: 34px; height: 34px; border-radius: 11px; flex-shrink: 0;
+    background: rgba(255,149,0,.12); display: grid; place-items: center; color: var(--pizazz);
+  }
+  .insight h3 { font-weight: 800; font-size: 16px; color: var(--ink); letter-spacing: -.01em; }
+  .insight p { font-size: 13.5px; line-height: 1.55; color: var(--ink-dim); margin-top: 12px; }
+  .insight .chips { display: flex; gap: 8px; margin-top: 13px; flex-wrap: wrap; }
+  .insight .chip {
+    font-family:'DM Sans',sans-serif; font-size: 11.5px; font-weight: 600;
+    padding: 5px 11px; border-radius: 999px;
+    background: var(--black-squeeze); color: var(--paradiso);
+  }
+
+  /* ───────── recent prompts (list, dividers not boxes) ───────── */
+  .prompts {
+    background: #fff; border-radius: 24px; padding: 6px 20px 8px;
+    box-shadow: 0 6px 22px var(--shadow-soft);
+  }
+  .prompts .hd {
+    padding: 14px 0 4px; font-weight: 800; font-size: 16px; color: var(--ink); letter-spacing: -.01em;
+  }
+  .prow {
+    display: flex; align-items: center; gap: 12px; padding: 13px 0;
+    border-top: 1px solid var(--hairline); cursor: pointer;
+  }
+  .prow:first-of-type { border-top: none; }
+  .prow .ic {
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+    background: var(--black-squeeze); display: grid; place-items: center; color: var(--paradiso);
+  }
+  .prow .tx { font-size: 13.5px; color: var(--ink); font-weight: 600; line-height: 1.4; }
+  .prow .send {
+    margin-left: auto; flex-shrink: 0;
+    font-family:'DM Sans',sans-serif; font-weight: 600; font-size: 11.5px;
+    color: var(--blue-chill); background: var(--black-squeeze);
+    padding: 6px 12px; border-radius: 999px;
+  }
+  .prow:hover .send { background: var(--anakiwa); color: var(--blue-lagoon); }
+
+  /* ───────── bottom nav ───────── */
+  .nav {
+    flex-shrink: 0; height: 70px; background: #fff;
+    border-top: 1px solid var(--hairline);
+    display: flex; align-items: flex-start; justify-content: space-around;
+    padding-top: 11px;
+    box-shadow: 0 -4px 20px rgba(3,123,131,.05);
+  }
+  .nav .item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: var(--gothic); font-family:'DM Sans',sans-serif; font-size: 10.5px; font-weight: 600;
+  }
+  .nav .item.on { color: var(--blue-lagoon); }
+
+  /* ───────── child switcher drawer (state 3) ───────── */
+  .scrim {
+    position: absolute; inset: 0; z-index: 30;
+    background: rgba(7,53,57,.32); border-radius: 36px;
+    display: flex; align-items: flex-end;
+  }
+  .drawer {
+    width: 100%; background: #fff;
+    border-radius: 30px 30px 36px 36px;
+    padding: 10px 20px 22px;
+    box-shadow: 0 -10px 40px rgba(3,123,131,.20);
+  }
+  .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--ziggurat); margin: 6px auto 14px; }
+  .drawer-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .drawer-hd h3 { font-weight: 800; font-size: 19px; color: var(--ink); letter-spacing: -.01em; }
+  .drawer-hd .x {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--black-squeeze);
+    display: grid; place-items: center; color: var(--smalt-blue); cursor: pointer;
+  }
+  .crow {
+    display: flex; align-items: center; gap: 13px; padding: 13px 12px;
+    border-radius: 18px; cursor: pointer; margin-top: 8px;
+    border: 2px solid transparent; transition: background .15s, border-color .15s;
+  }
+  .crow:hover { background: var(--lgc); }
+  .crow.sel { background: var(--black-squeeze); border-color: var(--fountain-blue); }
+  .crow .av {
+    width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+    display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 17px;
+    font-family:'DM Sans',sans-serif;
+  }
+  .crow .meta .nm { font-weight: 700; font-size: 15.5px; color: var(--ink); }
+  .crow .meta .ag {
+    font-family:'DM Sans',sans-serif; font-size: 12px; color: var(--ink-dim); margin-top: 1px;
+  }
+  .crow .radio {
+    margin-left: auto; width: 24px; height: 24px; border-radius: 50%;
+    border: 2px solid var(--ziggurat); flex-shrink: 0; display: grid; place-items: center;
+  }
+  .crow.sel .radio { border-color: var(--blue-chill); background: var(--blue-chill); }
+  .crow.sel .radio svg { color: #fff; }
+  .crow:not(.sel) .radio svg { display: none; }
+  .add-child {
+    margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 9px;
+    padding: 14px; border-radius: 18px;
+    border: 2px dashed var(--ziggurat); color: var(--blue-chill);
+    font-weight: 700; font-size: 14.5px; cursor: pointer;
+    background: rgba(232,244,248,.4); transition: border-color .15s, background .15s;
+  }
+  .add-child:hover { border-color: var(--fountain-blue); background: var(--black-squeeze); }
+
+  /* hide scrollbars in the screen */
+  .scroll::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+
+  <div class="intro">
+    <div class="kicker">HeyLolo · Parent area · light-only</div>
+    <h1>Parent Dashboard — redesign</h1>
+    <p>
+      A calmer, flatter take on the parent home (P1). Same warm teal tide-pool brand and the
+      same content the real screen carries — child picker, weekly mood, current companion,
+      today's usage, today's insight and recent prompts — but hierarchy now comes from type and
+      whitespace instead of nested cards and chevrons everywhere. Three live states shown side by
+      side. <em>Monthly Review and Perspective Alignment are intentionally out of scope.</em>
+    </p>
+    <div class="legend">
+      <span><b>Tap</b> the child pill to open the switcher (state&nbsp;3).</span>
+      <span><b>Hover</b> a prompt to see the "Ask" affordance.</span>
+      <span>Numerals + stats set in <b>DM Sans</b>; everything else <b>Nunito</b>.</span>
+    </div>
+  </div>
+
+  <div class="rail">
+
+    <!-- ════════ STATE 1 — dashboard scroll (top) ════════ -->
+    <div class="device">
+      <div class="cap">
+        <div class="state">Dashboard — weekly mood</div>
+        <div class="sub">resting home, top of scroll</div>
+      </div>
+      <div class="phone">
+        <div class="screen" id="screen1">
+          <div class="statusbar">
+            <span class="num">9:41</span>
+            <span class="glyphs">
+              <!-- signal -->
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect x="0" y="7" width="3" height="4" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="currentColor"/></svg>
+              <!-- wifi -->
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M8 10.2 5.6 7.7a3.4 3.4 0 0 1 4.8 0L8 10.2Z" fill="currentColor"/><path d="M8 2.3c2.3 0 4.4.9 6 2.5l-1.3 1.3A6.6 6.6 0 0 0 8 4.2a6.6 6.6 0 0 0-4.7 1.9L2 4.8A8.5 8.5 0 0 1 8 2.3Z" fill="currentColor" opacity=".9"/></svg>
+              <!-- battery -->
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.6" fill="currentColor"/><rect x="22.5" y="4" width="1.6" height="4" rx=".8" fill="currentColor" opacity=".5"/></svg>
+            </span>
+          </div>
+
+          <div class="scroll"><div class="scroll-inner">
+
+            <div class="ph-head">
+              <div class="ph-greet">
+                <div class="small">Tuesday · today</div>
+                <h2>Hello, Anna</h2>
+              </div>
+              <div class="child-pill" onclick="openDrawer()">
+                <span class="av av-paul">P</span>
+                <span class="nm">Paul</span>
+                <span class="caret">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 5.5 7 9l3.5-3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </div>
+            </div>
+
+            <!-- weekly mood hero -->
+            <div class="week">
+              <div class="week-top">
+                <div class="mood-face">
+                  <svg width="26" height="20" viewBox="0 0 26 20" fill="none">
+                    <circle cx="8.5" cy="8" r="1.5" fill="#037B83"/><circle cx="17.5" cy="8" r="1.5" fill="#037B83"/>
+                    <path d="M8 12.5a5.5 5.5 0 0 0 10 0" stroke="#037B83" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="lbl">
+                  <div class="ek">Paul's week</div>
+                  <div class="hd">Happy and Calm</div>
+                </div>
+              </div>
+
+              <div class="chart">
+                <svg viewBox="0 0 300 88" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="fill1" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="#5EBCC1" stop-opacity=".22"/>
+                      <stop offset="1" stop-color="#5EBCC1" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M12,58 L60,40 L108,46 L156,26 L204,34 L252,20 L290,30 L290,88 L12,88 Z" fill="url(#fill1)"/>
+                  <path d="M12,58 L60,40 L108,46 L156,26 L204,34 L252,20 L290,30" fill="none" stroke="#0E8B93" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <g fill="#fff" stroke="#0E8B93" stroke-width="2.2">
+                    <circle cx="12" cy="58" r="3.4"/><circle cx="60" cy="40" r="3.4"/><circle cx="108" cy="46" r="3.4"/>
+                    <circle cx="156" cy="26" r="3.4"/><circle cx="204" cy="34" r="3.4"/>
+                    <circle cx="290" cy="30" r="3.4"/>
+                  </g>
+                  <circle cx="252" cy="20" r="4.6" fill="#037B83"/>
+                  <circle cx="252" cy="20" r="8.5" fill="#037B83" fill-opacity=".12"/>
+                </svg>
+                <div class="dow"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+              </div>
+
+              <div class="concern">
+                <span class="ic">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 8.3 6.6 11 12 4.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <div class="tx">
+                  <div class="t">No concerns detected</div>
+                  <div class="s">A steady, cheerful week of chats.</div>
+                </div>
+                <a class="link" onclick="return false" href="#">Recent chats</a>
+              </div>
+            </div>
+
+            <!-- companion / usage duo -->
+            <div class="duo">
+              <div class="tile">
+                <div class="ek">Current companion</div>
+                <div class="companion-row">
+                  <div class="mode-face">
+                    <svg width="20" height="16" viewBox="0 0 24 18" fill="none"><circle cx="9" cy="7" r="1.3" fill="#037B83"/><circle cx="15" cy="7" r="1.3" fill="#037B83"/><path d="M9 11a4 4 0 0 0 6 0" stroke="#037B83" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </div>
+                  <div>
+                    <div class="mode-name">Normal</div>
+                    <div class="mode-desc">Balanced buddy</div>
+                  </div>
+                </div>
+                <div class="foot">
+                  <a onclick="return false" href="#">Switch mode</a>
+                </div>
+              </div>
+
+              <div class="tile">
+                <div class="ek">Today's usage</div>
+                <div class="big num">1h 32<span class="u">m</span></div>
+                <div class="spark">
+                  <svg viewBox="0 0 120 30" preserveAspectRatio="none">
+                    <g fill="#C2DDDE"><rect x="2"  y="16" width="9" height="14" rx="2.5"/><rect x="16" y="10" width="9" height="20" rx="2.5"/><rect x="30" y="20" width="9" height="10" rx="2.5"/><rect x="44" y="6"  width="9" height="24" rx="2.5"/><rect x="58" y="13" width="9" height="17" rx="2.5"/></g>
+                    <rect x="72" y="2" width="9" height="28" rx="2.5" fill="#0E8B93"/>
+                  </svg>
+                </div>
+                <div class="foot">
+                  <a onclick="return false" href="#">Daily summary</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- insight -->
+            <div class="insight">
+              <div class="hd-row">
+                <span class="ic">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5a5 5 0 0 0-3 9c.5.4.8 1 .8 1.6v.4h4.4v-.4c0-.6.3-1.2.8-1.6a5 5 0 0 0-3-9Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.8 15.5h4.4M7.6 17h2.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                </span>
+                <h3>Today's insight</h3>
+              </div>
+              <p>Space and the universe came up several times this week. Paul is leaning curious and scientific — a great moment to feed that spark with a star map or a "why" question at dinner.</p>
+              <div class="chips">
+                <span class="chip">Space</span><span class="chip">Curiosity</span><span class="chip">Science</span>
+              </div>
+            </div>
+
+            <!-- recent prompts -->
+            <div class="prompts">
+              <div class="hd">Recent prompts</div>
+              <div class="prow">
+                <span class="ic">
+                  <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M2.5 4.5A2 2 0 0 1 4.5 2.5h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7l-3.5 3v-3a2 2 0 0 1-1-1.7v-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="tx">What was your favorite part of the day?</span>
+                <span class="send">Ask</span>
+              </div>
+              <div class="prow">
+                <span class="ic">
+                  <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M2.5 4.5A2 2 0 0 1 4.5 2.5h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7l-3.5 3v-3a2 2 0 0 1-1-1.7v-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="tx">Shall we do a quiz? What are you curious about?</span>
+                <span class="send">Ask</span>
+              </div>
+              <div class="prow">
+                <span class="ic">
+                  <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M2.5 4.5A2 2 0 0 1 4.5 2.5h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7l-3.5 3v-3a2 2 0 0 1-1-1.7v-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="tx">Do you need help with your math homework?</span>
+                <span class="send">Ask</span>
+              </div>
+            </div>
+
+          </div></div>
+
+          <div class="nav">
+            <div class="item on">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.5 11 3l8 6.5V18a1.5 1.5 0 0 1-1.5 1.5h-3v-5h-7v5h-3A1.5 1.5 0 0 1 3 18V9.5Z" fill="currentColor"/></svg>
+              <span>Home</span>
+            </div>
+            <div class="item">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 14a4.5 4.5 0 0 1-.6-9A5.5 5.5 0 0 1 15.3 6 4 4 0 0 1 16 14H5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+              <span>HeyLolo</span>
+            </div>
+            <div class="item">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h13A1.5 1.5 0 0 1 19 5.5v8A1.5 1.5 0 0 1 17.5 15H8l-4 3.5V15a1.5 1.5 0 0 1-1-1.5v-8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+              <span>Chat</span>
+            </div>
+            <div class="item">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M11 2.5v2M11 17.5v2M19.5 11h-2M4.5 11h-2M17 5l-1.4 1.4M6.4 15.6 5 17M17 17l-1.4-1.4M6.4 6.4 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              <span>Settings</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ STATE 2 — dashboard scrolled (insight + companion focus) ════════ -->
+    <div class="device">
+      <div class="cap">
+        <div class="state">Companion switched — Homework</div>
+        <div class="sub">tiles update, usage trending up</div>
+      </div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar">
+            <span class="num">9:41</span>
+            <span class="glyphs">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect x="0" y="7" width="3" height="4" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="currentColor"/></svg>
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M8 10.2 5.6 7.7a3.4 3.4 0 0 1 4.8 0L8 10.2Z" fill="currentColor"/><path d="M8 2.3c2.3 0 4.4.9 6 2.5l-1.3 1.3A6.6 6.6 0 0 0 8 4.2a6.6 6.6 0 0 0-4.7 1.9L2 4.8A8.5 8.5 0 0 1 8 2.3Z" fill="currentColor" opacity=".9"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.6" fill="currentColor"/><rect x="22.5" y="4" width="1.6" height="4" rx=".8" fill="currentColor" opacity=".5"/></svg>
+            </span>
+          </div>
+
+          <div class="scroll"><div class="scroll-inner">
+
+            <div class="ph-head">
+              <div class="ph-greet">
+                <div class="small">Switched companion</div>
+                <h2>Hello, Anna</h2>
+              </div>
+              <div class="child-pill">
+                <span class="av av-paul">P</span>
+                <span class="nm">Paul</span>
+                <span class="caret">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 5.5 7 9l3.5-3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </div>
+            </div>
+
+            <!-- companion / usage duo — companion now in Homework -->
+            <div class="duo">
+              <div class="tile" style="border:2px solid var(--fountain-blue);box-shadow:0 6px 22px var(--shadow);">
+                <div class="ek">Current companion</div>
+                <div class="companion-row">
+                  <div class="mode-face">
+                    <svg width="22" height="16" viewBox="0 0 24 18" fill="none"><path d="M2 6 12 2l10 4-10 4L2 6Z" stroke="#037B83" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 8v3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5V8" stroke="#037B83" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                  </div>
+                  <div>
+                    <div class="mode-name">Homework</div>
+                    <div class="mode-desc">Study tutor tone</div>
+                  </div>
+                </div>
+                <div class="foot">
+                  <a onclick="return false" href="#">Switch mode</a>
+                </div>
+              </div>
+
+              <div class="tile">
+                <div class="ek">Today's usage</div>
+                <div class="big num">2h 14<span class="u">m</span></div>
+                <div class="spark">
+                  <svg viewBox="0 0 120 30" preserveAspectRatio="none">
+                    <g fill="#C2DDDE"><rect x="2"  y="14" width="9" height="16" rx="2.5"/><rect x="16" y="9"  width="9" height="21" rx="2.5"/><rect x="30" y="17" width="9" height="13" rx="2.5"/><rect x="44" y="11" width="9" height="19" rx="2.5"/><rect x="58" y="6"  width="9" height="24" rx="2.5"/></g>
+                    <rect x="72" y="0" width="9" height="30" rx="2.5" fill="#0E8B93"/>
+                  </svg>
+                </div>
+                <div class="foot">
+                  <a onclick="return false" href="#">Daily summary</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- insight expanded with follow-up affordance -->
+            <div class="insight">
+              <div class="hd-row">
+                <span class="ic">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 1.5a5 5 0 0 0-3 9c.5.4.8 1 .8 1.6v.4h4.4v-.4c0-.6.3-1.2.8-1.6a5 5 0 0 0-3-9Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.8 15.5h4.4M7.6 17h2.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                </span>
+                <h3>Today's insight</h3>
+              </div>
+              <p>Lots of fraction questions today — Paul asked HeyLolo to re-explain "halves and quarters" twice. In Homework mode replies stay short and Socratic, so he works it out rather than getting the answer handed over.</p>
+              <div class="chips">
+                <span class="chip">Math</span><span class="chip">Fractions</span><span class="chip">Persistence</span>
+              </div>
+            </div>
+
+            <!-- recent prompts -->
+            <div class="prompts">
+              <div class="hd">Recent prompts</div>
+              <div class="prow">
+                <span class="ic">
+                  <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M2.5 4.5A2 2 0 0 1 4.5 2.5h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7l-3.5 3v-3a2 2 0 0 1-1-1.7v-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="tx">Can you quiz me on my times tables?</span>
+                <span class="send">Ask</span>
+              </div>
+              <div class="prow">
+                <span class="ic">
+                  <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M2.5 4.5A2 2 0 0 1 4.5 2.5h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7l-3.5 3v-3a2 2 0 0 1-1-1.7v-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="tx">Why is half plus a quarter three quarters?</span>
+                <span class="send">Ask</span>
+              </div>
+              <div class="prow">
+                <span class="ic">
+                  <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M2.5 4.5A2 2 0 0 1 4.5 2.5h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7l-3.5 3v-3a2 2 0 0 1-1-1.7v-5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="tx">Tell me a fun fact about space.</span>
+                <span class="send">Ask</span>
+              </div>
+            </div>
+
+          </div></div>
+
+          <div class="nav">
+            <div class="item on">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.5 11 3l8 6.5V18a1.5 1.5 0 0 1-1.5 1.5h-3v-5h-7v5h-3A1.5 1.5 0 0 1 3 18V9.5Z" fill="currentColor"/></svg>
+              <span>Home</span>
+            </div>
+            <div class="item">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 14a4.5 4.5 0 0 1-.6-9A5.5 5.5 0 0 1 15.3 6 4 4 0 0 1 16 14H5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+              <span>HeyLolo</span>
+            </div>
+            <div class="item">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h13A1.5 1.5 0 0 1 19 5.5v8A1.5 1.5 0 0 1 17.5 15H8l-4 3.5V15a1.5 1.5 0 0 1-1-1.5v-8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+              <span>Chat</span>
+            </div>
+            <div class="item">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M11 2.5v2M11 17.5v2M19.5 11h-2M4.5 11h-2M17 5l-1.4 1.4M6.4 15.6 5 17M17 17l-1.4-1.4M6.4 6.4 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              <span>Settings</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ STATE 3 — child switcher drawer open ════════ -->
+    <div class="device">
+      <div class="cap">
+        <div class="state">Child switcher — drawer open</div>
+        <div class="sub">tap the pill to switch child</div>
+      </div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar">
+            <span class="num">9:41</span>
+            <span class="glyphs">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect x="0" y="7" width="3" height="4" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="6" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="8.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="currentColor"/></svg>
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M8 10.2 5.6 7.7a3.4 3.4 0 0 1 4.8 0L8 10.2Z" fill="currentColor"/><path d="M8 2.3c2.3 0 4.4.9 6 2.5l-1.3 1.3A6.6 6.6 0 0 0 8 4.2a6.6 6.6 0 0 0-4.7 1.9L2 4.8A8.5 8.5 0 0 1 8 2.3Z" fill="currentColor" opacity=".9"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.6" fill="currentColor"/><rect x="22.5" y="4" width="1.6" height="4" rx=".8" fill="currentColor" opacity=".5"/></svg>
+            </span>
+          </div>
+
+          <!-- dimmed dashboard behind -->
+          <div class="scroll"><div class="scroll-inner" style="opacity:.5;">
+            <div class="ph-head">
+              <div class="ph-greet">
+                <div class="small">Tuesday · today</div>
+                <h2>Hello, Anna</h2>
+              </div>
+              <div class="child-pill">
+                <span class="av av-paul">P</span>
+                <span class="nm">Paul</span>
+                <span class="caret">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 8.5 7 5l3.5 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="week">
+              <div class="week-top">
+                <div class="mood-face">
+                  <svg width="26" height="20" viewBox="0 0 26 20" fill="none"><circle cx="8.5" cy="8" r="1.5" fill="#037B83"/><circle cx="17.5" cy="8" r="1.5" fill="#037B83"/><path d="M8 12.5a5.5 5.5 0 0 0 10 0" stroke="#037B83" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </div>
+                <div class="lbl"><div class="ek">Paul's week</div><div class="hd">Happy and Calm</div></div>
+              </div>
+            </div>
+          </div></div>
+
+          <!-- drawer scrim -->
+          <div class="scrim">
+            <div class="drawer">
+              <div class="grab"></div>
+              <div class="drawer-hd">
+                <h3>Switch child</h3>
+                <div class="x" onclick="closeDrawer()">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+
+              <div class="crow sel">
+                <span class="av av-paul">P</span>
+                <div class="meta"><div class="nm">Paul</div><div class="ag num">Age 8</div></div>
+                <span class="radio"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 6.7 5.3 9 10 3.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+
+              <div class="crow">
+                <span class="av av-mia">M</span>
+                <div class="meta"><div class="nm">Mia</div><div class="ag num">Age 6</div></div>
+                <span class="radio"></span>
+              </div>
+
+              <div class="crow">
+                <span class="av av-leo">L</span>
+                <div class="meta"><div class="nm">Leo</div><div class="ag num">Age 10</div></div>
+                <span class="radio"></span>
+              </div>
+
+              <div class="add-child">
+                <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 3.5v10M3.5 8.5h10" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+                Add another child
+              </div>
+            </div>
+          </div>
+
+          <div class="nav">
+            <div class="item on">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9.5 11 3l8 6.5V18a1.5 1.5 0 0 1-1.5 1.5h-3v-5h-7v5h-3A1.5 1.5 0 0 1 3 18V9.5Z" fill="currentColor"/></svg>
+              <span>Home</span>
+            </div>
+            <div class="item">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 14a4.5 4.5 0 0 1-.6-9A5.5 5.5 0 0 1 15.3 6 4 4 0 0 1 16 14H5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+              <span>HeyLolo</span>
+            </div>
+            <div class="item">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h13A1.5 1.5 0 0 1 19 5.5v8A1.5 1.5 0 0 1 17.5 15H8l-4 3.5V15a1.5 1.5 0 0 1-1-1.5v-8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+              <span>Chat</span>
+            </div>
+            <div class="item">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M11 2.5v2M11 17.5v2M19.5 11h-2M4.5 11h-2M17 5l-1.4 1.4M6.4 15.6 5 17M17 17l-1.4-1.4M6.4 6.4 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              <span>Settings</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // state 1 pill opens the state-3 drawer visually by scrolling to it; also a live in-screen
+    // toggle so the leftmost device demonstrates the interaction without leaving the screen.
+    const s1 = document.getElementById('screen1');
+    let liveDrawer = null;
+    function openDrawer() {
+      if (liveDrawer) return;
+      liveDrawer = document.createElement('div');
+      liveDrawer.className = 'scrim';
+      liveDrawer.style.opacity = '0';
+      liveDrawer.style.transition = 'opacity .2s ease';
+      liveDrawer.innerHTML = `
+        <div class="drawer" style="transform:translateY(16px);transition:transform .22s ease;">
+          <div class="grab"></div>
+          <div class="drawer-hd">
+            <h3>Switch child</h3>
+            <div class="x" onclick="closeDrawer()">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+          <div class="crow sel"><span class="av av-paul">P</span><div class="meta"><div class="nm">Paul</div><div class="ag num">Age 8</div></div><span class="radio"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 6.7 5.3 9 10 3.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+          <div class="crow" onclick="pickChild(this,'Mia')"><span class="av av-mia">M</span><div class="meta"><div class="nm">Mia</div><div class="ag num">Age 6</div></div><span class="radio"></span></div>
+          <div class="crow" onclick="pickChild(this,'Leo')"><span class="av av-leo">L</span><div class="meta"><div class="nm">Leo</div><div class="ag num">Age 10</div></div><span class="radio"></span></div>
+          <div class="add-child"><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 3.5v10M3.5 8.5h10" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg> Add another child</div>
+        </div>`;
+      liveDrawer.addEventListener('click', e => { if (e.target === liveDrawer) closeDrawer(); });
+      s1.appendChild(liveDrawer);
+      requestAnimationFrame(() => {
+        liveDrawer.style.opacity = '1';
+        liveDrawer.querySelector('.drawer').style.transform = 'translateY(0)';
+      });
+    }
+    function closeDrawer() {
+      if (!liveDrawer) return;
+      const d = liveDrawer; liveDrawer = null;
+      d.style.opacity = '0';
+      setTimeout(() => d.remove(), 200);
+    }
+    function pickChild(row, name) {
+      row.parentElement.querySelectorAll('.crow').forEach(r => {
+        r.classList.remove('sel');
+        r.querySelector('.radio').innerHTML = '';
+      });
+      row.classList.add('sel');
+      row.querySelector('.radio').innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3 6.7 5.3 9 10 3.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      setTimeout(closeDrawer, 260);
+    }
+  </script>
+</body>
+</html>
