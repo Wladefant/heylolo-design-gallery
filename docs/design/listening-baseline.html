@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Listening — faithful recreation · HeyLoLo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background:#eaf1f1;
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;
+    padding:40px 16px 64px;color:#28484c;
+  }
+  .pagehead{text-align:center;margin-bottom:24px;max-width:560px;}
+  .pagehead .eyebrow{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}
+  .pagehead h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;letter-spacing:-.01em;}
+  .pagehead p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}
+  .pagehead code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+
+  /* ───────── device frame ───────── */
+  .phone{
+    width:340px;height:724px;border-radius:52px;
+    background:#0c2f33;padding:11px;
+    box-shadow:0 30px 70px rgba(11,60,64,.30), 0 4px 14px rgba(11,60,64,.18);
+    position:relative;
+  }
+  .screen{
+    width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;
+    /* the real mint wash — lighter at top, cooler mint toward the listening disc */
+    background:
+      radial-gradient(130% 52% at 50% 88%, rgba(255,255,255,.72), rgba(255,255,255,0) 58%),
+      linear-gradient(180deg,#E9F5F2 0%, #DEF1ED 42%, #CFEAE6 78%, #C6E5E1 100%);
+  }
+
+  /* status bar */
+  .statusbar{height:48px;display:flex;align-items:center;justify-content:space-between;padding:14px 26px 0;}
+  .statusbar .time{font-weight:700;font-size:15px;color:#173c40;letter-spacing:.2px;}
+  .statusbar .ind{display:flex;align-items:center;gap:6px;color:#173c40;}
+
+  /* header */
+  .header{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 0;}
+  .voice-pill{
+    background:#fff;border-radius:999px;padding:9px 17px;
+    font-weight:700;font-size:14.5px;color:#0E7077;
+    box-shadow:0 5px 16px rgba(3,123,131,.12);
+  }
+  .close-btn{
+    width:38px;height:38px;border-radius:50%;background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 5px 16px rgba(3,123,131,.12);
+  }
+
+  /* conversation */
+  .convo{padding:22px 18px 0;display:flex;flex-direction:column;}
+  .bubble-user{
+    align-self:flex-end;max-width:80%;
+    background:linear-gradient(180deg,#37999B 0%, #2A888C 100%);
+    color:#fff;font-weight:600;font-size:16px;line-height:1.36;
+    padding:12px 16px;border-radius:22px 22px 8px 22px;
+    box-shadow:0 8px 20px rgba(20,120,124,.20);
+  }
+  .cursor{display:inline-block;width:2px;height:17px;background:#dff3f2;margin-left:1px;
+    vertical-align:-3px;animation:blink 1.05s steps(1) infinite;border-radius:1px;}
+  @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+
+  /* listening cluster pinned to lower third */
+  .listening{position:absolute;left:0;right:0;bottom:34px;display:flex;flex-direction:column;align-items:center;}
+  .listening .label{font-weight:700;font-size:15px;color:#1C8488;letter-spacing:.2px;margin-bottom:30px;}
+
+  .disc-stack{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center;}
+  .ring{position:absolute;border-radius:50%;border:1.5px solid;}
+  .ring.r1{width:150px;height:150px;border-color:rgba(255,255,255,.78);}
+  .ring.r2{width:222px;height:222px;border-color:rgba(255,255,255,.5);}
+  .ring.r3{width:300px;height:300px;border-color:rgba(255,255,255,.32);}
+  .disc-glow{position:absolute;width:140px;height:140px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.85),rgba(255,255,255,0) 68%);}
+  .disc{width:92px;height:92px;object-fit:contain;position:relative;z-index:2;
+    filter:drop-shadow(0 16px 22px rgba(4,86,92,.30));}
+  .disc-reflection{position:absolute;bottom:96px;width:78px;height:14px;border-radius:50%;
+    background:radial-gradient(circle,rgba(7,90,96,.22),rgba(7,90,96,0) 70%);z-index:1;}
+
+  /* flanking controls, vertically centered on the disc */
+  .ctrl{position:absolute;top:50%;transform:translateY(-50%);
+    width:50px;height:50px;border-radius:50%;background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px rgba(3,123,131,.14);}
+  .ctrl.left{left:30px;}
+  .ctrl.right{right:30px;}
+  .ctrl svg{width:23px;height:23px;}
+
+  /* home indicator */
+  .home-ind{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);
+    width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.32);}
+
+  .srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:380px;line-height:1.5;}
+  .srccite b{color:#0E8B93;}
+</style>
+</head>
+<body>
+  <div class="pagehead">
+    <div class="eyebrow">Faithful recreation · baseline</div>
+    <h1>Voice — Listening</h1>
+    <p>Rebuilt to match the saved Figma screen <code>voice-listening.png</code> 1:1 — real mint wash, the real mesh mic disc asset, the teal user bubble, soft concentric rings, and the + / explorer controls. This is the accurate baseline; redesign comes on top of it.</p>
+  </div>
+
+  <div class="phone">
+    <div class="screen">
+
+      <div class="statusbar">
+        <span class="time">9:41</span>
+        <span class="ind">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <svg width="26" height="13" viewBox="0 0 26 13" fill="none"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
+        </span>
+      </div>
+
+      <div class="header">
+        <div class="voice-pill">HeyLoLo Voice</div>
+        <div class="close-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="#5A8994" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <div class="convo">
+        <div class="bubble-user">HeyLoLo, why do onio<span class="cursor"></span></div>
+      </div>
+
+      <div class="listening">
+        <div class="label">I'm listening...</div>
+        <div class="disc-stack">
+          <span class="ring r3"></span>
+          <span class="ring r2"></span>
+          <span class="ring r1"></span>
+          <span class="disc-glow"></span>
+          <span class="disc-reflection"></span>
+          <img class="disc" src="assets/disc-mesh.png" alt="listening" />
+
+          <div class="ctrl left">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 5V19" stroke="#0E8B93" stroke-width="2" stroke-linecap="round"/><path d="M5 12H19" stroke="#0E8B93" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="ctrl right">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M22.24 14.24c-.07-.18-.14-.35-.22-.51l-3.9-8.87a2.5 2.5 0 0 0-.16-.24 2.9 2.9 0 0 0-4.26 0 .9.9 0 0 0-.22.53V7.5h-3V5.16a.86.86 0 0 0-.24-.53 2.9 2.9 0 0 0-4.26 0 .9.9 0 0 0-.16.23l-3.9 8.87c-.08.16-.16.33-.22.51a3.75 3.75 0 1 0 7.24 1.51V9h3v6.75a3.75 3.75 0 1 0 7.26-1.51ZM6 18.75A3 3 0 1 1 9 15.75 3 3 0 0 1 6 18.75Zm12 0a3 3 0 1 1 3-3 3 3 0 0 1-3 3Z" fill="#0E8B93"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-ind"></div>
+    </div>
+  </div>
+
+  <p class="srccite">Source: <b>docs/_session/voice-mode-listening-rebuild/screens/voice-listening.png</b> · disc asset <b>soundwave-sphere.png</b> · tokens from <b>palette.ts</b> · font Nunito.</p>
+</body>
+</html>
