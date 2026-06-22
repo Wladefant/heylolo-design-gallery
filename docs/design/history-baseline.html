@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conversation History — faithful recreation · HeyLoLo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+  .pagehead{text-align:center;margin-bottom:24px;max-width:560px;}
+  .pagehead .eyebrow{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}
+  .pagehead h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}
+  .pagehead p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}
+  .pagehead code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+  .phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30),0 4px 14px rgba(11,60,64,.18);position:relative;}
+  .screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:linear-gradient(180deg,#EAF5F2 0%,#E4F2EE 100%);}
+  .statusbar{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;}
+  .statusbar .time{font-weight:700;font-size:15px;color:#173c40;}.statusbar .ind{display:flex;align-items:center;gap:6px;}
+  .scroll{flex:1;overflow:hidden;padding:6px 18px 0;}
+  h2.title{font-weight:800;font-size:21px;color:#176E73;margin:4px 2px 14px;}
+  .chips{display:flex;gap:9px;margin-bottom:16px;}
+  .chip{background:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px;color:#3C9094;box-shadow:0 3px 9px rgba(20,90,95,.06);}
+  .chip.active{background:#1E8E8E;color:#fff;}
+  .card{background:#fff;border-radius:20px;padding:18px;box-shadow:0 10px 26px rgba(20,90,95,.09);}
+  .card .ct{font-weight:800;font-size:17px;color:#176E73;}
+  .meta{display:flex;align-items:center;gap:8px;font-weight:600;font-size:12.5px;color:#8aa7aa;margin-top:5px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:#B98BD9;}
+  .desc{font-weight:500;font-size:14.5px;line-height:1.45;color:#5e7c7f;margin-top:11px;}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+  .tag{background:#E6F2F1;border-radius:999px;padding:6px 12px;font-weight:700;font-size:12px;color:#2E8C90;}
+  .fuq{font-weight:700;font-size:13.5px;color:#3f5e62;margin-top:16px;}
+  .q{display:flex;gap:9px;margin-top:10px;font-weight:500;font-size:13.5px;line-height:1.4;color:#5e7c7f;}
+  .q .qd{width:7px;height:7px;border-radius:50%;background:#2E8C90;margin-top:6px;flex:none;}
+  .vt{font-weight:800;font-size:13.5px;color:#1B7F84;margin-top:16px;display:flex;align-items:center;gap:5px;}
+  .tabbar-dark{position:absolute;left:14px;right:14px;bottom:12px;height:62px;background:#3C4C4F;border-radius:24px;display:flex;align-items:center;justify-content:space-around;box-shadow:0 12px 30px rgba(11,40,42,.32);}
+  .tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:700;font-size:10.5px;color:#C7D5D6;}
+  .tb.active{color:#5FD6D6;}.tb svg{width:21px;height:21px;}
+  .home-ind{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:120px;height:5px;border-radius:3px;background:rgba(255,255,255,.5);}
+  .srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:400px;line-height:1.5;}.srccite b{color:#0E8B93;}
+</style>
+</head>
+<body>
+  <div class="pagehead"><div class="eyebrow">Faithful recreation · baseline</div><h1>Conversation History</h1>
+  <p>Rebuilt to match the live app (TestFlight <code>IMG_0113</code>) — filter chips, the review card with tags + suggested follow-ups + "View full transcript", the dark tab bar.</p></div>
+  <div class="phone"><div class="screen">
+    <div class="statusbar"><span class="time">9:41</span><span class="ind">
+      <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
+    </span></div>
+    <div class="scroll">
+      <h2 class="title">Conversation History</h2>
+      <div class="chips"><span class="chip active">All</span><span class="chip">Ongoing</span><span class="chip">Flagged</span><span class="chip">Creative</span></div>
+      <div class="card">
+        <div class="ct">Once upon a time, a tiny green d…</div>
+        <div class="meta">20:08 <span class="dot"></span> Creative</div>
+        <div class="desc">Wladimir shared that he is 5 years old and had fun creating a picture of a friendly red dragon and a princess, adding the detail that they are enjoying delicious chocolate ice cream on the beach.</div>
+        <div class="tags"><span class="tag">Dragons</span><span class="tag">Imagination</span><span class="tag">Princesses</span><span class="tag">German Language</span></div>
+        <div class="fuq">Suggested follow-up questions:</div>
+        <div class="q"><span class="qd"></span>What does the picture of the red dragon and the princess look like?</div>
+        <div class="q"><span class="qd"></span>Do the dragon and the princess have chocolate ice cream on their noses?</div>
+        <div class="q"><span class="qd"></span>Would you like to draw your own picture of the red dragon and the princess?</div>
+        <div class="vt">View full transcript ›</div>
+      </div>
+    </div>
+    <div class="tabbar-dark">
+      <div class="tb"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7" stroke="#C7D5D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9h14v-9" stroke="#C7D5D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Home</div>
+      <div class="tb"><svg viewBox="0 0 24 24" fill="none"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1.4A3.5 3.5 0 0 1 17 18H7Z" stroke="#C7D5D6" stroke-width="2" stroke-linejoin="round"/></svg>HeyLoLo</div>
+      <div class="tb active"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#5FD6D6" stroke-width="2" stroke-linejoin="round"/></svg>Chat</div>
+      <div class="tb"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#C7D5D6" stroke-width="2"/><path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2M6.7 6.7l1.4 1.4M15.9 15.9l1.4 1.4M17.3 6.7l-1.4 1.4M8.1 15.9l-1.4 1.4" stroke="#C7D5D6" stroke-width="2" stroke-linecap="round"/></svg>Settings</div>
+    </div>
+    <div class="home-ind"></div>
+  </div></div>
+  <p class="srccite">Source: live TestFlight app <b>IMG_0113</b> · tokens from <b>palette.ts</b> · font Nunito.</p>
+</body>
+</html>

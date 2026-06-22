@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chat — faithful recreation · HeyLoLo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+  .pagehead{text-align:center;margin-bottom:24px;max-width:560px;}
+  .pagehead .eyebrow{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}
+  .pagehead h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}
+  .pagehead p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}
+  .pagehead code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+  .phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30),0 4px 14px rgba(11,60,64,.18);position:relative;}
+  .screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:linear-gradient(180deg,#E9F4F1 0%, #E0F1EC 50%, #D6ECE7 100%);}
+  .statusbar{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;}
+  .statusbar .time{font-weight:700;font-size:15px;color:#173c40;}
+  .statusbar .ind{display:flex;align-items:center;gap:6px;}
+  .header{display:flex;align-items:center;gap:8px;padding:8px 16px 4px;}
+  .circ{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(3,123,131,.10);flex:none;}
+  .chatpill{background:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:14.5px;color:#0E7077;box-shadow:0 4px 12px rgba(3,123,131,.10);}
+  .spacer{flex:1;}
+  .convo{flex:1;overflow:hidden;padding:14px 16px 0;display:flex;flex-direction:column;gap:14px;}
+  .user{align-self:flex-end;max-width:82%;background:linear-gradient(180deg,#2E9498,#23868A);color:#fff;font-weight:600;font-size:15.5px;line-height:1.38;padding:13px 16px;border-radius:20px 20px 6px 20px;box-shadow:0 8px 18px rgba(20,120,124,.18);}
+  .bot{align-self:flex-start;max-width:88%;background:#fff;color:#3f5e62;font-weight:500;font-size:15.5px;line-height:1.46;padding:16px 17px;border-radius:8px 22px 22px 22px;box-shadow:0 10px 24px rgba(20,90,95,.10);}
+  .bot b{color:#23696e;font-weight:800;}
+  .bot p{margin-bottom:12px;}.bot p:last-child{margin:0;}
+  .composer{flex:none;padding:6px 0 0;display:flex;flex-direction:column;align-items:center;margin-bottom:26px;position:relative;}
+  .disc-row{display:flex;align-items:center;justify-content:center;gap:54px;width:100%;}
+  .mini{width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(3,123,131,.12);}
+  .mini svg{width:22px;height:22px;}
+  .disc-wrap{width:86px;height:86px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.7),rgba(255,255,255,0) 70%);display:flex;align-items:center;justify-content:center;}
+  .disc-wrap img{width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 10px 16px rgba(4,86,92,.26));}
+  .ortype{margin-top:8px;font-weight:600;font-size:13.5px;color:#5b9296;display:flex;align-items:center;gap:6px;}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.22);}
+  .srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:400px;line-height:1.5;}
+  .srccite b{color:#0E8B93;}
+</style>
+</head>
+<body>
+  <div class="pagehead">
+    <div class="eyebrow">Faithful recreation · baseline</div>
+    <h1>Kid Chat</h1>
+    <p>Rebuilt to match the live app (TestFlight <code>IMG_0110</code>) — teal user bubble, white assistant card with bold inline, the real mesh disc composer with + / explorer / "or type".</p>
+  </div>
+  <div class="phone"><div class="screen">
+    <div class="statusbar"><span class="time">9:41</span><span class="ind">
+      <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
+    </span></div>
+    <div class="header">
+      <div class="circ"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#3C9094" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="chatpill">HeyLoLo Chat</div>
+      <div class="spacer"></div>
+      <div class="circ"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" stroke="#3C9094" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 4v4h4" stroke="#3C9094" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v4l3 2" stroke="#3C9094" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="circ"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5" r="1.6" fill="#3C9094"/><circle cx="12" cy="12" r="1.6" fill="#3C9094"/><circle cx="12" cy="19" r="1.6" fill="#3C9094"/></svg></div>
+    </div>
+    <div class="convo">
+      <div class="user">If you could invent something to help people, what would it be and why?</div>
+      <div class="bot"><p>I would invent the <b>Magic Trash-to-Art Maker</b>!</p><p>You would put plastic bottles and old paper inside, and it would instantly turn them into beautiful art supplies like colorful clay and shiny paints. It would keep our oceans clean and help everyone make beautiful masterpieces!</p><p>What is your favorite thing to draw when you make art, Wladimir?</p></div>
+    </div>
+    <div class="composer">
+      <div class="disc-row">
+        <div class="mini"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="#0E8B93" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="disc-wrap"><img src="assets/disc-mesh.png" alt=""></div>
+        <div class="mini"><svg viewBox="0 0 24 24" fill="none"><path d="M22.24 14.24c-.07-.18-.14-.35-.22-.51l-3.9-8.87a2.5 2.5 0 0 0-.16-.24 2.9 2.9 0 0 0-4.26 0 .9.9 0 0 0-.22.53V7.5h-3V5.16a.86.86 0 0 0-.24-.53 2.9 2.9 0 0 0-4.26 0 .9.9 0 0 0-.16.23l-3.9 8.87c-.08.16-.16.33-.22.51a3.75 3.75 0 1 0 7.24 1.51V9h3v6.75a3.75 3.75 0 1 0 7.26-1.51ZM6 18.75A3 3 0 1 1 9 15.75 3 3 0 0 1 6 18.75Zm12 0a3 3 0 1 1 3-3 3 3 0 0 1-3 3Z" fill="#0E8B93"/></svg></div>
+      </div>
+      <div class="ortype"><svg width="18" height="14" viewBox="0 0 24 18" fill="none"><rect x="1" y="2" width="22" height="14" rx="3" stroke="#5b9296" stroke-width="1.6"/><path d="M5 6h.01M9 6h.01M13 6h.01M17 6h.01M5 10h.01M9 10h.01M13 10h.01M8 13h8" stroke="#5b9296" stroke-width="1.6" stroke-linecap="round"/></svg> or type</div>
+    </div>
+    <div class="home-ind"></div>
+  </div></div>
+  <p class="srccite">Source: live TestFlight app <b>IMG_0110</b> · disc <b>soundwave-sphere.png</b> · tokens from <b>palette.ts</b> · font Nunito.</p>
+</body>
+</html>
