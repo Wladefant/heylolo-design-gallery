@@ -3,111 +3,74 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Listening — faithful recreation · HeyLoLo</title>
+<title>Listening — faithful recreation + audio-reactive waves · HeyLoLo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{
-    font-family:'Nunito',sans-serif;
-    background:#eaf1f1;
-    min-height:100vh;
-    display:flex;flex-direction:column;align-items:center;
-    padding:40px 16px 64px;color:#28484c;
-  }
-  .pagehead{text-align:center;margin-bottom:24px;max-width:560px;}
+  body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+  .pagehead{text-align:center;margin-bottom:24px;max-width:580px;}
   .pagehead .eyebrow{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}
-  .pagehead h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;letter-spacing:-.01em;}
+  .pagehead h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}
   .pagehead p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}
   .pagehead code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+  .pagehead b{color:#0E8B93;}
 
-  /* ───────── device frame ───────── */
-  .phone{
-    width:340px;height:724px;border-radius:52px;
-    background:#0c2f33;padding:11px;
-    box-shadow:0 30px 70px rgba(11,60,64,.30), 0 4px 14px rgba(11,60,64,.18);
-    position:relative;
-  }
-  .screen{
-    width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;
-    /* the real mint wash — lighter at top, cooler mint toward the listening disc */
-    background:radial-gradient(130% 52% at 50% 84%,rgba(255,255,255,.5),rgba(255,255,255,0) 56%),linear-gradient(180deg,#C3E6EA 0%,#DCF1F1 46%,#A9E0E7 100%);
-  }
+  .phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;
+    box-shadow:0 30px 70px rgba(11,60,64,.30),0 4px 14px rgba(11,60,64,.18);position:relative;}
+  /* real background — aqua at top fading to near-white (sampled from Figma) */
+  .screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;
+    background:radial-gradient(130% 52% at 50% 84%,rgba(255,255,255,.55),rgba(255,255,255,0) 56%),linear-gradient(180deg,#C3E6EA 0%,#DCF1F1 46%,#A9E0E7 100%);}
 
-  /* status bar */
-  .statusbar{height:48px;display:flex;align-items:center;justify-content:space-between;padding:14px 26px 0;}
-  .statusbar .time{font-weight:700;font-size:15px;color:#173c40;letter-spacing:.2px;}
-  .statusbar .ind{display:flex;align-items:center;gap:6px;color:#173c40;}
+  .statusbar{position:relative;z-index:6;height:48px;display:flex;align-items:center;justify-content:space-between;padding:14px 26px 0;}
+  .statusbar .time{font-weight:700;font-size:15px;color:#173c40;}
+  .statusbar .ind{display:flex;align-items:center;gap:6px;}
 
-  /* header */
-  .header{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 0;}
-  .voice-pill{
-    background:#fff;border-radius:999px;padding:9px 17px;
-    font-weight:700;font-size:14.5px;color:#0E7077;
-    box-shadow:0 5px 16px rgba(3,123,131,.12);
-  }
-  .close-btn{
-    width:38px;height:38px;border-radius:50%;background:#fff;
-    display:flex;align-items:center;justify-content:center;
-    box-shadow:0 5px 16px rgba(3,123,131,.12);
-  }
+  .header{position:relative;z-index:6;display:flex;align-items:center;justify-content:space-between;padding:6px 18px 0;}
+  .voice-pill{background:#fff;border-radius:999px;padding:9px 17px;font-weight:700;font-size:14.5px;color:#0E7077;box-shadow:0 5px 16px rgba(3,123,131,.12);}
+  .close-btn{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 16px rgba(3,123,131,.12);}
 
-  /* conversation */
-  .convo{padding:22px 18px 0;display:flex;flex-direction:column;}
-  .bubble-user{
-    align-self:flex-end;max-width:80%;
-    background:linear-gradient(180deg,#37999B 0%, #2A888C 100%);
-    color:#fff;font-weight:600;font-size:16px;line-height:1.36;
-    padding:12px 16px;border-radius:22px 22px 8px 22px;
-    box-shadow:0 8px 20px rgba(20,120,124,.20);
-  }
-  .cursor{display:inline-block;width:2px;height:17px;background:#dff3f2;margin-left:1px;
-    vertical-align:-3px;animation:blink 1.05s steps(1) infinite;border-radius:1px;}
+  .convo{position:relative;z-index:6;padding:22px 18px 0;display:flex;flex-direction:column;}
+  .bubble-user{align-self:flex-end;max-width:80%;background:linear-gradient(180deg,#37999B 0%, #2A888C 100%);color:#fff;font-weight:600;font-size:16px;line-height:1.36;padding:12px 16px;border-radius:22px 22px 8px 22px;box-shadow:0 8px 20px rgba(20,120,124,.20);}
+  .cursor{display:inline-block;width:2px;height:17px;background:#dff3f2;margin-left:1px;vertical-align:-3px;animation:blink 1.05s steps(1) infinite;border-radius:1px;}
   @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
 
-  /* listening cluster pinned to lower third */
-  .listening{position:absolute;left:0;right:0;bottom:34px;display:flex;flex-direction:column;align-items:center;}
-  .listening .label{font-weight:700;font-size:15px;color:#1C8488;letter-spacing:.2px;margin-bottom:30px;}
+  /* reactive halo canvas — sits over the bg, under the disc + controls */
+  .wavecanvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;}
 
-  .disc-stack{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center;}
-  .ring{position:absolute;border-radius:50%;border:1.5px solid;}
-  .ring.r1{width:150px;height:150px;border-color:rgba(255,255,255,.78);}
-  .ring.r2{width:222px;height:222px;border-color:rgba(255,255,255,.5);}
-  .ring.r3{width:300px;height:300px;border-color:rgba(255,255,255,.32);}
-  .disc-glow{position:absolute;width:140px;height:140px;border-radius:50%;
-    background:radial-gradient(circle,rgba(255,255,255,.85),rgba(255,255,255,0) 68%);}
-  .disc{width:92px;height:92px;object-fit:contain;position:relative;z-index:2;
-    filter:drop-shadow(0 16px 22px rgba(4,86,92,.30));}
-  .disc-reflection{position:absolute;bottom:96px;width:78px;height:14px;border-radius:50%;
-    background:radial-gradient(circle,rgba(7,90,96,.22),rgba(7,90,96,0) 70%);z-index:1;}
+  .listening{position:absolute;left:0;right:0;bottom:36px;z-index:5;display:flex;flex-direction:column;align-items:center;}
+  .listening .label{font-weight:700;font-size:15px;color:#1C8488;letter-spacing:.2px;margin-bottom:34px;display:inline-flex;align-items:center;gap:9px;}
+  .listening .label .pip{width:7px;height:7px;border-radius:50%;background:#5EBCC1;box-shadow:0 0 0 0 #5EBCC1;animation:pip 1.6s ease-out infinite;}
+  @keyframes pip{0%{box-shadow:0 0 0 0 rgba(94,188,193,.5)}70%{box-shadow:0 0 0 8px rgba(94,188,193,0)}100%{box-shadow:0 0 0 0 rgba(94,188,193,0)}}
 
-  /* flanking controls, vertically centered on the disc */
-  .ctrl{position:absolute;top:50%;transform:translateY(-50%);
-    width:50px;height:50px;border-radius:50%;background:#fff;
-    display:flex;align-items:center;justify-content:center;
-    box-shadow:0 6px 16px rgba(3,123,131,.14);}
-  .ctrl.left{left:30px;}
-  .ctrl.right{right:30px;}
+  .disc-stack{position:relative;width:240px;height:120px;display:flex;align-items:center;justify-content:center;}
+  .disc{width:92px;height:92px;object-fit:contain;position:relative;z-index:2;cursor:pointer;
+    filter:drop-shadow(0 16px 22px rgba(4,86,92,.30));transition:transform .12s ease-out;}
+
+  .ctrl{position:absolute;top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(3,123,131,.14);}
+  .ctrl.left{left:6px;}.ctrl.right{right:6px;}
   .ctrl svg{width:23px;height:23px;}
 
-  /* home indicator */
-  .home-ind{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);
-    width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.32);}
+  .michint{margin-top:14px;font-weight:700;font-size:12px;color:#3C9094;opacity:.85;}
+  .michint.live{color:#0E8B93;}
 
-  .srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:380px;line-height:1.5;}
+  .home-ind{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.32);z-index:6;}
+
+  .srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:440px;line-height:1.5;}
   .srccite b{color:#0E8B93;}
 </style>
 </head>
 <body>
   <div class="pagehead">
-    <div class="eyebrow">Faithful recreation · baseline</div>
+    <div class="eyebrow">Faithful recreation · audio-reactive</div>
     <h1>Voice — Listening</h1>
-    <p>Rebuilt to match the saved Figma screen <code>voice-listening.png</code> 1:1 — real mint wash, the real mesh mic disc asset, the teal user bubble, soft concentric rings, and the + / explorer controls. This is the accurate baseline; redesign comes on top of it.</p>
+    <p>The 1:1 Figma chrome (real mesh disc, aqua wash, teal bubble) with the <b>Voiceprint-halo</b> waves back in — a rim of frequency bars that surge, deform and bloom with the voice (not a fixed timer). It auto-animates; <b>tap the disc to drive it with your real mic</b>.</p>
   </div>
 
   <div class="phone">
-    <div class="screen">
+    <div class="screen" id="screen">
+      <canvas class="wavecanvas" id="wave"></canvas>
 
       <div class="statusbar">
         <span class="time">9:41</span>
@@ -130,28 +93,124 @@
       </div>
 
       <div class="listening">
-        <div class="label">I'm listening...</div>
+        <div class="label"><span class="pip"></span><span id="lbl">I'm listening...</span></div>
         <div class="disc-stack">
-          <span class="ring r3"></span>
-          <span class="ring r2"></span>
-          <span class="ring r1"></span>
-          <span class="disc-glow"></span>
-          <span class="disc-reflection"></span>
-          <img class="disc" src="assets/disc-mesh.png" alt="listening" />
-
+          <img class="disc" id="disc" src="assets/disc-mesh.png" alt="listening" />
           <div class="ctrl left">
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 5V19" stroke="#0E8B93" stroke-width="2" stroke-linecap="round"/><path d="M5 12H19" stroke="#0E8B93" stroke-width="2" stroke-linecap="round"/></svg>
           </div>
           <div class="ctrl right">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M22.24 14.24c-.07-.18-.14-.35-.22-.51l-3.9-8.87a2.5 2.5 0 0 0-.16-.24 2.9 2.9 0 0 0-4.26 0 .9.9 0 0 0-.22.53V7.5h-3V5.16a.86.86 0 0 0-.24-.53 2.9 2.9 0 0 0-4.26 0 .9.9 0 0 0-.16.23l-3.9 8.87c-.08.16-.16.33-.22.51a3.75 3.75 0 1 0 7.24 1.51V9h3v6.75a3.75 3.75 0 1 0 7.26-1.51ZM6 18.75A3 3 0 1 1 9 15.75 3 3 0 0 1 6 18.75Zm12 0a3 3 0 1 1 3-3 3 3 0 0 1-3 3Z" fill="#0E8B93"/></svg>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M22.24 14.24c-.07-.18-.14-.35-.22-.51l-3.9-8.87a2.9 2.9 0 0 0-4.42-.24.9.9 0 0 0-.2.53V7.5h-3V5.16a.9.9 0 0 0-.2-.53 2.9 2.9 0 0 0-4.42.24l-3.9 8.87c-.08.16-.16.33-.22.51a3.75 3.75 0 1 0 7.24 1.51V9h3v6.75a3.75 3.75 0 1 0 7.26-1.51ZM6 18.75A3 3 0 1 1 9 15.75 3 3 0 0 1 6 18.75Zm12 0a3 3 0 1 1 3-3 3 3 0 0 1-3 3Z" fill="#0E8B93"/></svg>
           </div>
         </div>
+        <div class="michint" id="michint">tap the disc to use your mic</div>
       </div>
 
       <div class="home-ind"></div>
     </div>
   </div>
 
-  <p class="srccite">Source: <b>docs/_session/voice-mode-listening-rebuild/screens/voice-listening.png</b> · disc asset <b>soundwave-sphere.png</b> · tokens from <b>palette.ts</b> · font Nunito.</p>
+  <p class="srccite">Source: Figma <b>voice-listening</b> + the <b>Voiceprint-halo</b> wave research (docs/_session/shazam-waves-redesign/) · real disc + tokens · Nunito.</p>
+
+<script>
+/* ---- teal palette (light tide-pool) ---- */
+const ring=[14,139,147], glow=[3,123,131], bar0=[3,123,131], bar1=[94,188,193];
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const NB=40;                       // frequency bands
+let bands=new Float32Array(NB);
+let amp=0, micOn=false, analyser=null, freq=null;
+
+const canvas=document.getElementById('wave'), ctx=canvas.getContext('2d');
+const screenEl=document.getElementById('screen'), discEl=document.getElementById('disc');
+let DPR=Math.min(window.devicePixelRatio||1,2.5), W=0, H=0;
+function size(){
+  const r=screenEl.getBoundingClientRect();
+  W=r.width; H=r.height;
+  canvas.width=W*DPR; canvas.height=H*DPR;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize',size);
+
+/* disc centre in canvas (CSS px) coords — tracks the real disc element */
+function discCenter(){
+  const s=screenEl.getBoundingClientRect(), d=discEl.getBoundingClientRect();
+  return {cx:d.left-s.left+d.width/2, cy:d.top-s.top+d.height/2, disc:d.width/2};
+}
+
+/* speech-like simulator: word envelope x syllable flutter (so it lives without a mic) */
+function speechSim(t){
+  const word=Math.max(0,Math.sin(t*1.7));
+  const syll=0.5+0.5*Math.sin(t*11.0);
+  const breath=0.6+0.4*Math.sin(t*0.5);
+  return word*word*(0.32+0.68*syll)*breath;
+}
+
+/* the Voiceprint halo — a rim of bars, each a frequency band, mirrored L/R */
+function drawVoiceprint(t,a){
+  const {cx,cy,disc}=discCenter();
+  // soft ambient ring so quiet still reads as "listening"
+  const breathe=disc+14+6*Math.sin(t*1.6);
+  ctx.beginPath(); ctx.arc(cx,cy,breathe,0,Math.PI*2);
+  ctx.lineWidth=1.4; ctx.strokeStyle=rgba(ring,(0.10+0.10*Math.sin(t*1.6))*0.85); ctx.stroke();
+
+  const bars=NB*2, rim=disc+10;
+  for(let i=0;i<bars;i++){
+    const ang=(i/bars)*Math.PI*2 - Math.PI/2;
+    const k=Math.min(NB-1, Math.round(Math.abs((i%NB))));        // mirror left/right
+    const band=micOn? bands[k] : (0.35+0.65*Math.abs(Math.sin(t*6+i*0.5)))*speechSim(t+i*0.02);
+    const len=7 + band*52*(0.4+a);
+    const r0=rim, r1=rim+len;
+    const x0=cx+Math.cos(ang)*r0, y0=cy+Math.sin(ang)*r0;
+    const x1=cx+Math.cos(ang)*r1, y1=cy+Math.sin(ang)*r1;
+    const mix=band, col=[
+      Math.round(bar0[0]+(bar1[0]-bar0[0])*mix),
+      Math.round(bar0[1]+(bar1[1]-bar0[1])*mix),
+      Math.round(bar0[2]+(bar1[2]-bar0[2])*mix)];
+    ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1);
+    ctx.lineCap='round'; ctx.lineWidth=3.1;
+    ctx.strokeStyle=rgba(col,(0.45+0.5*band)*0.85);
+    ctx.shadowColor=rgba(glow,0.5*a); ctx.shadowBlur=8*a;
+    ctx.stroke(); ctx.shadowBlur=0;
+  }
+}
+
+/* ---- mic (tap the disc) ---- */
+async function toggleMic(){
+  const hint=document.getElementById('michint');
+  if(micOn){ micOn=false; hint.classList.remove('live'); hint.textContent='tap the disc to use your mic'; return; }
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const actx=new (window.AudioContext||window.webkitAudioContext)();
+    actx.createMediaStreamSource(stream).connect(analyser=actx.createAnalyser());
+    analyser.fftSize=128; analyser.smoothingTimeConstant=0.75;
+    freq=new Uint8Array(analyser.frequencyBinCount);
+    micOn=true; hint.classList.add('live'); hint.textContent='mic live · talk to it!';
+  }catch(e){ document.getElementById('michint').textContent='mic blocked — showing the live sim'; }
+}
+discEl.addEventListener('click',toggleMic);
+
+function readMic(){
+  if(!micOn||!analyser) return 0;
+  analyser.getByteFrequencyData(freq);
+  let sum=0;
+  for(let i=0;i<NB;i++){
+    const v=freq[Math.floor(i/NB*freq.length)]/255;
+    bands[i]=bands[i]*0.6+v*0.4; sum+=v;
+  }
+  return Math.min(1, sum/NB*1.7);
+}
+
+/* ---- loop: envelope follower (fast attack, slow release) + disc breath ---- */
+function frame(now){
+  const t=now/1000;
+  const target= micOn? readMic() : 0.55*speechSim(t);
+  amp += (target-amp)*(target>amp?0.45:0.09);
+  ctx.clearRect(0,0,W,H);
+  drawVoiceprint(t, Math.max(amp,0.05));
+  discEl.style.transform=`scale(${1+amp*0.07})`;
+  requestAnimationFrame(frame);
+}
+size(); requestAnimationFrame(frame);
+</script>
 </body>
 </html>
