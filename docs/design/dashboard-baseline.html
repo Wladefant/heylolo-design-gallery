@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Parent Dashboard — faithful recreation · HeyLoLo</title>
+<title>Parent Dashboard — 1:1 from Figma · HeyLoLo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
@@ -20,38 +20,40 @@
   .statusbar .time{font-weight:700;font-size:15px;color:#173c40;}.statusbar .ind{display:flex;align-items:center;gap:6px;}
   .scroll{flex:1;overflow:hidden;padding:8px 18px 0;}
   .tophdr{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
-  .tophdr h2{font-weight:800;font-size:20px;color:#176E73;}
-  .switch{display:flex;align-items:center;gap:7px;background:#fff;border-radius:999px;padding:6px 12px 6px 6px;box-shadow:0 4px 12px rgba(3,123,131,.10);font-weight:700;font-size:13px;color:#176E73;}
-  .switch img{width:26px;height:26px;object-fit:contain;border-radius:50%;}
-  .card{background:#fff;border-radius:22px;box-shadow:0 10px 26px rgba(20,90,95,.09);}
-  .week{margin-top:16px;padding:18px;}
+  .tophdr h2{font-weight:900;font-size:22px;color:#15727A;}
+  .switch{display:flex;align-items:center;gap:7px;background:#fff;border-radius:999px;padding:6px 14px 6px 6px;box-shadow:0 4px 12px rgba(3,123,131,.10);font-weight:700;font-size:13.5px;color:#176E73;}
+  .switch img{width:26px;height:26px;object-fit:contain;}
+  .card{background:#fff;border-radius:24px;box-shadow:0 12px 28px rgba(20,90,95,.10);}
+  .week{margin-top:16px;padding:18px 18px 16px;}
   .weekrow{display:flex;align-items:center;justify-content:space-between;}
-  .weekrow img{width:54px;height:46px;object-fit:contain;}
+  .weekrow img{width:58px;height:50px;object-fit:contain;}
   .weekrow .wt{text-align:right;}
-  .weekrow .wt .l{font-weight:700;font-size:13px;color:#3C9094;}
-  .weekrow .wt .m{font-weight:800;font-size:19px;color:#176E73;}
-  .chartline{height:1px;background:#9fcfcf;margin:18px 2px 10px;}
-  .days{display:flex;justify-content:space-between;font-weight:600;font-size:11px;color:#8aa7aa;padding:0 2px;}
-  .disc-text{font-weight:500;font-size:12.5px;line-height:1.5;color:#6f8d90;margin:12px 4px 0;}
-  .ok{margin-top:14px;background:#E5F3F0;border-radius:16px;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;}
-  .ok .okt .a{font-weight:800;font-size:15px;color:#1B7F84;}
-  .ok .okt .b{font-weight:600;font-size:12.5px;color:#6f8d90;margin-top:2px;}
-  .childmode{text-align:center;font-weight:800;font-size:15px;color:#1B7F84;margin:18px 0 6px;}
-  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px;}
-  .tile{background:#fff;border-radius:20px;padding:16px;box-shadow:0 10px 26px rgba(20,90,95,.09);text-align:center;}
-  .tile .tt{font-weight:800;font-size:14.5px;color:#1B7F84;line-height:1.2;}
-  .tile img{width:46px;height:40px;object-fit:contain;margin-top:8px;}
-  .tile .usage{font-weight:700;font-size:13px;color:#3C9094;margin-top:14px;}
+  .weekrow .wt .l{font-weight:800;font-size:14px;color:#3C9094;}
+  .weekrow .wt .m{font-weight:900;font-size:21px;color:#15727A;margin-top:1px;}
+  .chart{margin:14px 0 6px;}
+  .days{display:flex;justify-content:space-between;font-weight:600;font-size:11px;color:#9bb6b9;padding:0 4px;}
+  .disc-text{font-weight:500;font-size:13px;line-height:1.5;color:#6f8d90;margin:14px 2px 0;}
+  .safety{margin-top:14px;background:#E4F3EF;border-radius:18px;padding:15px 16px;display:flex;align-items:center;gap:14px;}
+  .safety .num{font-weight:900;font-size:30px;color:#15727A;line-height:1;}
+  .safety .st{flex:1;}
+  .safety .st .a{font-weight:800;font-size:15px;color:#1B7F84;}
+  .safety .st .b{font-weight:600;font-size:12.5px;color:#6f8d90;margin-top:2px;}
+  .childmode{margin:16px 2px 6px;text-align:center;font-weight:800;font-size:15px;color:#1B7F84;border:1.6px solid #9fcfcf;border-radius:999px;padding:14px;background:#fff;}
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+  .tile{background:#fff;border-radius:20px;padding:15px 12px;box-shadow:0 10px 26px rgba(20,90,95,.09);text-align:center;}
+  .tile .tt{font-weight:800;font-size:14px;color:#1B7F84;line-height:1.2;}
+  .tile img{width:48px;height:42px;object-fit:contain;margin-top:6px;}
+  .tile .usage{font-weight:900;font-size:22px;color:#15727A;margin-top:8px;}
   .tabbar-dark{position:absolute;left:14px;right:14px;bottom:12px;height:62px;background:#3C4C4F;border-radius:24px;display:flex;align-items:center;justify-content:space-around;box-shadow:0 12px 30px rgba(11,40,42,.32);}
   .tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:700;font-size:10.5px;color:#C7D5D6;}
   .tb.active{color:#5FD6D6;}.tb svg{width:21px;height:21px;}
   .home-ind{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:120px;height:5px;border-radius:3px;background:rgba(255,255,255,.5);}
-  .srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:400px;line-height:1.5;}.srccite b{color:#0E8B93;}
+  .srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:430px;line-height:1.5;}.srccite b{color:#0E8B93;}
 </style>
 </head>
 <body>
-  <div class="pagehead"><div class="eyebrow">Faithful recreation · baseline</div><h1>Parent Dashboard</h1>
-  <p>Rebuilt to match the live app (TestFlight <code>IMG_0111</code>) — child-switcher pill, the week mood card, the "No Concerns Detected" panel, Enter Child Mode, paired tiles, the dark Home/HeyLoLo/Chat/Settings bar.</p></div>
+  <div class="pagehead"><div class="eyebrow">1:1 from Figma · MVP Fixes 2.0</div><h1>Parent Dashboard</h1>
+  <p>Pulled 1:1 from Figma <code>Dashboard with Progress Logs</code> — populated state: "Paul's Week — Happy and Calm" with the green mood line, the <code>1 Safety Check</code> card, 1h 32m usage, real avatars.</p></div>
   <div class="phone"><div class="screen">
     <div class="statusbar"><span class="time">9:41</span><span class="ind">
       <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
@@ -59,21 +61,26 @@
       <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
     </span></div>
     <div class="scroll">
-      <div class="tophdr"><h2>Hello, Wladimir K…</h2>
-        <div class="switch"><img src="assets/home/chat.png" alt="">Wladim… <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#176E73" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="tophdr"><h2>Hello, Anna!</h2>
+        <div class="switch"><img src="assets/figma/avatar-paul.png" alt="">Paul <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#176E73" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
       <div class="card week">
-        <div class="weekrow"><img src="assets/home/chat.png" alt=""><div class="wt"><div class="l">Wladimir small's Week</div><div class="m">No mood yet</div></div></div>
-        <div class="chartline"></div>
+        <div class="weekrow"><img src="assets/figma/avatar-paul.png" alt=""><div class="wt"><div class="l">Paul's Week</div><div class="m">Happy and Calm</div></div></div>
+        <svg class="chart" width="100%" height="62" viewBox="0 0 290 62" preserveAspectRatio="none">
+          <polyline points="10,34 56,24 102,40 148,22 194,26 240,20 280,28" fill="none" stroke="#3FA079" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#3FA079">
+            <circle cx="10" cy="34" r="3.4"/><circle cx="56" cy="24" r="3.4"/><circle cx="102" cy="40" r="3.4"/><circle cx="148" cy="22" r="3.4"/><circle cx="194" cy="26" r="3.4"/><circle cx="240" cy="20" r="3.4"/><circle cx="280" cy="28" r="3.4"/>
+          </g>
+        </svg>
         <div class="days"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
-        <div class="disc-text">This section reflects patterns in your child's conversations and activity. It is a guide, not a diagnosis.</div>
-        <div class="ok"><div class="okt"><div class="a">No Concerns Detected</div><div class="b">View recent conversations</div></div>
+        <div class="disc-text">This section offers simple, meaningful insights into your child's conversations and activities.</div>
+        <div class="safety"><span class="num">1</span><div class="st"><div class="a">Safety Check</div><div class="b">Parental review required</div></div>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#1B7F84" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
       <div class="childmode">Enter Child Mode</div>
       <div class="tiles">
-        <div class="tile"><div class="tt">Current<br>Companion</div><img src="assets/home/chat.png" alt=""></div>
-        <div class="tile"><div class="tt">Today's Usage</div><div class="usage">— · Daily Summary ›</div></div>
+        <div class="tile"><div class="tt">Current Companion</div><img src="assets/home/explorer.png" alt=""></div>
+        <div class="tile"><div class="tt">Today's Usage</div><div class="usage">1h 32m</div></div>
       </div>
     </div>
     <div class="tabbar-dark">
@@ -84,6 +91,6 @@
     </div>
     <div class="home-ind"></div>
   </div></div>
-  <p class="srccite">Source: live TestFlight app <b>IMG_0111</b> · avatar from cached mascot · tokens from <b>palette.ts</b> · font Nunito.</p>
+  <p class="srccite">Source: Figma <b>MVP Fixes 2.0 / Dashboard with Progress Logs</b> (40002431:17090) · real avatar assets · font Nunito.</p>
 </body>
 </html>

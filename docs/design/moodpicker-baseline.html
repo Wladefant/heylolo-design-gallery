@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mood Picker — 1:1 from Figma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+  .pagehead{text-align:center;margin-bottom:24px;max-width:560px;}
+  .pagehead .eyebrow{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}
+  .pagehead h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}
+  .pagehead p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}
+  .pagehead code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+  .phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30),0 4px 14px rgba(11,60,64,.18);position:relative;}
+  .screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:linear-gradient(180deg,#E9F4F1 0%,#E0F1EC 60%,#D6ECE7 100%);}
+  /* dimmed home behind */
+  .behind{padding:54px 22px 0;filter:saturate(.9);}
+  .behind h1{font-weight:900;font-size:25px;line-height:1.16;color:#16737A;opacity:.9;}
+  .behind .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:18px;}
+  .behind .m{background:#fff;border-radius:16px;height:96px;}
+  .scrim{position:absolute;inset:0;background:rgba(18,52,55,.34);}
+  /* sheet */
+  .sheet{position:absolute;left:0;right:0;bottom:0;height:74%;background:#fff;border-radius:28px 28px 0 0;padding:12px 18px 0;box-shadow:0 -10px 40px rgba(11,40,42,.2);}
+  .grab{width:44px;height:5px;border-radius:3px;background:#cdddde;margin:0 auto 14px;}
+  .sheet h2{font-weight:900;font-size:22px;color:#15848A;text-align:center;}
+  .sheet .sh{font-weight:600;font-size:14.5px;color:#5E7C7F;text-align:center;margin-top:4px;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:18px;}
+  .mood{border-radius:18px;padding:12px 6px 9px;text-align:center;position:relative;}
+  .mood img{width:50px;height:44px;object-fit:contain;}
+  .mood span{display:block;margin-top:3px;font-weight:800;font-size:12.5px;}
+  .mood.happy{background:#fff;border:2px solid #1E8E8E;}
+  .mood.happy span{color:#15848A;}
+  .mood.excited{background:#FBF6D6;}.mood.okay{background:#E7F1FB;}
+  .mood.tired{background:#EFEAF6;}.mood.sad{background:#F1F1F1;}.mood.worried{background:#FBEAEA;}
+  .mood.bored{background:#F1F1F1;}.mood.angry{background:#FBE6E3;}.mood.overwhelmed{background:#EBF3E2;}
+  .mood:not(.happy) span{color:#5b6b6d;}
+  .check{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:50%;background:#1E8E8E;display:flex;align-items:center;justify-content:center;}
+  .submit{position:absolute;left:18px;right:18px;bottom:24px;background:linear-gradient(180deg,#1F8E8E,#177E7E);color:#fff;font-weight:800;font-size:17px;text-align:center;border-radius:999px;padding:16px;box-shadow:0 10px 24px rgba(20,110,114,.28);}
+  .srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:430px;line-height:1.5;}.srccite b{color:#0E8B93;}
+</style>
+</head>
+<body>
+  <div class="pagehead"><div class="eyebrow">1:1 from Figma · MVP Fixes 2.0</div><h1>Mood Picker</h1>
+  <p>Pulled 1:1 from Figma <code>Mood Picker</code> — the "Tell us how you feel" sheet over the home, the 3×3 cloud-face grid (Happy selected) with the real mood mascots, Submit.</p></div>
+  <div class="phone"><div class="screen">
+    <div class="behind">
+      <h1>Hi Paul! I'm HeyLoLo</h1>
+      <div class="modes"><div class="m"></div><div class="m"></div><div class="m"></div></div>
+    </div>
+    <div class="scrim"></div>
+    <div class="sheet">
+      <div class="grab"></div>
+      <h2>Tell us how you feel</h2>
+      <div class="sh">How was your afternoon today?</div>
+      <div class="grid">
+        <div class="mood happy"><div class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4 10-10" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><img src="assets/mood/happy.png" alt=""><span>Happy</span></div>
+        <div class="mood excited"><img src="assets/mood/excited.png" alt=""><span>Excited</span></div>
+        <div class="mood okay"><img src="assets/mood/okay.png" alt=""><span>Okay</span></div>
+        <div class="mood tired"><img src="assets/mood/tired.png" alt=""><span>Tired</span></div>
+        <div class="mood sad"><img src="assets/mood/sad.png" alt=""><span>Sad</span></div>
+        <div class="mood worried"><img src="assets/mood/worried.png" alt=""><span>Worried</span></div>
+        <div class="mood bored"><img src="assets/mood/bored.png" alt=""><span>Bored</span></div>
+        <div class="mood angry"><img src="assets/mood/angry.png" alt=""><span>Angry</span></div>
+        <div class="mood overwhelmed"><img src="assets/mood/overwhelmed.png" alt=""><span>Overwhelmed</span></div>
+      </div>
+      <div class="submit">Submit</div>
+    </div>
+  </div></div>
+  <p class="srccite">Source: Figma <b>MVP Fixes 2.0 / Mood Picker</b> (40002424:13171) · real mood mascots · font Nunito.</p>
+</body>
+</html>

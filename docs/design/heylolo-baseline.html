@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HeyLoLo assistant — 1:1 from Figma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+  .pagehead{text-align:center;margin-bottom:24px;max-width:560px;}
+  .pagehead .eyebrow{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}
+  .pagehead h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}
+  .pagehead p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}
+  .pagehead code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+  .phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30),0 4px 14px rgba(11,60,64,.18);position:relative;}
+  .screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:linear-gradient(180deg,#E9F4F1 0%,#E2F1ED 55%,#DAEEEA 100%);}
+  .statusbar{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;}
+  .statusbar .time{font-weight:700;font-size:15px;color:#173c40;}.statusbar .ind{display:flex;align-items:center;gap:6px;}
+  .header{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 2px;}
+  .circ{width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(3,123,131,.10);}
+  .htitle{font-weight:800;font-size:17px;color:#15727A;}
+  .avatars{display:flex;gap:13px;padding:8px 18px 2px;overflow:hidden;}
+  .av{display:flex;flex-direction:column;align-items:center;gap:4px;flex:none;width:54px;}
+  .av .ph{width:50px;height:50px;border-radius:50%;background:#fff;box-shadow:0 4px 10px rgba(3,123,131,.10);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .av .ph img{width:46px;height:46px;object-fit:contain;}
+  .av span{font-weight:700;font-size:11.5px;color:#2E8C90;}
+  .hero{display:flex;flex-direction:column;align-items:center;margin-top:6px;}
+  .hero img{width:168px;height:150px;object-fit:contain;filter:drop-shadow(0 16px 18px rgba(40,90,95,.16));}
+  .greet{font-weight:900;font-size:24px;color:#15727A;text-align:center;margin-top:6px;}
+  .sub{font-weight:600;font-size:15px;color:#5E7C7F;text-align:center;margin-top:3px;}
+  .rows{padding:18px 18px 0;display:flex;flex-direction:column;gap:12px;}
+  .row{background:#F4FAF9;border:1px solid #e2efee;border-radius:18px;padding:13px 14px;display:flex;align-items:center;gap:13px;}
+  .ricon{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;}
+  .ricon.g{background:#DFF1E4;}.ricon.b{background:#DFEFF7;}
+  .row .rt .a{font-weight:800;font-size:15px;color:#2c4d50;}
+  .row .rt .b{font-weight:600;font-size:12.5px;color:#7a979a;margin-top:1px;}
+  .composer{position:absolute;left:16px;right:16px;bottom:26px;background:#fff;border-radius:999px;padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 10px 26px rgba(20,90,95,.12);}
+  .composer .ph{flex:1;font-weight:600;font-size:15px;color:#9bb6b9;}
+  .composer .plus{font-weight:700;color:#0E8B93;}
+  .vbtn{width:38px;height:38px;border-radius:50%;background:#1E8E8E;display:flex;align-items:center;justify-content:center;}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.2);}
+  .srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:430px;line-height:1.5;}.srccite b{color:#0E8B93;}
+</style>
+</head>
+<body>
+  <div class="pagehead"><div class="eyebrow">1:1 from Figma · MVP Fixes 2.0</div><h1>HeyLoLo assistant (parent)</h1>
+  <p>Pulled 1:1 from Figma <code>Parent Chat Home</code> — the real pink-sunhat hero, the child-avatar row (Paul / John / Stella / George), greeting + two action rows + composer.</p></div>
+  <div class="phone"><div class="screen">
+    <div class="statusbar"><span class="time">9:41</span><span class="ind">
+      <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
+    </span></div>
+    <div class="header">
+      <div class="circ"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#3C9094" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="htitle">HeyLoLo</div>
+      <div class="circ"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" stroke="#3C9094" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 4v4h4" stroke="#3C9094" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v4l3 2" stroke="#3C9094" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="avatars">
+      <div class="av"><div class="ph"><img src="assets/figma/avatar-paul.png" alt=""></div><span>Paul</span></div>
+      <div class="av"><div class="ph"><img src="assets/figma/avatar-john.png" alt=""></div><span>John</span></div>
+      <div class="av"><div class="ph"><img src="assets/figma/avatar-stella.png" alt=""></div><span>Stella</span></div>
+      <div class="av"><div class="ph"><img src="assets/figma/avatar-george.png" alt=""></div><span>George</span></div>
+      <div class="av"><div class="ph"><img src="assets/figma/companion-doctor.png" alt=""></div><span>Add</span></div>
+    </div>
+    <div class="hero"><img src="assets/figma/hero-pinkhat.png" alt=""></div>
+    <div class="greet">Good Morning, Anna!</div>
+    <div class="sub">What can I do for you?</div>
+    <div class="rows">
+      <div class="row"><div class="ricon g"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 3h10M7 21h10M8 3c0 4 8 5 8 9s-8 5-8 9M16 3c0 4-8 5-8 9" stroke="#3a9b63" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <div class="rt"><div class="a">Review recent conversations</div><div class="b">See what your kids talked about</div></div></div>
+      <div class="row"><div class="ricon b"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M13 3 4 14h7l-1 7 9-11h-7l1-7Z" fill="#3a8bc4"/></svg></div>
+        <div class="rt"><div class="a">Get activity ideas</div><div class="b">Based on all your kid's interests</div></div></div>
+    </div>
+    <div class="composer"><span class="plus">+</span><span class="ph">Ask me anything</span>
+      <div class="vbtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 10v4M10 6v12M14 8v8M18 11v2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="home-ind"></div>
+  </div></div>
+  <p class="srccite">Source: Figma <b>MVP Fixes 2.0 / Parent Chat Home</b> (40002424:13401) · real hero + avatar assets · font Nunito.</p>
+</body>
+</html>
