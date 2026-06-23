@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Child Switcher — 1:1 from Figma</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+.ph{text-align:center;margin-bottom:22px;max-width:560px;}.ph .e{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}.ph h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}.ph p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}.ph code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+.phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30);position:relative;}
+.screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;background:linear-gradient(180deg,#E9F4F1,#E1F1ED 60%,#D8EDE8);}
+.sb{height:44px;display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;font-weight:700;font-size:15px;color:#173c40;}.sb .d{display:flex;gap:3px;align-items:flex-end;}.sb .d i{width:3px;background:#173c40;border-radius:1px;}
+.behind{padding:10px 18px;}
+.bh{display:flex;align-items:center;justify-content:space-between;}.bh h2{font-weight:900;font-size:20px;color:#176E73;}
+.swp{display:flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:6px 12px 6px 6px;font-weight:700;font-size:13px;color:#176E73;box-shadow:0 4px 12px rgba(3,123,131,.1);}.swp img{width:24px;height:24px;object-fit:contain;}
+.wkcard{background:#fff;border-radius:22px;margin-top:14px;padding:16px;box-shadow:0 10px 26px rgba(20,90,95,.09);display:flex;align-items:center;justify-content:space-between;}
+.wkcard img{width:52px;height:46px;object-fit:contain;}.wkcard .t{text-align:right;}.wkcard .t .l{font-weight:800;font-size:13px;color:#3C9094;}.wkcard .t .m{font-weight:900;font-size:19px;color:#15727A;}
+.scrim{position:absolute;inset:0;background:rgba(18,52,55,.4);}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;padding:16px 18px 24px;box-shadow:0 -10px 40px rgba(11,40,42,.2);}
+.shead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}.shead h3{font-weight:900;font-size:19px;color:#15727A;}
+.xc{width:32px;height:32px;border-radius:50%;background:#eef5f4;display:flex;align-items:center;justify-content:center;color:#5A8994;font-weight:800;}
+.kid{display:flex;align-items:center;gap:14px;padding:12px;border-radius:18px;margin-bottom:11px;background:#F6FBFA;border:2px solid transparent;}
+.kid.sel{border-color:#1E8E8E;background:#fff;}
+.kid .av{width:52px;height:52px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 4px 10px rgba(3,123,131,.08);}.kid .av img{width:48px;height:48px;object-fit:contain;}
+.kid .nm{flex:1;}.kid .nm .a{font-weight:800;font-size:17px;color:#1c4d50;}.kid .nm .b{font-weight:600;font-size:13px;color:#7a979a;}
+.radio{width:24px;height:24px;border-radius:50%;border:2px solid #cdd9da;}.radio.on{border:none;background:#1E8E8E;display:flex;align-items:center;justify-content:center;}
+.add{border:1.6px dashed #9fcfcf;border-radius:16px;padding:14px;text-align:center;font-weight:800;font-size:15px;color:#1B7F84;}
+.cite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:420px;}.cite b{color:#0E8B93;}
+</style></head><body>
+<div class="ph"><div class="e">1:1 from Figma · Parent Screens</div><h1>Child Switcher</h1><p>Figma <code>Child Switcher</code> — the dashboard with the "Switch Child" sheet: Paul (selected) / John / Stella + Add Another Child.</p></div>
+<div class="phone"><div class="screen">
+  <div class="sb"><span>9:41</span><span class="d"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:13px;opacity:.4"></i></span></div>
+  <div class="behind">
+    <div class="bh"><h2>Hello, Anna!</h2><div class="swp"><img src="assets/figma/avatar-paul.png" alt="">Paul <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#176E73" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+    <div class="wkcard"><img src="assets/figma/avatar-paul.png" alt=""><div class="t"><div class="l">Paul's Week</div><div class="m">Happy and Calm</div></div></div>
+  </div>
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="shead"><h3>Switch Child</h3><div class="xc">✕</div></div>
+    <div class="kid sel"><div class="av"><img src="assets/figma/avatar-paul.png" alt=""></div><div class="nm"><div class="a">Paul</div><div class="b">Age 9</div></div><div class="radio on"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4 10-10" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+    <div class="kid"><div class="av"><img src="assets/figma/avatar-john.png" alt=""></div><div class="nm"><div class="a">John</div><div class="b">Age 8</div></div><div class="radio"></div></div>
+    <div class="kid"><div class="av"><img src="assets/figma/avatar-stella.png" alt=""></div><div class="nm"><div class="a">Stella</div><div class="b">Age 6</div></div><div class="radio"></div></div>
+    <div class="add">+ Add Another Child</div>
+  </div>
+</div></div>
+<p class="cite">Source: Figma <b>Parent Screens / Child Switcher</b> (40001639:7921) · real avatar assets · font Nunito.</p>
+</body></html>
