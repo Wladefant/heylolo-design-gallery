@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mic treatments — disc halo vs recording waveform · HeyLoLo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+  .pagehead{text-align:center;margin-bottom:18px;max-width:660px;}
+  .pagehead .eyebrow{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}
+  .pagehead h1{font-weight:900;font-size:25px;margin:6px 0 8px;color:#114e52;}
+  .pagehead p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}
+  .pagehead b{color:#0E8B93;}
+  .micbtn{margin:14px auto 26px;display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:14px;color:#0E8B93;background:#fff;border:1.5px solid rgba(14,139,147,.3);border-radius:12px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 16px rgba(20,90,95,.08);}
+  .micbtn.live{background:#1E8E8E;color:#fff;border-color:transparent;}
+  .micbtn .dot{width:8px;height:8px;border-radius:50%;background:currentColor;}
+  .micbtn.live .dot{animation:blink 1s steps(2) infinite;}
+  @keyframes blink{50%{opacity:.3}}
+
+  .stage{display:flex;gap:clamp(20px,4vw,46px);align-items:flex-start;flex-wrap:wrap;justify-content:center;}
+  .col{display:flex;flex-direction:column;align-items:center;gap:13px;}
+  .col h2{font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#5d8488;}
+
+  .phone{width:300px;height:620px;border-radius:46px;background:#0c2f33;padding:10px;box-shadow:0 26px 60px rgba(11,60,64,.28);position:relative;}
+  .screen{width:100%;height:100%;border-radius:38px;overflow:hidden;position:relative;}
+  /* listening: aqua wash + disc glow */
+  .screen.listen{background:radial-gradient(130% 52% at 50% 84%,rgba(255,255,255,.55),rgba(255,255,255,0) 56%),linear-gradient(180deg,#C3E6EA 0%,#DCF1F1 46%,#A9E0E7 100%);}
+  /* chat: aqua → white */
+  .screen.chat{background:linear-gradient(180deg,#D6EFF5 0%,#E3F5F3 45%,#EFF9F8 75%,#FBFDFD 100%);}
+
+  .sb{position:relative;z-index:6;height:42px;display:flex;align-items:center;justify-content:space-between;padding:13px 22px 0;font-weight:700;font-size:13.5px;color:#173c40;}
+  .sb .d{display:flex;gap:5px;align-items:center;}.sb .d i{width:14px;height:9px;border-radius:2px;background:#173c40;opacity:.5;}.sb .d i:last-child{width:20px;opacity:.85;}
+
+  /* ---- phone A: listening disc + halo ---- */
+  .wavecanvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;}
+  .pill{position:relative;z-index:6;margin:6px 16px 0;display:inline-block;background:#fff;border-radius:999px;padding:8px 15px;font-weight:700;font-size:13.5px;color:#0E7077;box-shadow:0 5px 16px rgba(3,123,131,.12);}
+  .listening{position:absolute;left:0;right:0;bottom:40px;z-index:5;display:flex;flex-direction:column;align-items:center;}
+  .listening .lbl{font-weight:700;font-size:14px;color:#1C8488;margin-bottom:30px;display:inline-flex;align-items:center;gap:8px;}
+  .listening .pip{width:7px;height:7px;border-radius:50%;background:#5EBCC1;animation:pip 1.6s ease-out infinite;}
+  @keyframes pip{0%{box-shadow:0 0 0 0 rgba(94,188,193,.5)}70%{box-shadow:0 0 0 8px rgba(94,188,193,0)}100%{box-shadow:0 0 0 0 rgba(94,188,193,0)}}
+  .dstack{position:relative;width:210px;height:110px;display:flex;align-items:center;justify-content:center;}
+  .disc{width:84px;height:84px;object-fit:contain;z-index:2;filter:drop-shadow(0 14px 20px rgba(4,86,92,.3));transition:transform .12s;}
+
+  /* ---- phone B: chat + recording composer ---- */
+  .hd{position:relative;z-index:6;display:flex;align-items:center;justify-content:space-between;padding:4px 16px 6px;}
+  .circ{width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(3,123,131,.1);}
+  .chatbody{position:relative;z-index:6;padding:8px 14px 0;display:flex;flex-direction:column;gap:11px;}
+  .user{align-self:flex-end;max-width:82%;background:linear-gradient(180deg,#2E9498,#23868A);color:#fff;font-weight:600;font-size:14px;line-height:1.36;padding:11px 14px;border-radius:18px 18px 6px 18px;box-shadow:0 8px 18px rgba(20,120,124,.18);}
+  .bot{align-self:flex-start;max-width:86%;background:#fff;color:#3f5e62;font-weight:500;font-size:14px;line-height:1.42;padding:13px 14px;border-radius:6px 18px 18px 18px;box-shadow:0 8px 20px rgba(20,90,95,.10);}
+  .bot b{color:#23696e;font-weight:800;}
+  .recbar{position:absolute;left:14px;right:14px;bottom:26px;z-index:6;background:#fff;border-radius:999px;height:54px;display:flex;align-items:center;gap:10px;padding:0 10px;box-shadow:0 10px 26px rgba(20,90,95,.14);}
+  .stop{width:30px;height:30px;border-radius:9px;background:#1E8E8E;flex:none;}
+  .stop.cancel{background:transparent;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#3C9094;font-weight:800;}
+  .recwave{flex:1;height:38px;}
+  .send{width:36px;height:36px;border-radius:50%;background:#1E8E8E;flex:none;display:flex;align-items:center;justify-content:center;}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:118px;height:5px;border-radius:3px;background:rgba(20,60,64,.3);z-index:7;}
+
+  .srccite{margin-top:26px;font-size:12px;color:#6c8b8e;text-align:center;max-width:560px;line-height:1.5;}.srccite b{color:#0E8B93;}
+</style>
+</head>
+<body>
+  <div class="pagehead">
+    <div class="eyebrow">Audio-reactive · two mic treatments</div>
+    <h1>Disc halo vs recording waveform</h1>
+    <p>The same live audio drives <b>both</b> mic UIs side by side: the voice-mode <b>Voiceprint-halo disc</b> (left) and the text-composer <b>recording bar</b> with the live waveform + stop / send (right). Both auto-animate — <b>grant your mic to drive them for real</b>.</p>
+  </div>
+  <button class="micbtn" id="micbtn"><span class="dot"></span>Use my mic</button>
+
+  <div class="stage">
+    <div class="col">
+      <h2>Voice mode · disc halo</h2>
+      <div class="phone"><div class="screen listen" id="screenA">
+        <canvas class="wavecanvas" id="waveA"></canvas>
+        <div class="sb"><span>9:41</span><span class="d"><i></i><i></i><i></i></span></div>
+        <div class="pill">HeyLoLo Voice</div>
+        <div class="listening">
+          <div class="lbl"><span class="pip"></span>I'm listening...</div>
+          <div class="dstack"><img class="disc" id="discA" src="assets/disc-mesh.png" alt=""></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+    </div>
+
+    <div class="col">
+      <h2>Text mode · recording bar</h2>
+      <div class="phone"><div class="screen chat" id="screenB">
+        <div class="sb"><span>9:41</span><span class="d"><i></i><i></i><i></i></span></div>
+        <div class="hd">
+          <div class="circ"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#3C9094" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="circ"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 4v4h4M12 8v4l3 2" stroke="#3C9094" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+        <div class="chatbody">
+          <div class="user">I saw a tiny spider hanging from the ceiling on a white rope! How does it keep a whole rope inside its body?</div>
+          <div class="bot">Great question, Paul! Spiders don't carry rope, they make it!<br><br>Spiders have special parts on their tummy called <b>spinnerets</b>. When the liquid hits the air it turns instantly into strong, dry silk thread!</div>
+        </div>
+        <div class="recbar">
+          <div class="stop"></div>
+          <canvas class="recwave" id="waveB"></canvas>
+          <div class="send"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12l16-8-6 16-3-7-7-1Z" fill="#fff"/></svg></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+    </div>
+  </div>
+
+  <p class="srccite">Sources: Figma <b>voice-listening</b> + <b>recording composer</b> (09-recording-active) · the Voiceprint-halo wave research · real disc + tokens · Nunito.</p>
+
+<script>
+const teal0=[3,123,131], teal1=[94,188,193], ring=[14,139,147], glow=[3,123,131];
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const NB=40;
+let bands=new Float32Array(NB), amp=0, micOn=false, analyser=null, freq=null;
+const hist=new Float32Array(46);                 // scrolling level history for the recording bar
+
+const A={el:document.getElementById('waveA'),ctx:null,screen:document.getElementById('screenA'),disc:document.getElementById('discA')};
+const B={el:document.getElementById('waveB'),ctx:null};
+A.ctx=A.el.getContext('2d'); B.ctx=B.el.getContext('2d');
+const DPR=Math.min(window.devicePixelRatio||1,2.5);
+function size(){
+  [A,B].forEach(o=>{const r=o.el.getBoundingClientRect();o.w=r.width;o.h=r.height;o.el.width=r.width*DPR;o.el.height=r.height*DPR;o.ctx.setTransform(DPR,0,0,DPR,0,0);});
+}
+window.addEventListener('resize',size);
+
+function speechSim(t){const w=Math.max(0,Math.sin(t*1.7)),s=0.5+0.5*Math.sin(t*11),b=0.6+0.4*Math.sin(t*0.5);return w*w*(0.32+0.68*s)*b;}
+
+/* phone A — Voiceprint halo around the real disc */
+function drawHalo(t,a){
+  const ctx=A.ctx, s=A.screen.getBoundingClientRect(), d=A.disc.getBoundingClientRect();
+  const cx=d.left-s.left+d.width/2, cy=d.top-s.top+d.height/2, disc=d.width/2;
+  const breathe=disc+12+5*Math.sin(t*1.6);
+  ctx.beginPath();ctx.arc(cx,cy,breathe,0,Math.PI*2);ctx.lineWidth=1.4;ctx.strokeStyle=rgba(ring,(0.1+0.1*Math.sin(t*1.6))*0.85);ctx.stroke();
+  const bars=NB*2, rim=disc+9;
+  for(let i=0;i<bars;i++){
+    const ang=(i/bars)*Math.PI*2-Math.PI/2, k=Math.min(NB-1,Math.round(Math.abs(i%NB)));
+    const band=micOn?bands[k]:(0.35+0.65*Math.abs(Math.sin(t*6+i*0.5)))*speechSim(t+i*0.02);
+    const len=6+band*46*(0.4+a), r1=rim+len;
+    const x0=cx+Math.cos(ang)*rim,y0=cy+Math.sin(ang)*rim,x1=cx+Math.cos(ang)*r1,y1=cy+Math.sin(ang)*r1;
+    const m=band,col=[Math.round(teal0[0]+(teal1[0]-teal0[0])*m),Math.round(teal0[1]+(teal1[1]-teal0[1])*m),Math.round(teal0[2]+(teal1[2]-teal0[2])*m)];
+    ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.lineCap='round';ctx.lineWidth=2.8;
+    ctx.strokeStyle=rgba(col,(0.45+0.5*band)*0.85);ctx.shadowColor=rgba(glow,0.5*a);ctx.shadowBlur=7*a;ctx.stroke();ctx.shadowBlur=0;
+  }
+  A.disc.style.transform=`scale(${1+a*0.07})`;
+}
+
+/* phone B — scrolling recording waveform (newest on the right) */
+function drawWave(t,a){
+  const ctx=B.ctx,w=B.w,h=B.h,n=hist.length,gap=w/n,cy=h/2;
+  ctx.clearRect(0,0,w,h);
+  for(let i=0;i<n;i++){
+    const lvl=hist[i];
+    const bh=Math.max(2.5, lvl*(h*0.92));
+    const x=i*gap+gap/2;
+    const m=Math.min(1,lvl*1.4),col=[Math.round(teal1[0]+(teal0[0]-teal1[0])*m),Math.round(teal1[1]+(teal0[1]-teal1[1])*m),Math.round(teal1[2]+(teal0[2]-teal1[2])*m)];
+    ctx.beginPath();ctx.moveTo(x,cy-bh/2);ctx.lineTo(x,cy+bh/2);
+    ctx.lineCap='round';ctx.lineWidth=2.6;ctx.strokeStyle=rgba(col,0.92);ctx.stroke();
+  }
+}
+
+async function toggleMic(){
+  const btn=document.getElementById('micbtn');
+  if(micOn){micOn=false;btn.classList.remove('live');btn.lastChild.textContent='Use my mic';return;}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const actx=new (window.AudioContext||window.webkitAudioContext)();
+    actx.createMediaStreamSource(stream).connect(analyser=actx.createAnalyser());
+    analyser.fftSize=128;analyser.smoothingTimeConstant=0.75;freq=new Uint8Array(analyser.frequencyBinCount);
+    micOn=true;btn.classList.add('live');btn.lastChild.textContent='Mic live · talk to it!';
+  }catch(e){document.getElementById('micbtn').lastChild.textContent='Mic blocked — live sim';}
+}
+document.getElementById('micbtn').addEventListener('click',toggleMic);
+A.disc.addEventListener('click',toggleMic);
+
+function readMic(){
+  if(!micOn||!analyser)return 0;
+  analyser.getByteFrequencyData(freq);let sum=0;
+  for(let i=0;i<NB;i++){const v=freq[Math.floor(i/NB*freq.length)]/255;bands[i]=bands[i]*0.6+v*0.4;sum+=v;}
+  return Math.min(1,sum/NB*1.7);
+}
+
+function frame(now){
+  const t=now/1000;
+  const target=micOn?readMic():0.55*speechSim(t);
+  amp+=(target-amp)*(target>amp?0.45:0.09);
+  // push to the scrolling recording history (with a little per-sample sparkle)
+  for(let i=0;i<hist.length-1;i++)hist[i]=hist[i+1];
+  hist[hist.length-1]=Math.max(0.04, amp*(0.7+0.3*Math.abs(Math.sin(t*9))));
+  const a=Math.max(amp,0.05);
+  A.ctx.clearRect(0,0,A.w,A.h);
+  drawHalo(t,a); drawWave(t,a);
+  requestAnimationFrame(frame);
+}
+size();requestAnimationFrame(frame);
+</script>
+</body>
+</html>
