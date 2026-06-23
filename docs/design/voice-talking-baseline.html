@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Voice Talking — 1:1 from Figma</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+.ph{text-align:center;margin-bottom:22px;max-width:560px;}.ph .e{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}.ph h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}.ph p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}.ph code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+.phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30);position:relative;}
+.screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;background:linear-gradient(180deg,#E9F5F2,#DEF1ED 50%,#CFEAE6);display:flex;flex-direction:column;}
+.sb{height:44px;display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;font-weight:700;font-size:15px;color:#173c40;}
+.sb .d{display:flex;gap:3px;align-items:flex-end;}.sb .d i{width:3px;background:#173c40;border-radius:1px;display:block;}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 0;}
+.pill{background:#fff;border-radius:999px;padding:9px 17px;font-weight:700;font-size:14.5px;color:#0E7077;box-shadow:0 5px 16px rgba(3,123,131,.12);}
+.x{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 16px rgba(3,123,131,.12);color:#5A8994;font-weight:800;}
+.convo{padding:18px 18px 0;display:flex;flex-direction:column;gap:12px;}
+.user{align-self:flex-end;max-width:80%;background:linear-gradient(180deg,#2E9498,#23868A);color:#fff;font-weight:600;font-size:15.5px;line-height:1.36;padding:12px 16px;border-radius:20px 20px 6px 20px;box-shadow:0 8px 18px rgba(20,120,124,.18);}
+.bot{align-self:flex-start;max-width:84%;background:#fff;color:#3f5e62;font-weight:500;font-size:15.5px;line-height:1.44;padding:14px 16px;border-radius:8px 20px 20px 20px;box-shadow:0 10px 22px rgba(20,90,95,.10);}
+.cur{display:inline-block;width:2px;height:16px;background:#7fb3b6;vertical-align:-3px;animation:b 1s steps(1) infinite;}@keyframes b{50%{opacity:0}}
+.low{position:absolute;bottom:40px;left:0;right:0;display:flex;flex-direction:column;align-items:center;}
+.lbl{font-weight:700;font-size:14px;color:#1C8488;margin-bottom:24px;}
+.stack{position:relative;width:240px;height:200px;display:flex;align-items:center;justify-content:center;}
+.ring{position:absolute;border-radius:50%;border:1.5px solid;}
+.r1{width:120px;height:120px;border-color:rgba(255,255,255,.8);}.r2{width:180px;height:180px;border-color:rgba(255,255,255,.5);}.r3{width:240px;height:240px;border-color:rgba(255,255,255,.3);}
+.cloud{width:70px;height:62px;object-fit:contain;z-index:2;filter:drop-shadow(0 10px 16px rgba(4,86,92,.22));}
+.hi{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.3);}
+.cite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:420px;}.cite b{color:#0E8B93;}
+</style></head><body>
+<div class="ph"><div class="e">1:1 from Figma · Updated Chat UI</div><h1>Voice — LoLo Talking</h1><p>Figma <code>Voice - HeyLoLo Talking</code> — assistant streaming a reply, the cloud in the rings, "Tap anywhere to interrupt".</p></div>
+<div class="phone"><div class="screen">
+  <div class="sb"><span>9:41</span><span class="d"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:13px;opacity:.4"></i></span></div>
+  <div class="hd"><div class="pill">HeyLoLo Voice</div><div class="x">✕</div></div>
+  <div class="convo">
+    <div class="user">HeyLoLo, why do onions make people cry?</div>
+    <div class="bot">When you cut an onion, it releases a tiny gas into the air. If that gas reac<span class="cur"></span></div>
+  </div>
+  <div class="low"><div class="lbl">Tap anywhere to interrupt</div>
+    <div class="stack"><span class="ring r3"></span><span class="ring r2"></span><span class="ring r1"></span><img class="cloud" src="assets/figma/avatar-paul.png" alt=""></div>
+  </div>
+  <div class="hi"></div>
+</div></div>
+<p class="cite">Source: Figma <b>Updated Chat UI / Voice - HeyLoLo Talking</b> (40001952:10336) · font Nunito.</p>
+</body></html>

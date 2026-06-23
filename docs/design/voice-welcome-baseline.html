@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Voice Welcome — 1:1 from Figma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+.pagehead{text-align:center;margin-bottom:24px;max-width:560px;}
+.pagehead .eyebrow{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}
+.pagehead h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}
+.pagehead p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}.pagehead code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+.phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30),0 4px 14px rgba(11,60,64,.18);position:relative;}
+.screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;background:radial-gradient(130% 50% at 50% 30%,rgba(255,255,255,.7),rgba(255,255,255,0) 60%),linear-gradient(180deg,#E9F5F2 0%,#DEF1ED 50%,#CFEAE6 100%);}
+.statusbar{height:44px;display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;}
+.statusbar .time{font-weight:700;font-size:15px;color:#173c40;}.ind{display:flex;gap:6px;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 0;}
+.voice-pill{background:#fff;border-radius:999px;padding:9px 17px;font-weight:700;font-size:14.5px;color:#0E7077;box-shadow:0 5px 16px rgba(3,123,131,.12);}
+.close-btn{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 16px rgba(3,123,131,.12);}
+.hero{position:absolute;top:30%;left:0;right:0;display:flex;flex-direction:column;align-items:center;}
+.hero img{width:150px;height:130px;object-fit:contain;filter:drop-shadow(0 16px 20px rgba(40,90,95,.16));}
+.hero h2{font-weight:900;font-size:22px;color:#15848A;margin-top:14px;}
+.hero p{font-weight:600;font-size:14px;color:#5E7C7F;margin-top:6px;}
+.controls{position:absolute;bottom:40px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:54px;}
+.mini{width:50px;height:50px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(3,123,131,.14);}
+.mini svg{width:23px;height:23px;}
+.disc{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.8),rgba(255,255,255,0) 70%);display:flex;align-items:center;justify-content:center;}
+.disc img{width:58px;height:58px;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(4,86,92,.24));}
+.home-ind{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.3);}
+.srccite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:420px;line-height:1.5;}.srccite b{color:#0E8B93;}
+</style></head><body>
+<div class="pagehead"><div class="eyebrow">1:1 from Figma · Updated Chat UI</div><h1>Voice — Welcome</h1>
+<p>Figma <code>Voice - HeyLoLo Welcome</code> — the megaphone cloud, "Welcome to HeyLoLo Voice / Tap the mic below to start a conversation", + / disc / explorer.</p></div>
+<div class="phone"><div class="screen">
+  <div class="statusbar"><span class="time">9:41</span><span class="ind">
+    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+    <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg></span></div>
+  <div class="header"><div class="voice-pill">HeyLoLo Voice</div>
+    <div class="close-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="#5A8994" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+  <div class="hero"><img src="assets/figma/cloud-megaphone.png" alt=""><h2>Welcome to HeyLoLo Voice</h2><p>Tap the mic below to start a conversation</p></div>
+  <div class="controls">
+    <div class="mini"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="#0E8B93" stroke-width="2" stroke-linecap="round"/></svg></div>
+    <div class="disc"><img src="assets/disc-mesh.png" alt=""></div>
+    <div class="mini"><svg viewBox="0 0 24 24" fill="none"><path d="M22.24 14.24c-.07-.18-.14-.35-.22-.51l-3.9-8.87a2.9 2.9 0 0 0-4.42-.24.9.9 0 0 0-.2.53V7.5h-3V5.16a.9.9 0 0 0-.2-.53 2.9 2.9 0 0 0-4.42.24l-3.9 8.87c-.08.16-.16.33-.22.51a3.75 3.75 0 1 0 7.24 1.51V9h3v6.75a3.75 3.75 0 1 0 7.26-1.51ZM6 18.75A3 3 0 1 1 9 15.75 3 3 0 0 1 6 18.75Zm12 0a3 3 0 1 1 3-3 3 3 0 0 1-3 3Z" fill="#0E8B93"/></svg></div>
+  </div>
+  <div class="home-ind"></div>
+</div></div>
+<p class="srccite">Source: Figma <b>Updated Chat UI / Voice - HeyLoLo Welcome</b> (40001952:10514) · real megaphone cloud · font Nunito.</p>
+</body></html>
