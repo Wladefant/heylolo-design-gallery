@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Daily Summary — 1:1 from Figma</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+.ph{text-align:center;margin-bottom:22px;max-width:560px;}.ph .e{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}.ph h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}.ph p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}.ph code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+.phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30);position:relative;}
+.screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;background:linear-gradient(180deg,#E9F4F1,#E2F1ED);display:flex;flex-direction:column;}
+.sb{height:42px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:13px 22px 0;font-weight:700;font-size:14px;color:#173c40;}.sb .d{display:flex;gap:3px;align-items:flex-end;}.sb .d i{width:3px;background:#173c40;border-radius:1px;}
+.top{flex:none;display:flex;align-items:center;justify-content:space-between;padding:4px 18px 2px;}
+.top h2{font-weight:900;font-size:19px;color:#15727A;}
+.sw{display:flex;align-items:center;gap:5px;background:#fff;border-radius:999px;padding:5px 11px;font-weight:700;font-size:12.5px;color:#176E73;box-shadow:0 3px 9px rgba(3,123,131,.1);}
+.scroll{flex:1;overflow:hidden;padding:6px 16px 0;}
+.datenav{display:flex;align-items:center;justify-content:center;gap:18px;font-weight:800;font-size:14px;color:#2c4d50;margin:2px 0 12px;}.datenav span{color:#3C9094;}
+.card{background:#fff;border-radius:18px;padding:14px;box-shadow:0 8px 20px rgba(20,90,95,.07);margin-bottom:12px;}
+.sec{font-weight:800;font-size:14.5px;color:#1B7F84;margin-bottom:10px;}
+.sent{display:flex;align-items:center;gap:14px;}
+.gauge{position:relative;width:84px;height:50px;flex:none;}
+.gnum{position:absolute;left:0;right:0;bottom:0;text-align:center;font-weight:900;font-size:21px;color:#15727A;}
+.sent .st{font-weight:600;font-size:12.5px;line-height:1.4;color:#6f8d90;}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px;}
+.tile{background:#fff;border-radius:16px;padding:13px;text-align:center;box-shadow:0 6px 16px rgba(20,90,95,.06);}
+.tile .l{font-weight:700;font-size:12px;color:#7a979a;}.tile .v{font-weight:900;font-size:17px;color:#15727A;margin-top:2px;}
+.moods{display:flex;justify-content:space-around;}
+.mood{text-align:center;}.mood img{width:48px;height:42px;object-fit:contain;}.mood span{display:block;font-weight:600;font-size:11px;color:#8aa7aa;margin-top:2px;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{background:#E6F2F1;border-radius:999px;padding:5px 11px;font-weight:700;font-size:12px;color:#2E8C90;}
+.attn{background:#FCEDE9;border-radius:18px;padding:14px;margin-bottom:12px;}
+.attn .a{font-weight:800;font-size:14px;color:#D9774E;}
+.attn .b{font-weight:600;font-size:12.5px;line-height:1.4;color:#9a7a6e;margin:4px 0 11px;}
+.attn .btn{background:linear-gradient(180deg,#F2956A,#E97E4F);color:#fff;font-weight:800;font-size:13.5px;text-align:center;border-radius:999px;padding:11px;}
+.conv{background:#fff;border-radius:16px;padding:13px 14px;box-shadow:0 6px 16px rgba(20,90,95,.06);margin-bottom:10px;}
+.conv .ct{font-weight:800;font-size:14.5px;color:#176E73;}
+.conv .cm{font-weight:600;font-size:11.5px;color:#9bb6b9;margin-top:2px;}
+.bar{height:6px;border-radius:3px;background:#eef3f2;margin:9px 0;position:relative;}.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:#3FA079;display:block;}
+.vm{font-weight:800;font-size:12.5px;color:#1B7F84;}
+.insight{display:flex;gap:12px;align-items:center;padding:9px 0;}.insight+.insight{border-top:1px solid #f0f5f4;}
+.insight img{width:46px;height:40px;object-fit:contain;flex:none;}
+.insight .it{font-weight:800;font-size:13.5px;color:#1c4d50;}.insight .id{font-weight:600;font-size:12px;line-height:1.35;color:#7a979a;}
+.starter{display:flex;gap:10px;align-items:flex-start;padding:9px 0;font-weight:600;font-size:13px;line-height:1.4;color:#5e7c7f;}.starter+.starter{border-top:1px solid #f0f5f4;}
+.starter svg{width:18px;height:18px;flex:none;margin-top:1px;}
+.hi{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:120px;height:5px;border-radius:3px;background:rgba(20,60,64,.18);}
+.cite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:420px;}.cite b{color:#0E8B93;}
+</style></head><body>
+<div class="ph"><div class="e">1:1 from Figma · Daily Summary</div><h1>Daily Summary</h1><p>Figma <code>Daily Summary</code> — sentiment gauge, mood journey, topics, Requires Attention, conversation cards with sentiment bars, HeyLoLo's Insights + Conversation Starters.</p></div>
+<div class="phone"><div class="screen">
+  <div class="sb"><span>9:41</span><span class="d"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:13px;opacity:.4"></i></span></div>
+  <div class="top"><h2>Daily Summary</h2><div class="sw"><img src="assets/figma/avatar-paul.png" style="width:22px;height:22px;object-fit:contain" alt="">Paul <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#176E73" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+  <div class="scroll">
+    <div class="datenav"><span>‹</span> Saturday, 14 April <span>›</span></div>
+    <div class="card"><div class="sec">Today's Overall Sentiment</div><div class="sent">
+      <div class="gauge"><svg width="84" height="50" viewBox="0 0 84 50"><path d="M8 46a34 34 0 0 1 68 0" fill="none" stroke="#eef3f2" stroke-width="8" stroke-linecap="round"/><path d="M8 46a34 34 0 0 1 56.5-25.6" fill="none" stroke="#F2A24E" stroke-width="8" stroke-linecap="round"/></svg><div class="gnum">61</div></div>
+      <div class="st">Shared feelings of doubt and slight insecurity about friendships</div>
+    </div></div>
+    <div class="tiles"><div class="tile"><div class="l">Conversations</div><div class="v">4 topics</div></div><div class="tile"><div class="l">Total Time</div><div class="v">13m 32s</div></div></div>
+    <div class="card"><div class="sec">Paul's Mood Journey Today</div><div class="moods">
+      <div class="mood"><img src="assets/ds/mood-morning.png" alt=""><span>Morning</span></div>
+      <div class="mood"><img src="assets/ds/mood-noon.png" alt=""><span>Noon</span></div>
+      <div class="mood"><img src="assets/ds/mood-night.png" alt=""><span>Night</span></div>
+    </div></div>
+    <div class="card"><div class="sec">Topics Discussed by Paul</div><div class="chips"><span class="chip">Science</span><span class="chip">Space</span><span class="chip">Homework</span><span class="chip">Friendship</span><span class="chip">Black Holes</span><span class="chip">Plants</span><span class="chip">Roblox</span><span class="chip">Math</span></div></div>
+    <div class="attn"><div class="a">Requires Attention</div><div class="b">Paul mentioned feeling left out at lunch. This could be a good conversation to have tonight.</div><div class="btn">View Conversation</div></div>
+    <div class="sec" style="margin:4px 2px 10px">Paul's Conversations</div>
+    <div class="conv"><div class="ct">Science Homework</div><div class="cm">08:20 PM · 4 messages</div><div class="bar"><i style="width:78%"></i></div><div class="vm">View More ›</div></div>
+    <div class="conv"><div class="ct">Space &amp; Planets</div><div class="cm">8:10 PM · 14 messages</div><div class="bar"><i style="width:100%"></i></div><div class="vm">View More ›</div></div>
+    <div class="conv"><div class="ct">Friendship With John</div><div class="cm">4:30 PM · 8 messages</div><div class="bar"><i style="width:62%;background:#F2A24E"></i></div><div class="vm">View More ›</div></div>
+    <div class="conv"><div class="ct">Gaming Conversation</div><div class="cm">11:30 AM · 12 messages</div><div class="bar"><i style="width:90%"></i></div><div class="vm">View More ›</div></div>
+    <div class="card"><div class="sec">HeyLoLo's Insights for Paul</div>
+      <div class="insight"><img src="assets/ds/insight-strength.png" alt=""><div><div class="it">Strength</div><div class="id">Paul shows great enthusiasm about strategic games that involve problem-solving.</div></div></div>
+      <div class="insight"><img src="assets/ds/insight-curiosity.png" alt=""><div><div class="it">Curiosity</div><div class="id">Paul asked thought-provoking questions about space and asked very smart questions.</div></div></div>
+      <div class="insight"><img src="assets/ds/insight-social.png" alt=""><div><div class="it">Social-Emotional</div><div class="id">Paul is developing skills in articulating his feelings about social situations.</div></div></div>
+    </div>
+    <div class="card"><div class="sec">Conversation Starters for Paul</div>
+      <div class="starter"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#2E8C90" stroke-width="2" stroke-linejoin="round"/></svg>"I heard you learned about black holes today. What was the coolest thing you discovered?"</div>
+      <div class="starter"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#2E8C90" stroke-width="2" stroke-linejoin="round"/></svg>"How did things go at lunch today? Want to talk about it?"</div>
+    </div>
+  </div>
+  <div class="hi"></div>
+</div></div>
+<p class="cite">Source: Figma <b>Daily Summary</b> (40000453:7298) · real mood + insight assets · font Nunito.</p>
+</body></html>
