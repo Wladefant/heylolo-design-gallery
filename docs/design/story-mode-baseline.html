@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Story Mode — 1:1 from Figma</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+.ph{text-align:center;margin-bottom:22px;max-width:560px;}.ph .e{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}.ph h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}.ph p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}.ph code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+.phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30);position:relative;}
+.screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;background:linear-gradient(180deg,#E9F4F1,#E0F1EC 60%,#D8EDE8);display:flex;flex-direction:column;}
+.sb{height:44px;display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;font-weight:700;font-size:15px;color:#173c40;}.sb .d{display:flex;gap:3px;align-items:flex-end;}.sb .d i{width:3px;background:#173c40;border-radius:1px;}
+.hd{display:flex;align-items:center;gap:10px;padding:6px 16px 8px;}
+.back{width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(3,123,131,.1);}
+.hd h2{font-weight:900;font-size:17px;color:#15727A;flex:1;text-align:center;}
+.dots{width:36px;text-align:center;color:#3C9094;font-weight:800;}
+.art{margin:8px 22px 0;border-radius:22px;overflow:hidden;box-shadow:0 16px 34px rgba(20,60,64,.25);aspect-ratio:1/.94;}
+.art img{width:100%;height:100%;object-fit:cover;display:block;}
+.chap{text-align:center;margin-top:18px;}.chap .c{font-weight:900;font-size:19px;color:#1c4d50;}.chap .t{font-weight:600;font-size:14px;color:#7a979a;margin-top:2px;}
+.scrub{margin:20px 30px 0;}
+.bar{height:5px;border-radius:3px;background:#cfe3e3;position:relative;}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;width:72%;background:#1E8E8E;border-radius:3px;}
+.bar .knob{position:absolute;left:72%;top:50%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;background:#1E8E8E;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.2);}
+.times{display:flex;justify-content:space-between;font-weight:700;font-size:12px;color:#8aa7aa;margin-top:8px;}
+.pc{display:flex;align-items:center;justify-content:center;gap:34px;margin-top:18px;}
+.pc .sk{color:#3C9094;font-weight:800;display:flex;flex-direction:column;align-items:center;}.pc .sk svg{width:30px;height:30px;}.pc .sk small{font-size:9px;margin-top:-6px;}
+.play{width:72px;height:72px;border-radius:50%;background:#1E8E8E;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(20,110,114,.3);}
+.hi{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.25);}
+.cite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:420px;}.cite b{color:#0E8B93;}
+</style></head><body>
+<div class="ph"><div class="e">1:1 from Figma · Story Mode</div><h1>Story Mode</h1><p>Figma <code>Story Mode</code> — an audiobook player: story art, "Chapter 7 / The Great Escape", scrubber + rewind / play / forward.</p></div>
+<div class="phone"><div class="screen">
+  <div class="sb"><span>9:41</span><span class="d"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:13px;opacity:.4"></i></span></div>
+  <div class="hd"><div class="back"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#3C9094" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>The boy who was afraid</h2><div class="dots">⋮</div></div>
+  <div class="art"><img src="assets/figma/story-art.png" alt=""></div>
+  <div class="chap"><div class="c">Chapter 7</div><div class="t">The Great Escape</div></div>
+  <div class="scrub"><div class="bar"><div class="fill"></div><div class="knob"></div></div><div class="times"><span>7:14</span><span>10:00</span></div></div>
+  <div class="pc">
+    <div class="sk"><svg viewBox="0 0 24 24" fill="none"><path d="M11 8 4 12l7 4V8Z" fill="#3C9094"/><path d="M20 5a9 9 0 1 1-9-9" stroke="#3C9094" stroke-width="2" stroke-linecap="round" transform="rotate(20 12 12)"/></svg><small>15</small></div>
+    <div class="play"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="#fff"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="#fff"/></svg></div>
+    <div class="sk"><svg viewBox="0 0 24 24" fill="none"><path d="M13 8l7 4-7 4V8Z" fill="#3C9094"/><path d="M4 5a9 9 0 1 0 9-9" stroke="#3C9094" stroke-width="2" stroke-linecap="round" transform="rotate(-20 12 12)"/></svg><small>15</small></div>
+  </div>
+  <div class="hi"></div>
+</div></div>
+<p class="cite">Source: Figma <b>Story Mode</b> (40001975:11133) · real story art · font Nunito.</p>
+</body></html>

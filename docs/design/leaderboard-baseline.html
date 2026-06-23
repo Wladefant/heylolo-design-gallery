@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Leaderboard — 1:1 from Figma</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#eaf1f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 16px 64px;color:#28484c;}
+.ph{text-align:center;margin-bottom:22px;max-width:560px;}.ph .e{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:#0E8B93;}.ph h1{font-weight:900;font-size:24px;margin:6px 0 8px;color:#114e52;}.ph p{font-weight:500;font-size:13.5px;line-height:1.55;color:#5d7e82;}.ph code{background:#dce9e8;padding:1px 6px;border-radius:6px;font-size:12px;}
+.phone{width:340px;height:724px;border-radius:52px;background:#0c2f33;padding:11px;box-shadow:0 30px 70px rgba(11,60,64,.30);position:relative;}
+.screen{width:100%;height:100%;border-radius:42px;overflow:hidden;position:relative;background:linear-gradient(180deg,#DCEFF7 0%,#E9F5FA 60%,#EFF7F6 100%);display:flex;flex-direction:column;}
+.cloud-bg{position:absolute;border-radius:50%;background:rgba(255,255,255,.6);filter:blur(2px);}
+.sb{position:relative;height:44px;display:flex;align-items:center;justify-content:space-between;padding:14px 24px 0;font-weight:700;font-size:15px;color:#173c40;z-index:2;}.sb .d{display:flex;gap:3px;align-items:flex-end;}.sb .d i{width:3px;background:#173c40;border-radius:1px;}
+.hd{position:relative;z-index:2;display:flex;align-items:center;gap:10px;padding:6px 18px 6px;}
+.back{width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(3,80,90,.12);}
+.hd h2{font-weight:900;font-size:19px;color:#15727A;flex:1;text-align:center;margin-right:36px;}
+.toggle{position:relative;z-index:2;margin:4px 60px 6px;background:rgba(255,255,255,.7);border-radius:999px;padding:4px;display:flex;}
+.toggle div{flex:1;text-align:center;font-weight:800;font-size:13px;color:#6f9197;padding:8px;border-radius:999px;}
+.toggle .on{background:#fff;color:#15727A;box-shadow:0 3px 8px rgba(20,90,95,.12);}
+.podium{position:relative;z-index:2;display:flex;align-items:flex-end;justify-content:center;gap:8px;margin-top:10px;padding:0 22px;}
+.col{display:flex;flex-direction:column;align-items:center;}
+.col img{width:52px;height:46px;object-fit:contain;}
+.col .nm{font-weight:800;font-size:13px;color:#1c4d50;margin-top:2px;}
+.col .xp{font-weight:800;font-size:11px;color:#fff;border-radius:999px;padding:2px 9px;margin-top:3px;}
+.block{width:84px;border-radius:14px 14px 0 0;display:flex;align-items:flex-start;justify-content:center;font-weight:900;color:#fff;font-size:30px;padding-top:8px;margin-top:6px;}
+.c1 img{width:62px;height:54px;}.c1 .block{height:120px;background:linear-gradient(180deg,#6FC9C6,#49AEAB);} .c1 .xp{background:#3FA079;}
+.c2 .block{height:90px;background:linear-gradient(180deg,#A9D2EC,#86BCDF);} .c2 .xp{background:#5B97C4;}
+.c3 .block{height:70px;background:linear-gradient(180deg,#F4B7B0,#EC9B92);} .c3 .xp{background:#E08077;}
+.list{position:relative;z-index:2;margin:0 16px;}
+.lr{background:#fff;border-radius:16px;padding:11px 14px;display:flex;align-items:center;gap:12px;margin-top:10px;box-shadow:0 6px 16px rgba(20,90,95,.07);}
+.lr .rk{font-weight:900;font-size:15px;color:#9bb6b9;width:18px;}
+.lr .av{width:36px;height:36px;border-radius:50%;background:#eef6f5;display:flex;align-items:center;justify-content:center;overflow:hidden;}.lr .av img{width:34px;height:34px;object-fit:contain;}
+.lr .nm{flex:1;font-weight:800;font-size:15px;color:#1c4d50;}
+.lr .xp{font-weight:800;font-size:13.5px;color:#15727A;}
+.hi{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.25);z-index:2;}
+.cite{margin-top:20px;font-size:12px;color:#6c8b8e;text-align:center;max-width:420px;}.cite b{color:#0E8B93;}
+</style></head><body>
+<div class="ph"><div class="e">1:1 from Figma · Leaderboard &amp; Badges</div><h1>Leaderboard</h1><p>Figma <code>Leaderboard - 1</code> — Weekly / All Time toggle, the 1-2-3 podium (Paul / Theo / Mary) + ranked list. Avatars are cloud stand-ins.</p></div>
+<div class="phone"><div class="screen">
+  <span class="cloud-bg" style="width:80px;height:34px;top:120px;left:30px"></span>
+  <span class="cloud-bg" style="width:70px;height:30px;top:160px;right:26px"></span>
+  <div class="sb"><span>9:41</span><span class="d"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:13px;opacity:.4"></i></span></div>
+  <div class="hd"><div class="back"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#3C9094" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h2>Leaderboard</h2></div>
+  <div class="toggle"><div>Weekly</div><div class="on">All Time</div></div>
+  <div class="podium">
+    <div class="col c2"><img src="assets/figma/avatar-john.png" alt=""><div class="nm">Theo</div><div class="xp">3,517 XP</div><div class="block">2</div></div>
+    <div class="col c1"><img src="assets/figma/avatar-paul.png" alt=""><div class="nm">Paul</div><div class="xp">5,924 XP</div><div class="block">1</div></div>
+    <div class="col c3"><img src="assets/figma/avatar-stella.png" alt=""><div class="nm">Mary</div><div class="xp">1,501 XP</div><div class="block">3</div></div>
+  </div>
+  <div class="list">
+    <div class="lr"><span class="rk">4</span><div class="av"><img src="assets/figma/avatar-george.png" alt=""></div><span class="nm">Emma</span><span class="xp">1,405 XP</span></div>
+    <div class="lr"><span class="rk">5</span><div class="av"><img src="assets/mood/happy.png" alt=""></div><span class="nm">Lemmy</span><span class="xp">1,215 XP</span></div>
+  </div>
+  <div class="hi"></div>
+</div></div>
+<p class="cite">Source: Figma <b>Leaderboard &amp; Badges / Leaderboard - 1</b> (40002430:12346) · font Nunito.</p>
+</body></html>
