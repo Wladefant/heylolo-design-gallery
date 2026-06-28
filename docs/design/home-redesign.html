@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kid Home redesign · HeyLoLo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --lagoon:#037B83;--chill:#0E8B93;--paradiso:#3C9094;--fountain:#5EBCC1;--ink:#114e52;--ink2:#28484c;
+    --muted:#5b9296;--muted2:#6c8b8e;--teal-deep:#16737A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;color:var(--ink2);
+    background:radial-gradient(900px 500px at 50% -8%, #d8f0f3 0, rgba(216,240,243,0) 60%),linear-gradient(180deg,#eef6f6,#e7f1f1);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:34px 16px 70px;}
+  h1.page{font-weight:900;font-size:25px;color:var(--ink);letter-spacing:-.01em;}
+  .sub{font-weight:600;font-size:13.5px;line-height:1.55;color:var(--muted);max-width:600px;text-align:center;margin:7px 0 22px;}
+
+  .phone{width:344px;height:730px;border-radius:54px;background:#0c2f33;padding:11px;box-shadow:0 36px 80px rgba(11,60,64,.30),0 6px 16px rgba(11,60,64,.16);position:relative;}
+  .screen{width:100%;height:100%;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;
+    background:linear-gradient(180deg,#D6EFF5 0%,#E3F5F3 42%,#EFF9F8 72%,#FBFDFD 100%);}
+  .statusbar{height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:15px 26px 0;}
+  .statusbar .time{font-family:'DM Sans';font-weight:700;font-size:15px;color:#173c40;}
+  .statusbar .ind{display:flex;align-items:center;gap:6px;}
+
+  .scroll{flex:1;overflow:hidden;padding:6px 20px 0;
+    -webkit-mask-image:linear-gradient(180deg,#000 92%,transparent 100%);mask-image:linear-gradient(180deg,#000 92%,transparent 100%);}
+
+  .greet{display:flex;align-items:center;gap:12px;margin-top:8px;}
+  .greet .lolo{width:54px;height:54px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 38% 32%, #F5FBFB,#DEF4F6 46%,#CDF0F2 100%);border:4px solid rgba(255,255,255,.6);box-shadow:0 8px 16px rgba(3,123,131,.18);}
+  .greet .lolo svg{width:28px;height:28px;}
+  .greet h2{font-weight:900;font-size:23px;line-height:1.12;color:var(--teal-deep);letter-spacing:-.01em;}
+  .greet h2 .w{color:#7FB7BB;}
+  .tagline{font-weight:600;font-size:14px;line-height:1.5;color:#5E7C7F;margin-top:13px;}
+
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;}
+  .mode{background:#fff;border-radius:22px;padding:16px 14px 14px;box-shadow:0 8px 22px rgba(20,90,95,.09);cursor:pointer;
+    transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .2s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;}
+  .mode:active{transform:scale(.97);}
+  .mode .ic{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;}
+  .mode .ic svg{width:26px;height:26px;}
+  .mode .t{font-weight:800;font-size:15px;color:#1B7F84;line-height:1.15;}
+  .mode .d{font-weight:600;font-size:12px;color:#7a9a9d;line-height:1.3;}
+  .mode.voice{grid-column:1 / -1;flex-direction:row;align-items:center;gap:14px;
+    background:linear-gradient(135deg,#0E8B93,#037B83);box-shadow:0 12px 26px rgba(3,123,131,.30);}
+  .mode.voice .ic{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.18);}
+  .mode.voice .ic svg{width:30px;height:30px;}
+  .mode.voice .t{color:#fff;font-size:17px;}
+  .mode.voice .d{color:rgba(255,255,255,.82);font-size:12.5px;}
+  .mode.voice .go{margin-left:auto;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex:none;}
+  .ic.chat{background:#E4F3F2;}.ic.explore{background:#FFF0E9;}
+
+  .card{background:#fff;border-radius:26px;padding:20px;margin-top:16px;box-shadow:0 12px 28px rgba(20,90,95,.10);}
+  .card .label{font-weight:800;font-size:13px;color:var(--chill);}
+  .qrow{display:flex;align-items:center;gap:14px;margin-top:10px;}
+  .qmasc{width:74px;height:74px;border-radius:20px;flex:none;background:linear-gradient(160deg,#EAF7F6,#D7EEEF);display:flex;align-items:center;justify-content:center;}
+  .qmasc svg{width:40px;height:40px;}
+  .qtext{font-weight:700;font-size:16px;line-height:1.3;color:#3f6164;}
+  .cta{display:block;width:100%;margin-top:16px;background:linear-gradient(180deg,#2F8E92,#247A7E);color:#fff;font-family:inherit;
+    font-weight:800;font-size:16px;border:none;border-radius:999px;padding:15px;cursor:pointer;box-shadow:0 10px 22px rgba(20,110,114,.26);
+    transition:transform .14s;}
+  .cta:active{transform:scale(.98);}
+
+  .goal{display:flex;align-items:center;gap:14px;}
+  .goal .gmasc{width:56px;height:56px;border-radius:18px;flex:none;background:linear-gradient(160deg,#FFF3EC,#FFE3D6);display:flex;align-items:center;justify-content:center;}
+  .goal .gmasc svg{width:30px;height:30px;}
+  .goal .gt{font-weight:800;font-size:15px;color:#1B7F84;}
+  .goal .gd{font-weight:600;font-size:12.5px;color:#8aa6a8;margin-top:2px;}
+  .goal .ring{margin-left:auto;width:46px;height:46px;flex:none;}
+
+  .tabbar{position:absolute;left:16px;right:16px;bottom:14px;height:66px;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);
+    border-radius:28px;box-shadow:0 12px 32px rgba(11,60,64,.16);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:5;}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:800;font-size:11px;color:#9bb5b8;flex:1;cursor:pointer;}
+  .tab.active{color:#178187;}
+  .pill{width:56px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+  .tab.active .pill{background:#E0F1EE;}
+  .tab svg{width:22px;height:22px;}
+  .home-ind{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.18);z-index:6;}
+
+  .notes{margin-top:20px;max-width:520px;font-size:12.5px;color:var(--muted2);text-align:center;line-height:1.6;}
+  .notes b{color:var(--chill);}
+  @media (prefers-reduced-motion: reduce){*{transition-duration:.08s !important;}}
+</style>
+</head>
+<body>
+  <h1 class="page">Kid Home</h1>
+  <p class="sub">The warm welcome + a clear way in: a hero <b>Talk to LoLo</b> tile, then Chat & Explore, the Question of the Day, and today's goal. Real mascot glyphs, tide-pool palette, soft cards.</p>
+
+  <div class="phone"><div class="screen">
+    <div class="statusbar">
+      <span class="time">9:41</span>
+      <span class="ind">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
+      </span>
+    </div>
+
+    <div class="scroll">
+      <div class="greet">
+        <div class="lolo"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1.1" fill="#fff"/><circle cx="14" cy="11.5" r="1.1" fill="#fff"/><path d="M10.3 13.7c.6.6 2.8.6 3.4 0" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <h2>Hi <span class="w">Wladimir!</span><br>I'm LoLo</h2>
+      </div>
+      <p class="tagline">Let's discover something exciting together. What would you like to do today?</p>
+
+      <div class="modes">
+        <div class="mode voice">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div><div class="t">Talk to LoLo</div><div class="d">Have a voice chat — just say hi</div></div>
+          <div class="go"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 10v4M10.5 6v12M15 9v6M19 11v2" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="mode">
+          <div class="ic chat"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#0E8B93" stroke-width="2" stroke-linejoin="round"/></svg></div>
+          <div class="t">Chat with LoLo</div>
+          <div class="d">Type or talk, see the words</div>
+        </div>
+        <div class="mode">
+          <div class="ic explore"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18" stroke="#E0763F" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="#E0763F" stroke-width="2"/></svg></div>
+          <div class="t">Explorer Mode</div>
+          <div class="d">Point at things & ask</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="label">Question of the day</div>
+        <div class="qrow">
+          <div class="qmasc"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#0E8B93" stroke-width="1.8"/><path d="M9.2 9.4a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2.2-2.6 3.8" stroke="#0E8B93" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.1" fill="#0E8B93"/></svg></div>
+          <div class="qtext">What is a small thing that made you happy this week?</div>
+        </div>
+        <button class="cta">Talk to LoLo about it</button>
+      </div>
+
+      <div class="card goal">
+        <div class="gmasc"><svg viewBox="0 0 24 24" fill="none"><path d="M5 3v10a7 7 0 0 0 14 0V3" stroke="#E0763F" stroke-width="1.8" stroke-linecap="round"/><path d="M5 6h14M8 21h8M12 20v-3" stroke="#E0763F" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <div><div class="gt">Today's goal</div><div class="gd">Learn 3 fun facts about space</div></div>
+        <svg class="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="#E6F2F1" stroke-width="5"/><circle cx="22" cy="22" r="18" fill="none" stroke="#0E8B93" stroke-width="5" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="40" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle" font-family="DM Sans" font-weight="700" font-size="12" fill="#0E8B93">2/3</text></svg>
+      </div>
+    </div>
+
+    <div class="tabbar">
+      <div class="tab active"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9h14v-9" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Home</div>
+      <div class="tab"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#9bb5b8" stroke-width="2" stroke-linejoin="round"/></svg></span>Chats</div>
+      <div class="tab"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#9bb5b8" stroke-width="2"/><path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2M6.7 6.7l1.4 1.4M15.9 15.9l1.4 1.4M17.3 6.7l-1.4 1.4M8.1 15.9l-1.4 1.4" stroke="#9bb5b8" stroke-width="2" stroke-linecap="round"/></svg></span>Settings</div>
+    </div>
+    <div class="home-ind"></div>
+  </div></div>
+
+  <p class="notes">The voice-first way in is the <b>hero tile</b> (kids can't all read), with Chat & Explorer below. The QOTD card keeps its "Talk to LoLo about it" launcher; the goal card gains a quiet progress ring.</p>
+</body>
+</html>

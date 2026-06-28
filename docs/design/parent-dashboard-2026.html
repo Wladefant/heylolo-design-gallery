@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Parent Dashboard 2026 · HeyLoLo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --lagoon:#037B83;--chill:#0E8B93;--paradiso:#3C9094;--fountain:#5EBCC1;--ink:#114e52;--ink2:#28484c;
+    --muted:#5b9296;--muted2:#6c8b8e;--teal-deep:#15727A;--green:#3FA079;
+    --coral-bg:#FFF0EA;--coral-ink:#E0763F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;color:var(--ink2);
+    background:radial-gradient(900px 500px at 50% -8%, #d8f0f3 0, rgba(216,240,243,0) 60%),linear-gradient(180deg,#eef6f6,#e7f1f1);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:34px 16px 70px;}
+  h1.page{font-weight:900;font-size:25px;color:var(--ink);letter-spacing:-.01em;}
+  .sub{font-weight:600;font-size:13.5px;line-height:1.55;color:var(--muted);max-width:600px;text-align:center;margin:7px 0 22px;}
+
+  .phone{width:344px;height:730px;border-radius:54px;background:#0c2f33;padding:11px;box-shadow:0 36px 80px rgba(11,60,64,.30),0 6px 16px rgba(11,60,64,.16);position:relative;}
+  .screen{width:100%;height:100%;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;
+    background:linear-gradient(180deg,#D6EFF5 0%,#E3F5F3 42%,#EFF9F8 72%,#FBFDFD 100%);}
+  .statusbar{height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:15px 26px 0;}
+  .statusbar .time{font-family:'DM Sans';font-weight:700;font-size:15px;color:#173c40;}
+  .statusbar .ind{display:flex;align-items:center;gap:6px;}
+
+  .scroll{flex:1;overflow:hidden;padding:6px 18px 0;
+    -webkit-mask-image:linear-gradient(180deg,#000 92%,transparent 100%);mask-image:linear-gradient(180deg,#000 92%,transparent 100%);}
+
+  .tophdr{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+  .tophdr h2{font-weight:900;font-size:22px;color:var(--teal-deep);letter-spacing:-.01em;}
+  .switch{display:flex;align-items:center;gap:9px;background:#fff;border-radius:999px;padding:5px 12px 5px 5px;
+    box-shadow:0 5px 14px rgba(3,123,131,.12);font-weight:800;font-size:13.5px;color:#176E73;cursor:pointer;transition:transform .14s;}
+  .switch:active{transform:scale(.96);}
+  .switch .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(160deg,#FFE3D6,#FFD0BD);display:flex;align-items:center;justify-content:center;font-weight:900;color:#E0763F;font-size:13px;}
+  .switch .sw{width:18px;height:18px;display:flex;align-items:center;justify-content:center;}
+
+  .card{background:#fff;border-radius:26px;box-shadow:0 12px 28px rgba(20,90,95,.10);}
+  .week{margin-top:16px;padding:18px 18px 16px;}
+  .weekrow{display:flex;align-items:center;gap:13px;}
+  .weekrow .av{width:48px;height:48px;border-radius:50%;flex:none;background:linear-gradient(160deg,#FFE3D6,#FFD0BD);display:flex;align-items:center;justify-content:center;font-weight:900;color:#E0763F;font-size:18px;}
+  .weekrow .wt .l{font-weight:700;font-size:13px;color:var(--paradiso);}
+  .weekrow .wt .m{font-weight:900;font-size:19px;color:var(--teal-deep);margin-top:1px;}
+  .weekrow .mood{margin-left:auto;font-weight:800;font-size:12px;color:var(--green);background:#E6F5EE;padding:6px 12px;border-radius:999px;}
+  .chart{margin:16px 0 4px;}
+  .days{display:flex;justify-content:space-between;font-family:'DM Sans';font-weight:600;font-size:11px;color:#9bb6b9;padding:0 4px;}
+
+  .safety{margin-top:13px;background:var(--coral-bg);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:transform .14s;}
+  .safety:active{transform:scale(.98);}
+  .safety .num{font-family:'DM Sans';font-weight:700;font-size:26px;color:var(--coral-ink);line-height:1;width:34px;text-align:center;}
+  .safety .st{flex:1;}
+  .safety .st .a{font-weight:800;font-size:15px;color:#C25E2C;}
+  .safety .st .b{font-weight:600;font-size:12.5px;color:#b58468;margin-top:1px;}
+  .safety .review{font-weight:800;font-size:12.5px;color:#fff;background:var(--coral-ink);padding:8px 13px;border-radius:999px;}
+
+  .childmode{display:block;width:100%;margin:15px 0 2px;text-align:center;font-family:inherit;font-weight:800;font-size:15.5px;color:#fff;
+    border:none;border-radius:999px;padding:15px;cursor:pointer;background:linear-gradient(180deg,#2F8E92,#247A7E);
+    box-shadow:0 10px 22px rgba(20,110,114,.26);transition:transform .14s;}
+  .childmode:active{transform:scale(.98);}
+
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+  .tile{background:#fff;border-radius:22px;padding:15px 15px 16px;box-shadow:0 10px 26px rgba(20,90,95,.09);}
+  .tile .tt{font-weight:700;font-size:12.5px;color:var(--muted);}
+  .tile .companion{display:flex;align-items:center;gap:10px;margin-top:10px;}
+  .tile .cic{width:38px;height:38px;border-radius:12px;background:#FFF0E9;display:flex;align-items:center;justify-content:center;flex:none;}
+  .tile .cn{font-weight:800;font-size:15px;color:#1B7F84;line-height:1.1;}
+  .tile .usage{font-family:'DM Sans';font-weight:700;font-size:24px;color:var(--teal-deep);margin-top:10px;}
+  .tile .usage span{font-size:14px;color:var(--muted);}
+  .tile .bar{height:5px;border-radius:3px;background:#E6F2F1;margin-top:10px;overflow:hidden;}
+  .tile .bar i{display:block;height:100%;width:62%;background:linear-gradient(90deg,var(--fountain),var(--chill));border-radius:3px;}
+
+  .tabbar{position:absolute;left:14px;right:14px;bottom:13px;height:64px;background:#27393C;border-radius:26px;
+    display:flex;align-items:center;justify-content:space-around;box-shadow:0 14px 32px rgba(11,40,42,.34);z-index:5;}
+  .tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:700;font-size:10.5px;color:#9fb4b5;cursor:pointer;}
+  .tb.active{color:#5FD6D6;}.tb svg{width:21px;height:21px;}
+  .home-ind{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:120px;height:5px;border-radius:3px;background:rgba(255,255,255,.5);z-index:6;}
+
+  .notes{margin-top:20px;max-width:520px;font-size:12.5px;color:var(--muted2);text-align:center;line-height:1.6;}
+  .notes b{color:var(--chill);}
+  @media (prefers-reduced-motion: reduce){*{transition-duration:.08s !important;}}
+</style>
+</head>
+<body>
+  <h1 class="page">Parent Dashboard</h1>
+  <p class="sub">The grown-up side: the week's mood at a glance, a gentle <b>safety review</b> when something needs a look, current companion + usage, and the way into Child Mode. Calm, trustworthy, numerals in DM Sans.</p>
+
+  <div class="phone"><div class="screen">
+    <div class="statusbar">
+      <span class="time">9:41</span>
+      <span class="ind">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
+      </span>
+    </div>
+
+    <div class="scroll">
+      <div class="tophdr">
+        <h2>Hello, Anna</h2>
+        <div class="switch">
+          <span class="av">P</span>Paul
+          <span class="sw"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M7 8a2.6 2.6 0 1 0 0-.01M17 16a2.6 2.6 0 1 0 0-.01M4 18v-1a3 3 0 0 1 3-3M20 6v1a3 3 0 0 1-3 3" stroke="#176E73" stroke-width="1.9" stroke-linecap="round"/></svg></span>
+        </div>
+      </div>
+
+      <div class="card week">
+        <div class="weekrow">
+          <span class="av">P</span>
+          <div class="wt"><div class="l">Paul's week</div><div class="m">Happy & Calm</div></div>
+          <span class="mood">Steady</span>
+        </div>
+        <svg class="chart" width="100%" height="64" viewBox="0 0 290 64" preserveAspectRatio="none">
+          <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3FA079" stop-opacity=".22"/><stop offset="1" stop-color="#3FA079" stop-opacity="0"/></linearGradient></defs>
+          <path d="M10,36 56,26 102,42 148,24 194,28 240,22 280,30 L280,60 L10,60 Z" fill="url(#g)"/>
+          <polyline points="10,36 56,26 102,42 148,24 194,28 240,22 280,30" fill="none" stroke="#3FA079" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#fff" stroke="#3FA079" stroke-width="2.2"><circle cx="10" cy="36" r="3.6"/><circle cx="56" cy="26" r="3.6"/><circle cx="102" cy="42" r="3.6"/><circle cx="148" cy="24" r="3.6"/><circle cx="194" cy="28" r="3.6"/><circle cx="240" cy="22" r="3.6"/><circle cx="280" cy="30" r="3.6"/></g>
+        </svg>
+        <div class="days"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+
+        <div class="safety">
+          <span class="num">1</span>
+          <div class="st"><div class="a">Safety check</div><div class="b">One chat would like your eyes on it</div></div>
+          <span class="review">Review</span>
+        </div>
+      </div>
+
+      <button class="childmode">Enter Child Mode</button>
+
+      <div class="tiles">
+        <div class="tile">
+          <div class="tt">Current companion</div>
+          <div class="companion">
+            <div class="cic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18" stroke="#E0763F" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="#E0763F" stroke-width="2"/></svg></div>
+            <div class="cn">Explorer</div>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tt">Today's usage</div>
+          <div class="usage">1<span>h</span> 32<span>m</span></div>
+          <div class="bar"><i></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabbar">
+      <div class="tb active"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7" stroke="#5FD6D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9h14v-9" stroke="#5FD6D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Home</div>
+      <div class="tb"><svg viewBox="0 0 24 24" fill="none"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1.4A3.5 3.5 0 0 1 17 18H7Z" stroke="#9fb4b5" stroke-width="2" stroke-linejoin="round"/></svg>HeyLoLo</div>
+      <div class="tb"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#9fb4b5" stroke-width="2" stroke-linejoin="round"/></svg>Chat</div>
+      <div class="tb"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#9fb4b5" stroke-width="2"/><path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2M6.7 6.7l1.4 1.4M15.9 15.9l1.4 1.4M17.3 6.7l-1.4 1.4M8.1 15.9l-1.4 1.4" stroke="#9fb4b5" stroke-width="2" stroke-linecap="round"/></svg>Settings</div>
+    </div>
+    <div class="home-ind"></div>
+  </div></div>
+
+  <p class="notes">The safety check is a <b>calm coral</b> nudge, not an alarm ("would like your eyes on it" + a Review pill). Numerals are DM Sans; the child switcher uses a people-swap glyph (no chevron). Mood line gets a soft area fill.</p>
+</body>
+</html>
