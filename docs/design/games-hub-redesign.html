@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Games hub · HeyLoLo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* real tokens — palette.ts + chat-baseline (lifted from home/voice-chat redesign) */
+    --lagoon:#037B83;--chill:#0E8B93;--paradiso:#3C9094;--fountain:#5EBCC1;
+    --anakiwa:#A2F3FF;--onahau:#CAF8FF;--smalt:#5A8994;
+    --ink:#114e52;--ink2:#28484c;--muted:#5b9296;--muted2:#6c8b8e;--teal-deep:#16737A;
+    --disc1:#CDF0F2;--disc2:#DEF4F6;--disc3:#F5FBFB;
+    --coral-ink:#E0763F;
+    /* calm, tide-pool-aligned tile accents */
+    --amber:#C98A2E;--sea:#3B9C77;--sky:#3E82B5;--rose:#D45D74;
+    --r-lg:26px;--r-md:22px;--r-sm:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;color:var(--ink2);
+    background:radial-gradient(900px 500px at 50% -8%, #d8f0f3 0, rgba(216,240,243,0) 60%),linear-gradient(180deg,#eef6f6,#e7f1f1);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:34px 16px 70px;}
+  h1.page{font-weight:900;font-size:25px;color:var(--ink);letter-spacing:-.01em;}
+  .sub{font-weight:600;font-size:13.5px;line-height:1.55;color:var(--muted);max-width:600px;text-align:center;margin:7px 0 22px;}
+  .sub b{color:var(--chill);}
+
+  .phone{width:344px;height:730px;border-radius:54px;background:#0c2f33;padding:11px;box-shadow:0 36px 80px rgba(11,60,64,.30),0 6px 16px rgba(11,60,64,.16);position:relative;}
+  .screen{width:100%;height:100%;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;
+    background:linear-gradient(180deg,#D6EFF5 0%,#E3F5F3 42%,#EFF9F8 72%,#FBFDFD 100%);}
+  .statusbar{height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:15px 26px 0;}
+  .statusbar .time{font-family:'DM Sans';font-weight:700;font-size:15px;color:#173c40;}
+  .statusbar .ind{display:flex;align-items:center;gap:6px;}
+
+  .scroll{flex:1;overflow-y:auto;padding:6px 20px 96px;
+    -webkit-mask-image:linear-gradient(180deg,#000 88%,transparent 100%);mask-image:linear-gradient(180deg,#000 88%,transparent 100%);}
+  .scroll::-webkit-scrollbar{display:none;} .scroll{scrollbar-width:none;}
+
+  /* ---- hub header ---- */
+  .hubhead{display:flex;align-items:center;gap:11px;margin-top:6px;}
+  .circ{width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 12px rgba(3,123,131,.10);flex:none;cursor:pointer;transition:transform .14s;}
+  .circ:active{transform:scale(.92);}
+  .lolo{width:50px;height:50px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 38% 32%, var(--disc3),var(--disc2) 46%,var(--disc1) 100%);border:4px solid rgba(255,255,255,.6);box-shadow:0 8px 16px rgba(3,123,131,.18);}
+  .lolo svg{width:27px;height:27px;}
+  .htext h2{font-weight:900;font-size:24px;line-height:1.08;color:var(--teal-deep);letter-spacing:-.01em;}
+  .htext .tagline{font-weight:600;font-size:12.5px;line-height:1.4;color:#5E7C7F;margin-top:2px;}
+
+  /* ---- continue playing ---- */
+  .continue{background:#fff;border-radius:var(--r-lg);padding:15px 16px 16px;margin-top:18px;box-shadow:0 12px 28px rgba(20,90,95,.10);}
+  .label{font-weight:800;font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--chill);}
+  .crow{display:flex;align-items:center;gap:13px;margin-top:11px;}
+  .cicon{width:56px;height:56px;border-radius:18px;flex:none;background:#DCF0EF;display:flex;align-items:center;justify-content:center;}
+  .cicon svg{width:32px;height:32px;}
+  .ctext{flex:1;min-width:0;}
+  .ct{font-weight:800;font-size:16px;color:#28565a;line-height:1.15;}
+  .cd{font-weight:600;font-size:12.5px;color:#8aa6a8;margin-top:2px;}
+  .cplay{width:46px;height:46px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer;
+    background:linear-gradient(180deg,#2F8E92,#247A7E);box-shadow:0 8px 18px rgba(20,110,114,.28);transition:transform .14s;}
+  .cplay:active{transform:scale(.93);}
+
+  .rowhead{display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 0;}
+  .rowhead .rt{font-weight:900;font-size:16px;color:var(--teal-deep);letter-spacing:-.01em;}
+  .rowhead .rc{font-weight:700;font-size:12px;color:#8aa6a8;}
+
+  /* ---- game grid + tiles ---- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+  .tile{background:#fff;border-radius:var(--r-md);padding:15px 14px 14px;box-shadow:0 8px 22px rgba(20,90,95,.09);
+    cursor:pointer;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:9px;min-height:118px;
+    transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .2s;}
+  .tile:active{transform:scale(.96);box-shadow:0 5px 14px rgba(20,90,95,.10);}
+  .chip{width:50px;height:50px;border-radius:16px;display:flex;align-items:center;justify-content:center;}
+  .chip svg{width:29px;height:29px;}
+  .tt{font-weight:800;font-size:14.5px;color:#28565a;line-height:1.16;margin-top:auto;}
+  .td{font-weight:600;font-size:11.5px;color:#93aeb0;line-height:1.3;}
+
+  .c-teal{background:#DEF1F1;} .c-lagoon{background:#D7EDED;} .c-coral{background:#FFEBE2;}
+  .c-amber{background:#FBF0DA;} .c-sea{background:#E0F2E8;} .c-sky{background:#E3EFFA;} .c-rose{background:#FCE7EA;}
+
+  /* vs LoLo badge */
+  .vs{position:absolute;top:11px;right:11px;display:flex;align-items:center;gap:4px;
+    background:rgba(3,123,131,.10);color:#0E7077;font-weight:800;font-size:10px;letter-spacing:.01em;
+    padding:3px 8px 3px 4px;border-radius:999px;}
+  .vs .f{width:16px;height:16px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 38% 32%,var(--disc3),var(--disc2) 46%,var(--disc1) 100%);}
+  .vs .f svg{width:12px;height:12px;}
+
+  /* ---- tab bar (shared) ---- */
+  .tabbar{position:absolute;left:16px;right:16px;bottom:14px;height:66px;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);
+    border-radius:28px;box-shadow:0 12px 32px rgba(11,60,64,.16);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:5;}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:800;font-size:11px;color:#9bb5b8;flex:1;cursor:pointer;}
+  .tab.active{color:#178187;}
+  .pill{width:56px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+  .tab.active .pill{background:#E0F1EE;}
+  .tab svg{width:22px;height:22px;}
+  .home-ind{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.18);z-index:6;}
+
+  /* toast */
+  .toast{position:absolute;left:50%;bottom:94px;transform:translateX(-50%) translateY(10px);
+    background:rgba(17,78,82,.94);color:#fff;font-weight:700;font-size:13px;padding:11px 18px;border-radius:999px;
+    box-shadow:0 10px 24px rgba(11,60,64,.30);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:20;
+    display:flex;align-items:center;gap:9px;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast .spin{width:15px;height:15px;border-radius:50%;border:2.4px solid rgba(255,255,255,.35);border-top-color:#fff;animation:sp .7s linear infinite;}
+  @keyframes sp{to{transform:rotate(360deg);}}
+
+  .notes{margin-top:20px;max-width:520px;font-size:12.5px;color:var(--muted2);text-align:center;line-height:1.6;}
+  .notes b{color:var(--chill);}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;transition-duration:.08s !important;}}
+</style>
+</head>
+<body>
+  <h1 class="page">Games</h1>
+  <p class="sub">A warm, playful hub the kid taps to launch. <b>Continue playing</b> up top, then a calm grid of tiles — hand-drawn glyphs, a quiet <b>vs&nbsp;LoLo</b> badge on the ones you play against the AI. Tide-pool palette, soft cards.</p>
+
+  <div class="phone"><div class="screen">
+    <div class="statusbar">
+      <span class="time">9:41</span>
+      <span class="ind">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
+      </span>
+    </div>
+
+    <div class="scroll">
+      <div class="hubhead">
+        <div class="circ"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#3C9094" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="lolo"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1.1" fill="#fff"/><circle cx="14" cy="11.5" r="1.1" fill="#fff"/><path d="M10.3 13.7c.6.6 2.8.6 3.4 0" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="htext"><h2>Games</h2><p class="tagline">Play on your own — or against LoLo</p></div>
+      </div>
+
+      <!-- continue playing -->
+      <div class="continue" data-toast="Memory cards">
+        <div class="label">Continue playing</div>
+        <div class="crow">
+          <div class="cicon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="9" height="12" rx="2.2" transform="rotate(-8 8.5 11)" fill="#DCF0EF" stroke="#0E8B93" stroke-width="1.6"/><rect x="11.4" y="7" width="9" height="12" rx="2.2" transform="rotate(7 15.9 13)" fill="#fff" stroke="#0E8B93" stroke-width="1.6"/><path d="M16 10.5l.9 1.85 2.05.3-1.48 1.43.35 2.03L16 15.15l-1.82.96.35-2.03-1.48-1.43 2.05-.3L16 10.5Z" fill="#0E8B93"/></svg></div>
+          <div class="ctext"><div class="ct">Memory cards</div><div class="cd">Round 3 · you found 4 pairs</div></div>
+          <div class="cplay" title="resume"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M8 5.5l11 6.5-11 6.5V5.5Z" fill="#fff"/></svg></div>
+        </div>
+      </div>
+
+      <div class="rowhead"><span class="rt">All games</span><span class="rc">9 to play</span></div>
+
+      <div class="grid">
+        <!-- Chess vs LoLo -->
+        <div class="tile" data-toast="Chess">
+          <span class="vs"><span class="f"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1" fill="#fff"/><circle cx="14" cy="11.5" r="1" fill="#fff"/></svg></span>vs&nbsp;LoLo</span>
+          <span class="chip c-lagoon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="6.2" r="3.1" fill="#037B83"/><path d="M9.4 9.6h5.2l-.95 2.2c1.35.9 2.15 2.4 2.35 4.2H8c.2-1.8 1-3.3 2.35-4.2L9.4 9.6Z" fill="#037B83"/><rect x="7" y="17.2" width="10" height="2.9" rx="1.45" fill="#037B83"/></svg></span>
+          <div class="tt">Chess</div><div class="td">Think ahead</div>
+        </div>
+        <!-- Connect Four vs LoLo -->
+        <div class="tile" data-toast="Connect Four">
+          <span class="vs"><span class="f"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1" fill="#fff"/><circle cx="14" cy="11.5" r="1" fill="#fff"/></svg></span>vs&nbsp;LoLo</span>
+          <span class="chip c-sky"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5.5" width="16" height="14" rx="3" fill="#EAF2FA" stroke="#3E82B5" stroke-width="1.6"/><circle cx="8.5" cy="10" r="1.8" fill="#3E82B5"/><circle cx="12" cy="10" r="1.8" fill="#fff" stroke="#3E82B5" stroke-width="1.2"/><circle cx="15.5" cy="10" r="1.8" fill="#E0763F"/><circle cx="8.5" cy="15" r="1.8" fill="#E0763F"/><circle cx="12" cy="15" r="1.8" fill="#3E82B5"/><circle cx="15.5" cy="15" r="1.8" fill="#3E82B5"/></svg></span>
+          <div class="tt">Connect Four</div><div class="td">Four in a row</div>
+        </div>
+        <!-- Memory vs LoLo -->
+        <div class="tile" data-toast="Memory cards">
+          <span class="vs"><span class="f"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1" fill="#fff"/><circle cx="14" cy="11.5" r="1" fill="#fff"/></svg></span>vs&nbsp;LoLo</span>
+          <span class="chip c-teal"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="9" height="12" rx="2.2" transform="rotate(-8 8.5 11)" fill="#DCF0EF" stroke="#0E8B93" stroke-width="1.6"/><rect x="11.4" y="7" width="9" height="12" rx="2.2" transform="rotate(7 15.9 13)" fill="#fff" stroke="#0E8B93" stroke-width="1.6"/><path d="M16 10.5l.9 1.85 2.05.3-1.48 1.43.35 2.03L16 15.15l-1.82.96.35-2.03-1.48-1.43 2.05-.3L16 10.5Z" fill="#0E8B93"/></svg></span>
+          <div class="tt">Memory cards</div><div class="td">Match the pairs</div>
+        </div>
+        <!-- Jigsaw -->
+        <div class="tile" data-toast="Jigsaw puzzle">
+          <span class="chip c-amber"><svg viewBox="0 0 24 24" fill="none"><path d="M11 3a2 2 0 0 1 2 2v.4c0 .7.7 1.1 1.3.8A2 2 0 0 1 17.2 8c0 .9-.6 1.6-1.4 1.9-.6.2-.8.7-.8 1.1v1.5h1.6c.5 0 1-.3 1.2-.9A2 2 0 0 1 21 13.9a2 2 0 0 1-3.2 1.6c-.5-.4-1.3 0-1.3.7V19a2 2 0 0 1-2 2h-4v-2.3c0-.7-.8-1.1-1.3-.7A2 2 0 0 1 6 16c0-.9.6-1.7 1.5-2 .6-.2.7-.7.7-1.1H6.4A2 2 0 0 1 4.4 11V7a2 2 0 0 1 2-2h2.6v-.4c0-.5-.3-.9-.8-1.2A2 2 0 0 1 11 3Z" fill="#C98A2E"/></svg></span>
+          <div class="tt">Jigsaw puzzle</div><div class="td">Piece it together</div>
+        </div>
+        <!-- Connect the dots -->
+        <div class="tile" data-toast="Connect the dots">
+          <span class="chip c-rose"><svg viewBox="0 0 24 24" fill="none"><path d="M5 7L10 5L15 9L19 6L17 14L11 18L6 15Z" stroke="#D45D74" stroke-width="1.4" stroke-dasharray="1.6 2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="5" cy="7" r="1.6" fill="#D45D74"/><circle cx="10" cy="5" r="1.6" fill="#D45D74"/><circle cx="15" cy="9" r="1.6" fill="#D45D74"/><circle cx="19" cy="6" r="1.6" fill="#D45D74"/><circle cx="17" cy="14" r="1.6" fill="#D45D74"/><circle cx="11" cy="18" r="1.6" fill="#D45D74"/><circle cx="6" cy="15" r="1.6" fill="#D45D74"/></svg></span>
+          <div class="tt">Connect the dots</div><div class="td">Follow the numbers</div>
+        </div>
+        <!-- Labyrinth -->
+        <div class="tile" data-toast="Labyrinth">
+          <span class="chip c-coral"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V4h16v16H8V8h8v8h-4v-4" stroke="#E0763F" stroke-width="2" stroke-linecap="square" fill="none"/></svg></span>
+          <div class="tt">Labyrinth</div><div class="td">Find the way out</div>
+        </div>
+        <!-- Which habitat -->
+        <div class="tile" data-toast="Which habitat">
+          <span class="chip c-sea"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l4.6 5.6H14l3 4.2h-2.4l2.6 3.9H6.8l2.6-3.9H7l3-4.2H7.4L12 3Z" fill="#3B9C77"/><rect x="10.8" y="16.4" width="2.4" height="4.6" rx="1" fill="#3B9C77"/></svg></span>
+          <div class="tt">Which habitat?</div><div class="td">Match each animal</div>
+        </div>
+        <!-- Manners quiz -->
+        <div class="tile" data-toast="Manners quiz">
+          <span class="chip c-teal"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20.4S3.9 15.3 3.9 9.5A4.55 4.55 0 0 1 12 6.7a4.55 4.55 0 0 1 8.1 2.8c0 5.8-8.1 10.9-8.1 10.9Z" fill="#0E8B93"/><path d="M18.6 4.4v3M17.1 5.9h3" stroke="#5EBCC1" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+          <div class="tt">Manners quiz</div><div class="td">Kind & polite</div>
+        </div>
+        <!-- Q&A -->
+        <div class="tile" data-toast="Q&amp;A">
+          <span class="chip c-lagoon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-6l-4 3.4V16H6a2 2 0 0 1-2-2V6Z" fill="#037B83"/><path d="M9.9 8.7a2 2 0 0 1 3.9.6c0 1.3-1.9 1.5-1.9 2.8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none"/><circle cx="11.9" cy="13.6" r=".95" fill="#fff"/></svg></span>
+          <div class="tt">Q&amp;A</div><div class="td">Ask LoLo anything</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabbar">
+      <div class="tab active"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9h14v-9" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Home</div>
+      <div class="tab"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#9bb5b8" stroke-width="2" stroke-linejoin="round"/></svg></span>Chats</div>
+      <div class="tab"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#9bb5b8" stroke-width="2"/><path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2M6.7 6.7l1.4 1.4M15.9 15.9l1.4 1.4M17.3 6.7l-1.4 1.4M8.1 15.9l-1.4 1.4" stroke="#9bb5b8" stroke-width="2" stroke-linecap="round"/></svg></span>Settings</div>
+    </div>
+    <div class="toast" id="toast"><span class="spin"></span><span id="toasttxt">Launching…</span></div>
+    <div class="home-ind"></div>
+  </div></div>
+
+  <p class="notes">Nine games in one calm grid. The three <b>vs&nbsp;LoLo</b> tiles (Chess, Connect&nbsp;Four, Memory) carry a tiny mascot badge so a non-reader still knows those are "play against LoLo". Tap any tile for a gentle press + a "Launching…" toast — motion respects <b>prefers-reduced-motion</b>.</p>
+
+<script>
+  var toast=document.getElementById('toast'), toasttxt=document.getElementById('toasttxt'), thide=null;
+  function launch(name){
+    toasttxt.textContent='Launching '+name+'…';
+    toast.classList.add('show');
+    clearTimeout(thide);
+    thide=setTimeout(function(){toast.classList.remove('show');},1500);
+  }
+  document.querySelectorAll('[data-toast]').forEach(function(el){
+    el.addEventListener('click',function(){launch(el.getAttribute('data-toast'));});
+  });
+</script>
+</body>
+</html>

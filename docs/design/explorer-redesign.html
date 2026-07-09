@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Explorer mode redesign · HeyLoLo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --lagoon:#037B83;--chill:#0E8B93;--paradiso:#3C9094;--fountain:#5EBCC1;
+    --anakiwa:#A2F3FF;--ink:#114e52;--ink2:#28484c;--muted:#5b9296;--muted2:#6c8b8e;
+    --coral-bg:#FFE6DE;--coral-ink:#E36843;--teal-deep:#16737A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;color:var(--ink2);
+    background:radial-gradient(900px 500px at 50% -8%, #d8f0f3 0, rgba(216,240,243,0) 60%),linear-gradient(180deg,#eef6f6,#e7f1f1);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:34px 16px 70px;}
+  h1{font-weight:900;font-size:25px;color:var(--ink);letter-spacing:-.01em;}
+  .sub{font-weight:600;font-size:13.5px;line-height:1.55;color:var(--muted);max-width:620px;text-align:center;margin:7px 0 4px;}
+
+  .controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0 22px;max-width:600px;}
+  .controls button{font-family:inherit;font-weight:700;font-size:13px;color:var(--muted);background:#fff;border:1.5px solid #d3e7e7;border-radius:999px;padding:9px 16px;cursor:pointer;box-shadow:0 3px 10px rgba(3,123,131,.06);transition:transform .14s,background .18s,color .18s,border-color .18s;}
+  .controls button:active{transform:scale(.95);}
+  .controls button.on{background:linear-gradient(180deg,var(--chill),var(--lagoon));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(3,123,131,.26);}
+  .controls .play{background:linear-gradient(180deg,#3aa6ac,#0E8B93);color:#fff;border-color:transparent;}
+  .controls .sep{width:1px;align-self:stretch;background:#cfe3e3;margin:0 2px;}
+
+  .phone{width:344px;height:730px;border-radius:54px;background:#0c2f33;padding:11px;box-shadow:0 36px 80px rgba(11,60,64,.30),0 6px 16px rgba(11,60,64,.16);position:relative;}
+  .screen{width:100%;height:100%;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;
+    background:linear-gradient(180deg,#C8E9EC 0%,#DCF1F1 46%,#AEE1E7 100%);}
+
+  .statusbar{position:relative;z-index:8;height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:15px 26px 0;}
+  .statusbar .time{font-family:'DM Sans';font-weight:700;font-size:15px;color:#173c40;}
+  .statusbar .ind{display:flex;align-items:center;gap:6px;}
+
+  /* ===== camera viewport ===== */
+  .cam{position:relative;flex:1;overflow:hidden;}
+
+  /* soft photographic placeholder scene (no real camera) */
+  .scene{position:absolute;inset:0;transform-origin:50% 60%;transition:transform .12s ease-out;
+    background:
+      radial-gradient(120% 78% at 50% -6%, #FFF7F0 0%, #FDEEE3 42%, #F7E1D2 100%);}
+  .scn-light{position:absolute;left:-10%;top:-12%;width:70%;height:60%;border-radius:50%;filter:blur(30px);
+    background:radial-gradient(circle,#FFFDF8 0%,rgba(255,253,248,0) 70%);}
+  .scn-table{position:absolute;left:0;right:0;bottom:0;height:38%;
+    background:linear-gradient(180deg,#F1D8C2 0%,#E7C6AC 60%,#DFB998 100%);}
+  .scn-table::before{content:"";position:absolute;inset:0;opacity:.5;
+    background:repeating-linear-gradient(92deg,rgba(150,105,70,.10) 0 2px,rgba(150,105,70,0) 2px 26px);}
+  .scn-shadow{position:absolute;left:50%;top:60%;width:120px;height:34px;transform:translate(-50%,42px);
+    border-radius:50%;background:radial-gradient(circle,rgba(120,70,40,.32),rgba(120,70,40,0) 70%);filter:blur(3px);}
+  .scn-apple{position:absolute;left:50%;top:60%;width:132px;height:132px;transform:translate(-50%,-50%);
+    filter:drop-shadow(0 12px 16px rgba(150,40,30,.22));}
+  .scn-apple svg{width:100%;height:100%;display:block;}
+  .scene.dim .scn-apple,.scene.dim .scn-shadow{opacity:.14;transition:opacity .35s;}
+
+  /* corner viewfinder brackets */
+  .brackets{position:absolute;inset:16px;z-index:2;pointer-events:none;}
+  .brackets i{position:absolute;width:24px;height:24px;border:3px solid rgba(255,255,255,.82);border-radius:5px;
+    box-shadow:0 1px 4px rgba(11,60,64,.18);}
+  .brackets i.tl{top:0;left:0;border-right:0;border-bottom:0;}
+  .brackets i.tr{top:0;right:0;border-left:0;border-bottom:0;}
+  .brackets i.bl{bottom:0;left:0;border-right:0;border-top:0;}
+  .brackets i.br{bottom:0;right:0;border-left:0;border-top:0;}
+
+  /* scanning sweep */
+  .scanwrap{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .3s;}
+  .scanwrap.on{opacity:1;}
+  .scanwash{position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 46%,rgba(94,188,193,.14),rgba(94,188,193,0) 70%);}
+  .scanline{position:absolute;left:6%;right:6%;height:64px;border-radius:40px;
+    background:linear-gradient(180deg,rgba(94,188,193,0) 0%,rgba(94,188,193,.34) 50%,rgba(94,188,193,0) 100%);
+    box-shadow:0 0 22px rgba(94,188,193,.35);animation:sweep 2.6s ease-in-out infinite;}
+  @keyframes sweep{0%{top:8%}50%{top:66%}100%{top:8%}}
+  .scandots{position:absolute;left:50%;top:60%;width:56px;height:56px;transform:translate(-50%,-50%);
+    border:2px dashed rgba(14,139,147,.55);border-radius:16px;animation:roam 2.6s ease-in-out infinite;}
+  @keyframes roam{0%{transform:translate(-140%,-160%) scale(.9)}35%{transform:translate(30%,-30%) scale(1)}70%{transform:translate(-90%,40%) scale(.95)}100%{transform:translate(-140%,-160%) scale(.9)}}
+
+  /* focus reticle (locks on FOUND) */
+  .reticle{position:absolute;left:50%;top:60%;width:120px;height:120px;z-index:3;
+    transform:translate(-50%,-50%) scale(1.4);opacity:0;pointer-events:none;transition:opacity .18s;}
+  .reticle.show{opacity:1;}
+  .reticle.lock{animation:snap .42s cubic-bezier(.34,1.56,.5,1) forwards;}
+  @keyframes snap{0%{transform:translate(-50%,-50%) scale(1.4)}70%{transform:translate(-50%,-50%) scale(.92)}100%{transform:translate(-50%,-50%) scale(1)}}
+  .reticle b{position:absolute;width:26px;height:26px;border:3.5px solid var(--chill);border-radius:8px;
+    box-shadow:0 2px 8px rgba(3,123,131,.30);}
+  .reticle b.tl{top:0;left:0;border-right:0;border-bottom:0;}
+  .reticle b.tr{top:0;right:0;border-left:0;border-bottom:0;}
+  .reticle b.bl{bottom:0;left:0;border-right:0;border-top:0;}
+  .reticle b.br{bottom:0;right:0;border-left:0;border-top:0;}
+
+  /* haptic ripple pulse fired from the object on FOUND */
+  .ripplewrap{position:absolute;left:50%;top:60%;z-index:3;pointer-events:none;transform:translate(-50%,-50%);}
+  .ripplewrap i{position:absolute;left:50%;top:50%;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%;
+    border:2.5px solid rgba(14,139,147,.55);opacity:0;}
+  .ripplewrap.fire i{animation:ripple 900ms ease-out forwards;}
+  .ripplewrap.fire i:nth-child(2){animation-delay:130ms;}
+  .ripplewrap.fire i:nth-child(3){animation-delay:260ms;}
+  @keyframes ripple{0%{transform:scale(.35);opacity:.9;border-width:3px}100%{transform:scale(2.6);opacity:0;border-width:1px}}
+
+  /* whole-screen teal flash on the FOUND moment */
+  .flash{position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(70% 55% at 50% 52%,rgba(94,188,193,.30),rgba(94,188,193,0) 70%);opacity:0;}
+  .flash.fire{animation:flash 520ms ease-out;}
+  @keyframes flash{0%{opacity:0}22%{opacity:1}100%{opacity:0}}
+
+  /* zoom control (vertical) */
+  .zoom{position:absolute;right:12px;top:50%;transform:translateY(-50%);z-index:7;display:flex;flex-direction:column;align-items:center;gap:9px;}
+  .zread{font-family:'DM Sans';font-weight:700;font-size:12.5px;color:#0E7077;background:rgba(255,255,255,.86);
+    padding:5px 10px;border-radius:999px;box-shadow:0 4px 12px rgba(3,123,131,.14);min-width:44px;text-align:center;}
+  .zbtn{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 12px rgba(3,123,131,.14);cursor:pointer;transition:transform .12s;}
+  .zbtn:active{transform:scale(.9);}
+  .ztrack{position:relative;width:38px;height:150px;border-radius:22px;background:rgba(255,255,255,.72);
+    box-shadow:inset 0 2px 6px rgba(3,123,131,.10);cursor:pointer;touch-action:none;}
+  .zfill{position:absolute;left:0;right:0;bottom:0;border-radius:22px;background:linear-gradient(180deg,rgba(94,188,193,.55),rgba(3,123,131,.30));}
+  .zthumb{position:absolute;left:50%;width:28px;height:28px;border-radius:50%;transform:translate(-50%,50%);
+    background:linear-gradient(180deg,#3aa6ac,#0E8B93);box-shadow:0 4px 12px rgba(3,123,131,.34);border:3px solid #fff;cursor:grab;}
+  .zthumb:active{cursor:grabbing;}
+
+  /* pinch hint */
+  .pinch{position:absolute;left:50%;top:66px;transform:translateX(-50%);z-index:7;display:inline-flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,.86);padding:8px 14px;border-radius:999px;box-shadow:0 4px 14px rgba(3,123,131,.14);
+    font-weight:700;font-size:12.5px;color:#3C9094;opacity:0;transition:opacity .4s;}
+  .pinch.on{opacity:1;}
+
+  /* top state badge */
+  .badge{position:absolute;left:50%;top:26px;transform:translateX(-50%);z-index:7;
+    font-weight:800;font-size:14px;color:var(--lagoon);background:rgba(255,255,255,.72);padding:8px 17px;border-radius:999px;
+    box-shadow:0 3px 12px rgba(3,123,131,.10);display:inline-flex;align-items:center;gap:9px;transition:opacity .3s,transform .3s;}
+  .badge .pip{width:8px;height:8px;border-radius:50%;background:var(--fountain);animation:pip 1.5s ease-out infinite;}
+  @keyframes pip{0%{box-shadow:0 0 0 0 rgba(94,188,193,.5)}70%{box-shadow:0 0 0 9px rgba(94,188,193,0)}100%{box-shadow:0 0 0 0 rgba(94,188,193,0)}}
+  .badge.hide{opacity:0;transform:translate(-50%,-6px);}
+
+  /* empty state */
+  .empty{position:absolute;left:28px;right:28px;top:50%;transform:translateY(-50%);z-index:6;text-align:center;
+    background:rgba(255,255,255,.74);backdrop-filter:blur(6px);border-radius:26px;padding:24px 22px;
+    box-shadow:0 16px 34px rgba(11,60,64,.12);opacity:0;pointer-events:none;transition:opacity .3s;}
+  .empty.on{opacity:1;}
+  .empty .eic{width:64px;height:64px;margin:0 auto 12px;border-radius:22px;background:rgba(255,255,255,.7);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(3,123,131,.12);}
+  .empty h3{font-weight:900;font-size:19px;color:var(--teal-deep);}
+  .empty p{font-weight:600;font-size:13.5px;color:#5E7C7F;margin-top:6px;line-height:1.5;}
+
+  /* voiceprint halo canvas (LoLo, sibling of voice mode) */
+  .halo{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;}
+
+  /* LoLo status / caption bar (the detection card) */
+  .lobar{position:absolute;left:14px;right:14px;bottom:104px;z-index:5;
+    background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-radius:24px;padding:13px 15px;
+    display:flex;align-items:center;gap:12px;box-shadow:0 14px 32px rgba(11,60,64,.16);
+    transform:translateY(14px);opacity:0;transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s;}
+  .lobar.up{transform:translateY(0);opacity:1;}
+  .lobar.buzz{animation:buzz .4s ease-out;}
+  @keyframes buzz{0%,100%{transform:translateX(0)}12%{transform:translateX(-3px)}30%{transform:translateX(3px)}48%{transform:translateX(-2px)}66%{transform:translateX(2px)}84%{transform:translateX(-1px)}}
+  .lolo{width:46px;height:46px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 38% 32%, #F5FBFB,#DEF4F6 46%,#CDF0F2 100%);
+    border:4px solid rgba(255,255,255,.7);box-shadow:0 8px 16px rgba(3,123,131,.18);}
+  .lolo svg{width:26px;height:26px;}
+  .lotext{flex:1;min-width:0;}
+  .lolabel{font-weight:800;font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--fountain);}
+  .lotitle{font-weight:800;font-size:16px;line-height:1.28;color:var(--teal-deep);margin-top:1px;}
+  .locap{font-weight:600;font-size:14px;line-height:1.4;color:#3f5e62;margin-top:2px;}
+  .lodots{display:inline-flex;gap:4px;vertical-align:middle;margin-left:2px;}
+  .lodots i{width:5px;height:5px;border-radius:50%;background:var(--fountain);animation:dot 1.2s infinite;}
+  .lodots i:nth-child(2){animation-delay:.18s}.lodots i:nth-child(3){animation-delay:.36s}
+  @keyframes dot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+  .cur{display:inline-block;width:2px;height:15px;background:#7fb3b6;vertical-align:-2px;margin-left:1px;animation:b 1s steps(1) infinite;}@keyframes b{50%{opacity:0}}
+  .othumb{width:40px;height:40px;border-radius:12px;flex:none;background:linear-gradient(160deg,#FFF0E9,#FFE0D2);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(227,104,67,.18);
+    transform:scale(0);transition:transform .3s cubic-bezier(.34,1.56,.5,1);}
+  .othumb.pop{transform:scale(1);}
+  .othumb svg{width:26px;height:26px;}
+
+  /* bottom control dock */
+  .dock{position:absolute;left:0;right:0;bottom:0;z-index:6;height:100px;display:flex;align-items:center;justify-content:center;gap:38px;padding-bottom:18px;}
+  .dbtn{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;}
+  .dbtn .ring{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px rgba(3,123,131,.16);transition:transform .14s;}
+  .dbtn:active .ring{transform:scale(.92);}
+  .dbtn .lbl{font-weight:700;font-size:11.5px;color:#3C9094;}
+  .point .ring{width:76px;height:76px;background:linear-gradient(180deg,#2F8E92,#037B83);
+    box-shadow:0 12px 26px rgba(3,123,131,.34);border:4px solid rgba(255,255,255,.85);}
+  .point .lbl{color:#0E7077;font-weight:800;}
+
+  .home-ind{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.30);z-index:9;}
+
+  .notes{margin-top:20px;max-width:560px;font-size:12.5px;color:var(--muted2);text-align:center;line-height:1.6;}
+  .notes b{color:var(--chill);}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.08s !important;}
+  }
+</style>
+</head>
+<body>
+  <h1>Explorer mode</h1>
+  <p class="sub">Point the phone at the world and LoLo tells you what it sees. Two upgrades: <b>pinch / slider zoom</b>, and an unmistakable <b>“LoLo found it!”</b> moment — a locking reticle, a teal ripple, a haptic-buzz on the detection card, and LoLo’s voiceprint-halo blooming, all at once.</p>
+
+  <div class="controls" id="controls">
+    <button data-state="scanning">Scanning</button>
+    <button data-state="found">Found it</button>
+    <button data-state="talking">LoLo talks</button>
+    <button data-state="empty">Nothing found</button>
+    <span class="sep"></span>
+    <button class="play" id="play">▸ Play the flow</button>
+  </div>
+
+  <div class="phone"><div class="screen" id="screen">
+    <div class="statusbar">
+      <span class="time">9:41</span>
+      <span class="ind">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
+      </span>
+    </div>
+
+    <div class="cam" id="cam">
+      <!-- placeholder photographic scene (scales with zoom) -->
+      <div class="scene" id="scene">
+        <div class="scn-light"></div>
+        <div class="scn-table"></div>
+        <div class="scn-shadow"></div>
+        <div class="scn-apple">
+          <svg viewBox="0 0 100 100" fill="none">
+            <path d="M52 24 C60 12, 76 12, 78 21 C73 30, 59 32, 52 24 Z" fill="#6FBF73"/>
+            <path d="M50 26 C50 17, 49 12, 46 8" stroke="#7A4A2B" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M50 30 C36 21, 19 31, 21 51 C23 74, 40 90, 50 85 C60 90, 77 74, 79 51 C81 31, 64 21, 50 30 Z" fill="#E8433B"/>
+            <path d="M50 30 C44 25, 34 27, 27 36 C33 30, 43 30, 50 34 Z" fill="#F06A62" opacity=".7"/>
+            <ellipse cx="37" cy="46" rx="7" ry="12" fill="#fff" opacity=".26"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="brackets"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+
+      <div class="scanwrap" id="scanwrap">
+        <div class="scanwash"></div>
+        <div class="scandots"></div>
+        <div class="scanline"></div>
+      </div>
+
+      <div class="reticle" id="reticle"><b class="tl"></b><b class="tr"></b><b class="bl"></b><b class="br"></b></div>
+      <div class="ripplewrap" id="ripple"><i></i><i></i><i></i></div>
+      <div class="flash" id="flash"></div>
+
+      <canvas class="halo" id="halo"></canvas>
+
+      <div class="badge" id="badge"><span class="pip"></span><span id="badgetext">Looking around…</span></div>
+      <div class="pinch" id="pinch">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 8 4 5M4 5h4M4 5v4M17 16l3 3M20 19h-4M20 19v-4" stroke="#3C9094" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Pinch to zoom</span>
+      </div>
+
+      <div class="empty" id="empty">
+        <div class="eic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#0E8B93" stroke-width="2"/><path d="M16 16l4 4" stroke="#0E8B93" stroke-width="2" stroke-linecap="round"/><path d="M11 8v3M11 13.6v.4" stroke="#0E8B93" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Point me at something!</h3>
+        <p>Move me toward a toy, a plant, or your snack — I’ll take a good look.</p>
+      </div>
+
+      <!-- zoom control -->
+      <div class="zoom" id="zoom">
+        <div class="zread" id="zread">1.0×</div>
+        <div class="zbtn" id="zplus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#0E8B93" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+        <div class="ztrack" id="ztrack"><div class="zfill" id="zfill"></div><div class="zthumb" id="zthumb"></div></div>
+        <div class="zbtn" id="zminus"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="#0E8B93" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+      </div>
+
+      <!-- LoLo status / caption bar = the detection card -->
+      <div class="lobar" id="lobar">
+        <div class="lolo"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1" fill="#fff"/><circle cx="14" cy="11.5" r="1" fill="#fff"/><path d="M10.4 13.6c.5.5 2.7.5 3.2 0" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="lotext" id="lotext"></div>
+        <div class="othumb" id="othumb"><svg viewBox="0 0 100 100" fill="none"><path d="M52 24 C60 12, 76 12, 78 21 C73 30, 59 32, 52 24 Z" fill="#6FBF73"/><path d="M50 30 C36 21, 19 31, 21 51 C23 74, 40 90, 50 85 C60 90, 77 74, 79 51 C81 31, 64 21, 50 30 Z" fill="#E8433B"/><ellipse cx="37" cy="46" rx="7" ry="12" fill="#fff" opacity=".26"/></svg></div>
+      </div>
+
+      <!-- bottom dock -->
+      <div class="dock">
+        <div class="dbtn" id="askb">
+          <div class="ring"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="#0E7077"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3" stroke="#0E7077" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="lbl">Ask LoLo</div>
+        </div>
+        <div class="dbtn point" id="pointb">
+          <div class="ring"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke="#fff" stroke-width="2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="lbl">Point</div>
+        </div>
+        <div class="dbtn" id="flipb">
+          <div class="ring"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 8a8 8 0 0 1 14-3M20 8V4M20 8h-4" stroke="#0E8B93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 16a8 8 0 0 1-14 3M4 16v4M4 16h4" stroke="#0E8B93" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="lbl">Flip</div>
+        </div>
+      </div>
+    </div>
+    <div class="home-ind"></div>
+  </div></div>
+
+  <p class="notes"><b>Scanning</b> (calm sweep, roaming box) → <b>Found it</b> (reticle snaps to the apple, teal ripple + screen flash + the card buzzes like a real vibration + halo blooms) → <b>LoLo talks</b> (caption streams). <b>Nothing found</b> is gentle. Zoom with the right-side slider, the +/− buttons, or scroll/pinch over the view — the readout tracks 1.0×→3.0×.</p>
+
+<script>
+  const LOLO='<svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1" fill="#fff"/><circle cx="14" cy="11.5" r="1" fill="#fff"/><path d="M10.4 13.6c.5.5 2.7.5 3.2 0" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg>';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- ZOOM ---------- */
+  const ZMIN=1, ZMAX=3;
+  let zoom=1;
+  const scene=document.getElementById('scene'), zread=document.getElementById('zread'),
+        ztrack=document.getElementById('ztrack'), zthumb=document.getElementById('zthumb'), zfill=document.getElementById('zfill'),
+        cam=document.getElementById('cam');
+  function setZoom(z){
+    zoom=Math.max(ZMIN,Math.min(ZMAX,z));
+    scene.style.transform='scale('+zoom.toFixed(3)+')';
+    zread.textContent=zoom.toFixed(1)+'×';
+    const frac=(zoom-ZMIN)/(ZMAX-ZMIN);          // 0 bottom .. 1 top
+    const h=ztrack.clientHeight;
+    zthumb.style.bottom=(frac*(h-4))+'px';
+    zfill.style.height=(frac*h)+'px';
+  }
+  document.getElementById('zplus').addEventListener('click',()=>setZoom(zoom+0.2));
+  document.getElementById('zminus').addEventListener('click',()=>setZoom(zoom-0.2));
+  function trackToZoom(clientY){
+    const r=ztrack.getBoundingClientRect();
+    const frac=1-Math.max(0,Math.min(1,(clientY-r.top)/r.height));
+    setZoom(ZMIN+frac*(ZMAX-ZMIN));
+  }
+  let dragging=false;
+  const startDrag=e=>{dragging=true;ztrack.setPointerCapture(e.pointerId);trackToZoom(e.clientY);};
+  ztrack.addEventListener('pointerdown',startDrag);
+  ztrack.addEventListener('pointermove',e=>{if(dragging)trackToZoom(e.clientY);});
+  ztrack.addEventListener('pointerup',()=>dragging=false);
+  ztrack.addEventListener('pointercancel',()=>dragging=false);
+  // wheel + trackpad-pinch over the viewport
+  cam.addEventListener('wheel',e=>{e.preventDefault();setZoom(zoom - e.deltaY*0.0015);},{passive:false});
+  // touch pinch
+  let pinchStart=null;
+  cam.addEventListener('touchmove',e=>{
+    if(e.touches.length===2){
+      const dx=e.touches[0].clientX-e.touches[1].clientX, dy=e.touches[0].clientY-e.touches[1].clientY;
+      const d=Math.hypot(dx,dy);
+      if(pinchStart) setZoom(zoom*(d/pinchStart)); pinchStart=d; e.preventDefault();
+    }
+  },{passive:false});
+  cam.addEventListener('touchend',()=>pinchStart=null);
+  // pinch hint auto-show/hide
+  const pinch=document.getElementById('pinch');
+  function flashPinch(){pinch.classList.add('on');clearTimeout(flashPinch._t);flashPinch._t=setTimeout(()=>pinch.classList.remove('on'),2200);}
+
+  /* ---------- LoLo VOICEPRINT HALO (sibling of voice mode) ---------- */
+  const glow=[3,123,131], bar0=[3,123,131], bar1=[94,188,193], ring=[14,139,147];
+  const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  const NB=32; let bands=new Float32Array(NB);
+  let amp=0, target=0, haloMode='ambient';
+  const canvas=document.getElementById('halo'), hctx=canvas.getContext('2d');
+  const camEl=document.getElementById('cam'), loloEl=document.querySelector('#lobar .lolo'), lobar=document.getElementById('lobar');
+  let DPR=Math.min(window.devicePixelRatio||1,2.5), W=0,H=0;
+  function size(){const r=camEl.getBoundingClientRect();W=r.width;H=r.height;canvas.width=W*DPR;canvas.height=H*DPR;hctx.setTransform(DPR,0,0,DPR,0,0);setZoom(zoom);}
+  window.addEventListener('resize',size);
+  function loloCenter(){const s=camEl.getBoundingClientRect(),d=loloEl.getBoundingClientRect();return {cx:d.left-s.left+d.width/2,cy:d.top-s.top+d.height/2,r:d.width/2};}
+  function speechSim(t){const word=Math.max(0,Math.sin(t*1.7));const syll=0.5+0.5*Math.sin(t*11);const breath=0.6+0.4*Math.sin(t*0.5);return word*word*(0.32+0.68*syll)*breath;}
+  function drawHalo(t,a){
+    if(lobar.classList.contains('up')===false) return;   // halo only when LoLo bar is present
+    const {cx,cy,r}=loloCenter();
+    const reachK = haloMode==='ambient'?0.5 : haloMode==='found'?1.1 : haloMode==='speak'?0.85 : 0.6;
+    const breathe=r+9+4*Math.sin(t*1.6);
+    hctx.beginPath();hctx.arc(cx,cy,breathe,0,Math.PI*2);hctx.lineWidth=1.3;hctx.strokeStyle=rgba(ring,(0.10+0.10*Math.sin(t*1.6))*0.8);hctx.stroke();
+    const bars=NB*2, rim=r+7;
+    for(let i=0;i<bars;i++){
+      const ang=(i/bars)*Math.PI*2 - Math.PI/2;
+      const k=Math.min(NB-1,Math.round(Math.abs(i%NB)));
+      let band;
+      if(haloMode==='speak') band=(0.35+0.65*Math.abs(Math.sin(t*6+i*0.5)))*speechSim(t+i*0.02);
+      else if(haloMode==='found') band=0.55+0.4*Math.abs(Math.sin(t*7+i*0.6));
+      else band=0.20+0.16*Math.abs(Math.sin(t*2+i*0.3));
+      const len=(5+band*30*(0.4+a))*reachK;
+      const r0=rim,r1=rim+len;
+      const x0=cx+Math.cos(ang)*r0,y0=cy+Math.sin(ang)*r0,x1=cx+Math.cos(ang)*r1,y1=cy+Math.sin(ang)*r1;
+      const col=[Math.round(bar0[0]+(bar1[0]-bar0[0])*band),Math.round(bar0[1]+(bar1[1]-bar0[1])*band),Math.round(bar0[2]+(bar1[2]-bar0[2])*band)];
+      hctx.beginPath();hctx.moveTo(x0,y0);hctx.lineTo(x1,y1);hctx.lineCap='round';hctx.lineWidth=2.6;
+      hctx.strokeStyle=rgba(col,(0.42+0.5*band)*0.9);hctx.shadowColor=rgba(glow,0.5*a);hctx.shadowBlur=7*a;hctx.stroke();hctx.shadowBlur=0;
+    }
+  }
+  function frame(now){
+    const t=now/1000;
+    let tgt=target;
+    if(haloMode==='speak') tgt=0.5+0.5*speechSim(t);
+    amp += (tgt-amp)*(tgt>amp?0.35:0.12);
+    hctx.clearRect(0,0,W,H);
+    if(!reduce) drawHalo(t, Math.max(amp,0.05)); else drawHalo(t,0.6);
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- STATE MACHINE ---------- */
+  const badge=document.getElementById('badge'), badgetext=document.getElementById('badgetext'),
+        scanwrap=document.getElementById('scanwrap'), reticle=document.getElementById('reticle'),
+        ripple=document.getElementById('ripple'), flash=document.getElementById('flash'),
+        empty=document.getElementById('empty'), lotext=document.getElementById('lotext'), othumb=document.getElementById('othumb');
+  const OBJECT='a red apple';
+  const TALK="It’s a red apple! Apples grow on tall trees. This one is shiny and red, which means it’s ripe and ready for a big crunch.";
+  let capTimer=null, state='';
+
+  function setBadge(txt,live){badge.classList.remove('hide');badgetext.textContent=txt;badge.querySelector('.pip').style.display=live?'block':'none';}
+  function clearCaption(){if(capTimer){clearInterval(capTimer);capTimer=null;}}
+
+  function fireHapticMoment(){
+    // ripple pulse from the object
+    ripple.classList.remove('fire'); void ripple.offsetWidth; ripple.classList.add('fire');
+    // whole-screen teal flash
+    flash.classList.remove('fire'); void flash.offsetWidth; flash.classList.add('fire');
+    // haptic-buzz shimmy on the detection card (this is where a real vibration pairs)
+    lobar.classList.remove('buzz'); void lobar.offsetWidth; lobar.classList.add('buzz');
+  }
+
+  function go(s){
+    state=s; clearCaption();
+    document.querySelectorAll('#controls button[data-state]').forEach(b=>b.classList.toggle('on',b.dataset.state===s));
+    // reset transient layers
+    scanwrap.classList.remove('on');
+    empty.classList.remove('on');
+    scene.classList.remove('dim');
+
+    if(s==='scanning'){
+      haloMode='ambient'; target=0.3;
+      scanwrap.classList.add('on');
+      reticle.classList.remove('show','lock');
+      lobar.classList.add('up');
+      othumb.classList.remove('pop');
+      setBadge('Looking around…',true);
+      lotext.innerHTML='<div class="lolabel">LoLo</div><div class="locap">Let me see what’s here <span class="lodots"><i></i><i></i><i></i></span></div>';
+    }
+
+    if(s==='found'){
+      haloMode='found'; target=0.9;
+      reticle.classList.add('show','lock');
+      lobar.classList.add('up');
+      setBadge('Found it!',false);
+      lotext.innerHTML='<div class="lolabel">LoLo sees</div><div class="lotitle">I see '+OBJECT+'!</div>';
+      othumb.classList.remove('pop'); void othumb.offsetWidth; othumb.classList.add('pop');
+      fireHapticMoment();
+    }
+
+    if(s==='talking'){
+      haloMode='speak'; target=0.6;
+      reticle.classList.add('show'); reticle.classList.remove('lock');
+      lobar.classList.add('up');
+      othumb.classList.add('pop');
+      setBadge('LoLo is telling you…',false); badge.classList.add('hide');
+      lotext.innerHTML='<div class="lolabel">LoLo</div><div class="locap" id="capline"></div>';
+      streamCaption(document.getElementById('capline'), TALK);
+    }
+
+    if(s==='empty'){
+      haloMode='ambient'; target=0.3;
+      reticle.classList.remove('show','lock');
+      lobar.classList.remove('up');
+      scene.classList.add('dim'); setZoom(1);
+      empty.classList.add('on');
+      setBadge('Nothing yet',true);
+    }
+  }
+
+  function streamCaption(el,text){
+    if(!el)return; el.innerHTML='<span id="ct"></span><span class="cur"></span>';
+    const ct=document.getElementById('ct'); let i=0;
+    if(reduce){ct.textContent=text;return;}
+    capTimer=setInterval(()=>{i++;ct.textContent=text.slice(0,i);if(i>=text.length){clearInterval(capTimer);capTimer=null;}},26);
+  }
+
+  /* ---------- wiring ---------- */
+  document.querySelectorAll('#controls button[data-state]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.state)));
+
+  document.getElementById('pointb').addEventListener('click',()=>{
+    // the full reaction demo: scan -> found -> talk
+    go('scanning');
+    setTimeout(()=>go('found'), reduce?200:1600);
+    setTimeout(()=>go('talking'), reduce?400:3000);
+  });
+  document.getElementById('askb').addEventListener('click',()=>{
+    if(state==='found'||state==='talking'){ go('talking'); }
+    else { go('found'); setTimeout(()=>go('talking'), reduce?300:1300); }
+  });
+  document.getElementById('flipb').addEventListener('click',()=>{ setZoom(1); flashPinch(); });
+
+  document.getElementById('play').addEventListener('click',()=>{
+    const seq=[['scanning',0],['found',1800],['talking',3300]];
+    seq.forEach(([s,d])=>setTimeout(()=>go(s),reduce?d*0.15:d));
+  });
+
+  /* ---------- boot ---------- */
+  size(); setZoom(1); requestAnimationFrame(frame);
+  go('scanning');
+  setTimeout(flashPinch, 700);
+</script>
+</body>
+</html>

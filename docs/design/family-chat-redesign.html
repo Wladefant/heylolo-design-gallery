@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HeyLolo — Family (kid) redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ---- Real elumi-kids tokens (lifted from chat-conversation-redesign.html) ---- */
+  :root {
+    --blue-lagoon: #037B83;   /* primary teal, strong text-on-light */
+    --blue-chill:  #0E8B93;   /* user bubble fill + send glyph */
+    --paradiso:    #3C9094;
+    --fountain:    #5EBCC1;   /* chat-file value — match the chat surface */
+    --gothic:      #6B9EA8;
+    --smalt:       #5A8994;   /* secondary text */
+    --ziggurat:    #C2DDDE;
+    --anakiwa:     #A2F3FF;
+    --onahau:      #CAF8FF;
+    --aqua-spring: #E8F4F8;
+    --black-sqz:   #E9F6F6;
+    --lgc:         #F5FAFB;
+    --burnt:       #E36843;   /* warm coral accent (used sparingly) */
+    --scorpion:    #595959;   /* body text */
+    --abbey:       #494A50;
+    --manatee:     #8F9098;   /* placeholder / offline */
+    --white:       #FFFFFF;
+    --silver:      #B2B2B2;
+
+    --disc-1: #CDF0F2;
+    --disc-2: #DEF4F6;
+    --disc-3: #F5FBFB;
+
+    --font-body: 'Nunito', sans-serif;
+    --font-num:  'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  html, body { margin: 0; }
+  body {
+    font-family: var(--font-body);
+    color: var(--abbey);
+    background: linear-gradient(180deg, #eef7f8 0%, #e6f2f4 60%, #e9f3f1 100%);
+    padding: 40px 24px 64px;
+  }
+
+  .page-head { max-width: 980px; margin: 0 auto 22px; }
+  .page-head h1 {
+    font-size: 26px; font-weight: 800; letter-spacing: -0.01em;
+    margin: 0 0 6px; color: var(--blue-lagoon);
+  }
+  .page-head p {
+    margin: 0; font-size: 15px; color: var(--smalt); max-width: 64ch; line-height: 1.5;
+  }
+  .page-head .tag {
+    display: inline-block; margin-top: 12px; font-family: var(--font-num);
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+    color: var(--blue-chill); background: var(--white);
+    border: 1px solid rgba(14,139,147,0.14);
+    padding: 5px 12px; border-radius: 999px;
+  }
+
+  /* ---- dev toggle (owner flips between views) ---- */
+  .devbar {
+    max-width: 980px; margin: 0 auto 26px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .devbar .lbl {
+    font-family: var(--font-num); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--gothic);
+  }
+  .seg {
+    display: inline-flex; background: var(--white); border-radius: 999px; padding: 4px;
+    box-shadow: 0 6px 16px -10px rgba(3,123,131,0.34); border: 1px solid rgba(14,139,147,0.10);
+  }
+  .seg button {
+    border: none; background: transparent; cursor: pointer;
+    font-family: var(--font-num); font-weight: 600; font-size: 13px; color: var(--smalt);
+    padding: 8px 16px; border-radius: 999px; transition: background .18s ease, color .18s ease;
+  }
+  .seg button.active { background: var(--blue-chill); color: var(--white); }
+
+  /* ---- phone frame (identical to chat file) ---- */
+  .rail { max-width: 1180px; margin: 0 auto; display: flex; justify-content: center; }
+  .phone {
+    position: relative; width: 320px; height: 660px;
+    border-radius: 46px; background: #1d2b2e; padding: 12px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.4) inset,
+      0 22px 48px -18px rgba(3,123,131,0.42),
+      0 8px 22px -14px rgba(0,0,0,0.30);
+  }
+  .screen {
+    position: relative; width: 100%; height: 100%;
+    border-radius: 36px; overflow: hidden;
+    background: linear-gradient(180deg, #d4ecef 0%, #e3f1f0 42%, #ecf5f1 100%);
+    display: flex; flex-direction: column;
+  }
+  .notch {
+    position: absolute; top: 9px; left: 50%; transform: translateX(-50%);
+    width: 96px; height: 26px; background: #1d2b2e; border-radius: 16px; z-index: 30;
+  }
+  .statusbar {
+    height: 46px; flex: none; display: flex; align-items: flex-end;
+    justify-content: space-between; padding: 0 22px 5px;
+    font-family: var(--font-num); font-weight: 600; font-size: 13px;
+    color: #20343a; z-index: 5;
+  }
+  .statusbar .glyphs { display: flex; gap: 5px; align-items: center; }
+  .statusbar .glyphs svg { display: block; }
+
+  /* ---- view switching ---- */
+  .view { display: none; flex: 1; min-height: 0; flex-direction: column; }
+  .view.active { display: flex; }
+
+  /* =================== VIEW A · FAMILY LIST =================== */
+  .list-head {
+    flex: none; padding: 2px 20px 8px; display: flex;
+    align-items: center; justify-content: space-between;
+  }
+  .list-head h2 {
+    margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.01em;
+    color: var(--blue-lagoon);
+  }
+  .round-btn {
+    width: 36px; height: 36px; border-radius: 18px;
+    background: rgba(255,255,255,0.82);
+    box-shadow: 0 6px 14px -8px rgba(3,123,131,0.5);
+    border: none; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--blue-lagoon);
+    transition: background .18s ease, transform .12s ease;
+  }
+  .round-btn:active { transform: scale(0.94); }
+
+  .list-scroll {
+    flex: 1; min-height: 0; overflow-y: auto; padding: 4px 16px 84px;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 4%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 4%, #000 90%, transparent 100%);
+  }
+  .list-scroll::-webkit-scrollbar { display: none; }
+
+  /* safety / approval note */
+  .safe-note {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.7); border: 1px solid rgba(14,139,147,0.12);
+    border-radius: 16px; padding: 11px 13px; margin: 2px 4px 16px;
+  }
+  .safe-note .shield {
+    flex: none; width: 30px; height: 30px; border-radius: 10px;
+    background: var(--aqua-spring); display: flex; align-items: center; justify-content: center;
+    color: var(--blue-lagoon);
+  }
+  .safe-note p {
+    margin: 0; font-size: 12px; line-height: 1.35; font-weight: 600; color: var(--smalt);
+  }
+  .safe-note p strong { color: var(--blue-lagoon); font-weight: 800; }
+
+  .sect {
+    margin: 6px 4px 8px; font-family: var(--font-num);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--gothic);
+  }
+
+  /* contact row */
+  .contact {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--white); border-radius: 20px; padding: 10px 12px; margin-bottom: 10px;
+    box-shadow: 0 8px 20px -14px rgba(3,123,131,0.30), 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .avatar {
+    flex: none; position: relative; width: 48px; height: 48px; border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-num); font-weight: 700; font-size: 18px;
+  }
+  .avatar.mom     { background: #FCE4DA; color: #C4552F; }
+  .avatar.dad     { background: var(--onahau); color: var(--blue-lagoon); }
+  .avatar.gran    { background: var(--ziggurat); color: #3E6E72; }
+  .avatar.gramps  { background: var(--aqua-spring); color: var(--paradiso); }
+  .avatar .pres {
+    position: absolute; right: -1px; bottom: -1px;
+    width: 13px; height: 13px; border-radius: 7px; border: 2.5px solid var(--white);
+  }
+  .avatar .pres.on  { background: var(--fountain); }
+  .avatar .pres.off { background: var(--silver); }
+
+  .contact .meta { flex: 1; min-width: 0; }
+  .contact .name { font-size: 16px; font-weight: 700; color: var(--abbey); line-height: 1.2; }
+  .contact .presence { font-size: 12.5px; font-weight: 600; margin-top: 2px; }
+  .contact .presence.on  { color: var(--paradiso); }
+  .contact .presence.off { color: var(--manatee); }
+
+  .callset { display: flex; gap: 8px; flex: none; }
+  .call-btn {
+    width: 42px; height: 42px; border-radius: 21px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .12s ease, background .18s ease;
+  }
+  .call-btn:active { transform: scale(0.9); }
+  .call-btn.audio { background: var(--aqua-spring); color: var(--blue-lagoon); }
+  .call-btn.video { background: var(--black-sqz); color: var(--blue-chill); }
+
+  /* group row */
+  .group {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--white); border-radius: 20px; padding: 10px 12px; margin-bottom: 10px;
+    box-shadow: 0 8px 20px -14px rgba(3,123,131,0.30), 0 2px 4px rgba(0,0,0,0.02);
+    cursor: pointer;
+  }
+  .group-av {
+    flex: none; width: 48px; height: 48px; border-radius: 16px;
+    background: linear-gradient(160deg, #EAF7F6, #D7EEEF);
+    display: flex; align-items: center; justify-content: center; color: var(--blue-lagoon);
+  }
+  .group .meta { flex: 1; min-width: 0; }
+  .group .name { font-size: 16px; font-weight: 700; color: var(--abbey); line-height: 1.2; }
+  .group .preview {
+    font-size: 12.5px; font-weight: 600; color: var(--manatee); margin-top: 3px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 168px;
+  }
+  .group .preview b { color: var(--smalt); font-weight: 700; }
+  .group .right { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .group .time { font-family: var(--font-num); font-size: 11px; font-weight: 600; color: var(--manatee); }
+  .badge {
+    min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px;
+    background: var(--burnt); color: var(--white);
+    font-family: var(--font-num); font-weight: 700; font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* =================== VIEW B · CONVERSATION =================== */
+  .topbar {
+    flex: none; height: 58px; display: flex; align-items: center; gap: 10px;
+    padding: 0 12px 0 10px; z-index: 6;
+  }
+  .topbar .who { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+  .topbar .who .group-av { width: 38px; height: 38px; border-radius: 13px; }
+  .topbar .who .title { font-size: 16px; font-weight: 800; color: var(--blue-lagoon); line-height: 1.1; }
+  .topbar .who .subtitle {
+    font-size: 11.5px; font-weight: 600; color: var(--smalt); margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;
+  }
+  .topbar .hdr-calls { display: flex; gap: 8px; }
+  .hdr-call {
+    width: 36px; height: 36px; border-radius: 18px; border: none; cursor: pointer;
+    background: rgba(255,255,255,0.82); color: var(--blue-lagoon);
+    box-shadow: 0 6px 14px -8px rgba(3,123,131,0.5);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .12s ease;
+  }
+  .hdr-call:active { transform: scale(0.92); }
+
+  /* incoming-call ribbon (F27, legible in-context) */
+  .ring-banner {
+    flex: none; margin: 0 14px 6px; padding: 9px 10px 9px 12px;
+    background: var(--white); border-radius: 18px;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 10px 24px -12px rgba(3,123,131,0.4);
+    border: 1px solid rgba(94,188,193,0.35);
+  }
+  .ring-banner .rb-av { flex: none; width: 34px; height: 34px; border-radius: 17px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-num); font-weight: 700; font-size: 14px; }
+  .ring-banner .rb-txt { flex: 1; min-width: 0; }
+  .ring-banner .rb-name { font-size: 13.5px; font-weight: 800; color: var(--abbey); }
+  .ring-banner .rb-sub {
+    font-size: 11.5px; font-weight: 600; color: var(--paradiso);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .ring-banner .rb-sub .live {
+    width: 6px; height: 6px; border-radius: 3px; background: var(--fountain);
+    animation: livepulse 1.2s ease-in-out infinite;
+  }
+  @keyframes livepulse { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+  .rb-actions { display: flex; gap: 8px; flex: none; }
+  .rb-btn {
+    width: 40px; height: 40px; border-radius: 20px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; color: var(--white);
+    transition: transform .12s ease;
+  }
+  .rb-btn:active { transform: scale(0.9); }
+  .rb-btn.decline { background: var(--burnt); }
+  .rb-btn.answer  { background: var(--fountain); }
+
+  /* thread + bubbles (lifted from chat file) */
+  .thread {
+    flex: 1; min-height: 0; position: relative;
+    padding: 6px 16px 8px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 14px;
+    scrollbar-width: none;
+  }
+  .thread::-webkit-scrollbar { display: none; }
+  .fade-top {
+    position: absolute; top: 0; left: 0; right: 0; height: 44px; z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(180deg, #d8eeef 0%, rgba(216,238,239,0) 100%);
+  }
+
+  .day {
+    align-self: center; font-family: var(--font-num); font-size: 11px; font-weight: 600;
+    color: var(--gothic); background: rgba(255,255,255,0.55); padding: 3px 12px; border-radius: 999px;
+  }
+
+  .row { display: flex; align-items: flex-end; gap: 8px; }
+  .row.me { justify-content: flex-end; }
+  .row.them { justify-content: flex-start; }
+  .row .b-av {
+    flex: none; width: 28px; height: 28px; border-radius: 14px; margin-bottom: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-num); font-weight: 700; font-size: 12px;
+  }
+  .stack { display: flex; flex-direction: column; max-width: 78%; }
+  .sender { font-size: 11.5px; font-weight: 700; margin: 0 0 3px 4px; }
+  .sender.mom  { color: #C4552F; }
+  .sender.dad  { color: var(--blue-lagoon); }
+
+  .bubble {
+    padding: 11px 15px; border-radius: 20px;
+    font-size: 15.5px; line-height: 1.42; font-weight: 500;
+  }
+  .bubble.me {
+    background: var(--blue-chill); color: var(--white);
+    border-bottom-right-radius: 7px; align-self: flex-end;
+  }
+  .bubble.them {
+    background: var(--white); color: var(--scorpion);
+    border-bottom-left-radius: 7px;
+    box-shadow: 0 6px 18px -10px rgba(3,123,131,0.28), 0 2px 4px rgba(0,0,0,0.03);
+  }
+  .stamp {
+    font-family: var(--font-num); font-size: 10px; font-weight: 600; color: var(--manatee);
+    margin: 4px 4px 0; align-self: flex-end;
+  }
+  .row.them .stamp { align-self: flex-start; }
+
+  /* voice-note bubble (voice-first) */
+  .vnote { display: flex; align-items: center; gap: 10px; min-width: 168px; }
+  .vnote .play {
+    flex: none; width: 30px; height: 30px; border-radius: 15px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bubble.me .vnote .play   { background: rgba(255,255,255,0.22); color: var(--white); }
+  .bubble.them .vnote .play { background: var(--aqua-spring); color: var(--blue-lagoon); }
+  .wave { flex: 1; display: flex; align-items: center; gap: 3px; height: 22px; }
+  .wave span { width: 3px; border-radius: 2px; }
+  .bubble.me .wave span   { background: rgba(255,255,255,0.7); }
+  .bubble.them .wave span { background: var(--fountain); }
+  .vdur { font-family: var(--font-num); font-size: 11px; font-weight: 600; }
+  .bubble.me .vdur   { color: rgba(255,255,255,0.85); }
+  .bubble.them .vdur { color: var(--smalt); }
+
+  /* system line (a call happened) */
+  .callcard {
+    align-self: center; display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.6); border-radius: 14px; padding: 7px 13px;
+    font-size: 12px; font-weight: 600; color: var(--smalt);
+  }
+  .callcard svg { color: var(--paradiso); }
+
+  /* composer — mic prominent (voice-first) */
+  .composer { flex: none; padding: 8px 14px 18px; }
+  .pill {
+    background: var(--white); border-radius: 26px;
+    padding: 9px 10px 9px 14px; display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 22px -12px rgba(3,123,131,0.34), 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .pill input {
+    flex: 1; border: none; outline: none; background: transparent;
+    font-family: var(--font-body); font-weight: 600; font-size: 15.5px;
+    color: var(--scorpion); padding: 0; min-width: 0;
+  }
+  .pill input::placeholder { color: var(--manatee); font-weight: 500; }
+  .icon-btn {
+    flex: none; width: 32px; height: 32px; border-radius: 16px; border: none;
+    background: transparent; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; color: var(--blue-chill); transition: transform .12s ease;
+  }
+  .icon-btn:active { transform: scale(0.9); }
+  .mic-btn {
+    flex: none; width: 46px; height: 46px; border-radius: 23px; border: none; cursor: pointer;
+    background: radial-gradient(120% 120% at 32% 26%, var(--disc-3) 0%, var(--disc-2) 45%, var(--disc-1) 100%);
+    box-shadow: 0 8px 18px -8px rgba(3,123,131,0.5); border: 1.5px solid rgba(255,255,255,0.7);
+    display: flex; align-items: center; justify-content: center; color: var(--blue-lagoon);
+    transition: transform .12s ease;
+  }
+  .mic-btn:active { transform: scale(0.92); }
+
+  /* =================== VIEW C · IN-CALL =================== */
+  .callscreen {
+    flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center;
+    padding: 8px 22px 30px;
+    background: linear-gradient(180deg, #cfe9ec 0%, #dcefee 46%, #e9f4f1 100%);
+  }
+  .callscreen .safe-pill {
+    margin-top: 4px; display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.6); border-radius: 999px; padding: 6px 13px;
+    font-size: 11.5px; font-weight: 700; color: var(--blue-lagoon);
+  }
+  .callscreen .big-av {
+    margin-top: 46px; width: 130px; height: 130px; border-radius: 65px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-num); font-weight: 700; font-size: 46px;
+    background: #FCE4DA; color: #C4552F; position: relative;
+    box-shadow: 0 20px 46px -18px rgba(3,123,131,0.5);
+  }
+  .callscreen .big-av .halo {
+    position: absolute; inset: -14px; border-radius: 50%;
+    border: 2px solid rgba(94,188,193,0.5);
+    animation: halo 2.4s ease-out infinite;
+  }
+  @keyframes halo {
+    0% { transform: scale(0.92); opacity: .8; }
+    100% { transform: scale(1.25); opacity: 0; }
+  }
+  .callscreen .c-name { margin-top: 30px; font-size: 26px; font-weight: 800; color: var(--blue-lagoon); }
+  .callscreen .c-state {
+    margin-top: 6px; font-family: var(--font-num); font-size: 14px; font-weight: 600; color: var(--smalt);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .callscreen .c-state .dot {
+    width: 7px; height: 7px; border-radius: 4px; background: var(--fountain);
+    animation: livepulse 1.2s ease-in-out infinite;
+  }
+  .call-ctrls { margin-top: auto; display: flex; align-items: center; gap: 18px; }
+  .cc {
+    width: 58px; height: 58px; border-radius: 29px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.82); color: var(--blue-lagoon);
+    box-shadow: 0 10px 24px -14px rgba(3,123,131,0.5); transition: transform .12s ease;
+  }
+  .cc:active { transform: scale(0.92); }
+  .cc.end { width: 64px; height: 64px; border-radius: 32px; background: var(--burnt); color: var(--white); }
+  .cc .lbl {
+    position: absolute; margin-top: 78px; font-family: var(--font-num);
+    font-size: 11px; font-weight: 600; color: var(--smalt);
+  }
+  .cc-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .cc-wrap span { font-family: var(--font-num); font-size: 11px; font-weight: 600; color: var(--smalt); }
+
+  /* ---- tab bar (from home-redesign) ---- */
+  .tabbar {
+    position: absolute; left: 16px; right: 16px; bottom: 14px; height: 62px;
+    background: rgba(255,255,255,0.86); backdrop-filter: blur(14px);
+    border-radius: 26px; box-shadow: 0 12px 32px rgba(11,60,64,0.16);
+    display: flex; align-items: center; justify-content: space-around; padding: 0 6px; z-index: 20;
+  }
+  .tab {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-weight: 800; font-size: 10.5px; color: #9bb5b8; flex: 1; cursor: pointer;
+    font-family: var(--font-body);
+  }
+  .tab.active { color: #178187; }
+  .tab .tp { width: 52px; height: 30px; border-radius: 15px; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+  .tab.active .tp { background: #E0F1EE; }
+  .tab svg { width: 21px; height: 21px; }
+  .home-ind {
+    position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+    width: 128px; height: 5px; border-radius: 3px; background: rgba(20,60,64,0.18); z-index: 21;
+  }
+  .tabbar.hidden { display: none; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .row, .callcard, .day { animation: rise .34s cubic-bezier(.22,.9,.3,1) both; }
+
+  .home-link {
+    margin: 22px auto 0; display: block; text-align: center;
+    font-size: 13px; color: var(--smalt); text-decoration: none;
+    font-family: var(--font-num); font-weight: 600;
+  }
+  .home-link:hover { color: var(--blue-chill); text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition-duration: .08s !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>Family — the kid's window to the people who love them</h1>
+    <p>
+      A safe, warm place where a child can message and <strong>call</strong> the grown-ups a parent has
+      approved — Mom, Dad, Grandma — plus moderated family group chats. Voice-first composer, parent-approved
+      contacts only, no strangers. Flip the views below.
+    </p>
+    <span class="tag">light-only · Nunito + DM Sans · palette.ts teal spine · F27 + F31</span>
+  </div>
+
+  <div class="devbar">
+    <span class="lbl">Preview</span>
+    <div class="seg" id="seg">
+      <button class="active" data-view="list">Family list</button>
+      <button data-view="chat">Group chat</button>
+      <button data-view="call">In call</button>
+    </div>
+  </div>
+
+  <div class="rail">
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="statusbar">
+          <span>9:41</span>
+          <span class="glyphs">
+            <svg width="17" height="11" viewBox="0 0 17 11"><g fill="#20343a"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></g></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l-1.3 1.3A6.6 6.6 0 0 0 8 4.1c-1.8 0-3.4.7-4.7 1.8L2 4.6A8.6 8.6 0 0 1 8 2.2Z" fill="#20343a"/><path d="M8 5.7c1.3 0 2.5.5 3.4 1.4l-1.3 1.3A2.9 2.9 0 0 0 8 7.6c-.8 0-1.6.3-2.1.8L4.6 7.1A4.4 4.4 0 0 1 8 5.7Z" fill="#20343a"/><circle cx="8" cy="9.4" r="1.3" fill="#20343a"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#20343a" stroke-opacity="0.45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#20343a"/><rect x="22.5" y="4" width="1.5" height="4" rx="0.75" fill="#20343a" fill-opacity="0.5"/></svg>
+          </span>
+        </div>
+
+        <!-- ============ VIEW A · FAMILY LIST ============ -->
+        <div class="view active" id="view-list">
+          <div class="list-head">
+            <h2>Family</h2>
+            <button class="round-btn" aria-label="Ask a grown-up to add someone">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 4v10M4 9h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <div class="list-scroll">
+            <div class="safe-note">
+              <span class="shield">
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 1.6 3 4v4.4C3 12 5.5 15 9 16.4 12.5 15 15 12 15 8.4V4L9 1.6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.6 9.1 8.2 10.7 11.6 7.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <p>Only grown-ups a parent <strong>approved</strong> show up here. No strangers, ever.</p>
+            </div>
+
+            <div class="sect">People</div>
+
+            <div class="contact">
+              <div class="avatar mom">M<span class="pres on"></span></div>
+              <div class="meta">
+                <div class="name">Mom</div>
+                <div class="presence on">Online now</div>
+              </div>
+              <div class="callset">
+                <button class="call-btn audio" aria-label="Call Mom">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5 4h3.2l1.6 4-2 1.4a11 11 0 0 0 5.3 5.3l1.4-2 4 1.6V19a1.6 1.6 0 0 1-1.7 1.6A15.4 15.4 0 0 1 3.4 5.7 1.6 1.6 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="call-btn video" aria-label="Video call Mom">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="6.5" width="12.5" height="11" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 10.4 20.5 7.6v8.8l-5-2.8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="contact">
+              <div class="avatar dad">D<span class="pres off"></span></div>
+              <div class="meta">
+                <div class="name">Dad</div>
+                <div class="presence off">Last seen 2h ago</div>
+              </div>
+              <div class="callset">
+                <button class="call-btn audio" aria-label="Call Dad">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5 4h3.2l1.6 4-2 1.4a11 11 0 0 0 5.3 5.3l1.4-2 4 1.6V19a1.6 1.6 0 0 1-1.7 1.6A15.4 15.4 0 0 1 3.4 5.7 1.6 1.6 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="call-btn video" aria-label="Video call Dad">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="6.5" width="12.5" height="11" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 10.4 20.5 7.6v8.8l-5-2.8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="contact">
+              <div class="avatar gran">G<span class="pres on"></span></div>
+              <div class="meta">
+                <div class="name">Grandma</div>
+                <div class="presence on">Online now</div>
+              </div>
+              <div class="callset">
+                <button class="call-btn audio" aria-label="Call Grandma">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5 4h3.2l1.6 4-2 1.4a11 11 0 0 0 5.3 5.3l1.4-2 4 1.6V19a1.6 1.6 0 0 1-1.7 1.6A15.4 15.4 0 0 1 3.4 5.7 1.6 1.6 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="call-btn video" aria-label="Video call Grandma">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="6.5" width="12.5" height="11" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 10.4 20.5 7.6v8.8l-5-2.8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="contact">
+              <div class="avatar gramps">O<span class="pres off"></span></div>
+              <div class="meta">
+                <div class="name">Grandpa</div>
+                <div class="presence off">Last seen yesterday</div>
+              </div>
+              <div class="callset">
+                <button class="call-btn audio" aria-label="Call Grandpa">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5 4h3.2l1.6 4-2 1.4a11 11 0 0 0 5.3 5.3l1.4-2 4 1.6V19a1.6 1.6 0 0 1-1.7 1.6A15.4 15.4 0 0 1 3.4 5.7 1.6 1.6 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="call-btn video" aria-label="Video call Grandpa">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="6.5" width="12.5" height="11" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 10.4 20.5 7.6v8.8l-5-2.8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="sect" style="margin-top:18px;">Family groups</div>
+
+            <div class="group" id="openGroup">
+              <div class="group-av">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="9" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="16" cy="9" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M3 19a5 5 0 0 1 10 0M11 19a5 5 0 0 1 10 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              </div>
+              <div class="meta">
+                <div class="name">Family</div>
+                <div class="preview"><b>Mom:</b> Home in 10 minutes! 🚗</div>
+              </div>
+              <div class="right">
+                <span class="time">now</span>
+                <span class="badge">3</span>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="group-av">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="9" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="16" cy="9" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M3 19a5 5 0 0 1 10 0M11 19a5 5 0 0 1 10 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              </div>
+              <div class="meta">
+                <div class="name">Grandparents</div>
+                <div class="preview"><b>Grandma:</b> Can't wait to see you Sunday</div>
+              </div>
+              <div class="right">
+                <span class="time">1h</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabbar">
+            <div class="tab"><span class="tp"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7" stroke="#9bb5b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9h14v-9" stroke="#9bb5b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Home</div>
+            <div class="tab"><span class="tp"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#9bb5b8" stroke-width="2" stroke-linejoin="round"/></svg></span>Chats</div>
+            <div class="tab active"><span class="tp"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="9" r="3" stroke="#178187" stroke-width="2"/><circle cx="16" cy="9" r="3" stroke="#178187" stroke-width="2"/><path d="M3 19a5 5 0 0 1 10 0M11 19a5 5 0 0 1 10 0" stroke="#178187" stroke-width="2" stroke-linecap="round"/></svg></span>Family</div>
+            <div class="tab"><span class="tp"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#9bb5b8" stroke-width="2"/><path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2M6.7 6.7l1.4 1.4M15.9 15.9l1.4 1.4M17.3 6.7l-1.4 1.4M8.1 15.9l-1.4 1.4" stroke="#9bb5b8" stroke-width="2" stroke-linecap="round"/></svg></span>Settings</div>
+          </div>
+          <div class="home-ind"></div>
+        </div>
+
+        <!-- ============ VIEW B · GROUP CONVERSATION ============ -->
+        <div class="view" id="view-chat">
+          <div class="topbar">
+            <button class="round-btn" id="backToList" aria-label="Back to family">
+              <svg width="9" height="15" viewBox="0 0 9 15" fill="none"><path d="M7.5 1.5 1.5 7.5l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="who">
+              <div class="group-av">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="8" cy="9" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="16" cy="9" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M3 19a5 5 0 0 1 10 0M11 19a5 5 0 0 1 10 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <div class="title">Family</div>
+                <div class="subtitle">Mom, Dad, Grandma · you</div>
+              </div>
+            </div>
+            <div class="hdr-calls">
+              <button class="hdr-call" aria-label="Start a family voice call">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 4h3.2l1.6 4-2 1.4a11 11 0 0 0 5.3 5.3l1.4-2 4 1.6V19a1.6 1.6 0 0 1-1.7 1.6A15.4 15.4 0 0 1 3.4 5.7 1.6 1.6 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="hdr-call" aria-label="Start a family video call">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="6.5" width="12.5" height="11" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 10.4 20.5 7.6v8.8l-5-2.8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- incoming call (F27) -->
+          <div class="ring-banner">
+            <div class="rb-av" style="background:#FCE4DA;color:#C4552F;">M</div>
+            <div class="rb-txt">
+              <div class="rb-name">Mom is calling…</div>
+              <div class="rb-sub"><span class="live"></span> Family voice call</div>
+            </div>
+            <div class="rb-actions">
+              <button class="rb-btn decline" aria-label="Decline call">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 4h3.2l1.6 4-2 1.4a11 11 0 0 0 5.3 5.3l1.4-2 4 1.6V19a1.6 1.6 0 0 1-1.7 1.6A15.4 15.4 0 0 1 3.4 5.7 1.6 1.6 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M20 4 4 20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+              </button>
+              <button class="rb-btn answer" id="answerCall" aria-label="Answer call">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 4h3.2l1.6 4-2 1.4a11 11 0 0 0 5.3 5.3l1.4-2 4 1.6V19a1.6 1.6 0 0 1-1.7 1.6A15.4 15.4 0 0 1 3.4 5.7 1.6 1.6 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="thread">
+            <div class="fade-top"></div>
+            <div class="day">Today</div>
+
+            <div class="row them">
+              <div class="b-av" style="background:#FCE4DA;color:#C4552F;">M</div>
+              <div class="stack">
+                <div class="sender mom">Mom</div>
+                <div class="bubble them">Good morning, sunshine! Did you sleep well?</div>
+                <div class="stamp">8:02</div>
+              </div>
+            </div>
+
+            <div class="row me">
+              <div class="stack">
+                <div class="bubble me">Yes! I dreamed we went to the beach 🏖️</div>
+                <div class="stamp">8:05</div>
+              </div>
+            </div>
+
+            <div class="row them">
+              <div class="b-av" style="background:var(--onahau);color:var(--blue-lagoon);">D</div>
+              <div class="stack">
+                <div class="sender dad">Dad</div>
+                <div class="bubble them">
+                  <div class="vnote">
+                    <span class="play"><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor"><path d="M2.5 1.5v9l7.5-4.5-7.5-4.5Z"/></svg></span>
+                    <span class="wave">
+                      <span style="height:8px"></span><span style="height:14px"></span><span style="height:20px"></span><span style="height:11px"></span><span style="height:17px"></span><span style="height:9px"></span><span style="height:15px"></span><span style="height:21px"></span><span style="height:12px"></span><span style="height:7px"></span><span style="height:13px"></span>
+                    </span>
+                    <span class="vdur">0:07</span>
+                  </div>
+                </div>
+                <div class="stamp">8:11</div>
+              </div>
+            </div>
+
+            <div class="row me">
+              <div class="stack">
+                <div class="bubble me">
+                  <div class="vnote">
+                    <span class="play"><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor"><path d="M2.5 1.5v9l7.5-4.5-7.5-4.5Z"/></svg></span>
+                    <span class="wave">
+                      <span style="height:10px"></span><span style="height:16px"></span><span style="height:22px"></span><span style="height:12px"></span><span style="height:18px"></span><span style="height:8px"></span><span style="height:14px"></span>
+                    </span>
+                    <span class="vdur">0:04</span>
+                  </div>
+                </div>
+                <div class="stamp">8:12</div>
+              </div>
+            </div>
+
+            <div class="callcard">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 4h3.2l1.6 4-2 1.4a11 11 0 0 0 5.3 5.3l1.4-2 4 1.6V19a1.6 1.6 0 0 1-1.7 1.6A15.4 15.4 0 0 1 3.4 5.7 1.6 1.6 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
+              Family call · 6 min
+            </div>
+
+            <div class="row them">
+              <div class="b-av" style="background:var(--ziggurat);color:#3E6E72;">G</div>
+              <div class="stack">
+                <div class="sender" style="color:#3E6E72;">Grandma</div>
+                <div class="bubble them">That was such a lovely chat! See you Sunday 💛</div>
+                <div class="stamp">8:20</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="composer">
+            <div class="pill">
+              <button class="icon-btn" aria-label="Add a photo">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+              <input placeholder="Message your family" />
+              <button class="mic-btn" aria-label="Send a voice note">
+                <svg width="20" height="20" viewBox="0 0 16 22" fill="none"><rect x="5" y="1" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M2 9.5a6 6 0 0 0 12 0M8 15.5V20M5 20h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ VIEW C · IN-CALL (F27 active) ============ -->
+        <div class="view" id="view-call">
+          <div class="callscreen">
+            <div class="safe-pill">
+              <svg width="13" height="13" viewBox="0 0 18 18" fill="none"><path d="M9 1.6 3 4v4.4C3 12 5.5 15 9 16.4 12.5 15 15 12 15 8.4V4L9 1.6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              Safe family call
+            </div>
+
+            <div class="big-av">
+              <span class="halo"></span>
+              M
+            </div>
+            <div class="c-name">Mom</div>
+            <div class="c-state"><span class="dot"></span> Connected · 02:14</div>
+
+            <div class="call-ctrls">
+              <div class="cc-wrap">
+                <button class="cc" aria-label="Mute">
+                  <svg width="24" height="24" viewBox="0 0 16 22" fill="none"><rect x="5" y="1" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M2 9.5a6 6 0 0 0 12 0M8 15.5V20M5 20h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </button>
+                <span>Mute</span>
+              </div>
+              <div class="cc-wrap">
+                <button class="cc end" id="endCall" aria-label="End call">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 4h3.2l1.6 4-2 1.4a11 11 0 0 0 5.3 5.3l1.4-2 4 1.6V19a1.6 1.6 0 0 1-1.7 1.6A15.4 15.4 0 0 1 3.4 5.7 1.6 1.6 0 0 1 5 4Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M20 4 4 20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+                </button>
+                <span>End</span>
+              </div>
+              <div class="cc-wrap">
+                <button class="cc" aria-label="Turn on video">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="6.5" width="12.5" height="11" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M15.5 10.4 20.5 7.6v8.8l-5-2.8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                </button>
+                <span>Video</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <a class="home-link" href="#" onclick="return false">elumi-kids design prototype — not production</a>
+
+<script>
+  const seg = document.getElementById('seg');
+  const views = {
+    list: document.getElementById('view-list'),
+    chat: document.getElementById('view-chat'),
+    call: document.getElementById('view-call'),
+  };
+  function show(name) {
+    Object.values(views).forEach(v => v.classList.remove('active'));
+    views[name].classList.add('active');
+    [...seg.children].forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  }
+  seg.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (b) show(b.dataset.view);
+  });
+  // in-frame nav so the flow reads: list → chat → answer → call → back to list
+  document.getElementById('openGroup').addEventListener('click', () => show('chat'));
+  document.getElementById('backToList').addEventListener('click', () => show('list'));
+  document.getElementById('answerCall').addEventListener('click', () => show('call'));
+  document.getElementById('endCall').addEventListener('click', () => show('chat'));
+</script>
+</body>
+</html>

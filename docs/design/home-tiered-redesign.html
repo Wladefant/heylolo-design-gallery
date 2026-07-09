@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kid Home · Age-tiered progressive disclosure · HeyLoLo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --lagoon:#037B83;--chill:#0E8B93;--paradiso:#3C9094;--fountain:#5EBCC1;--ink:#114e52;--ink2:#28484c;
+    --muted:#5b9296;--muted2:#6c8b8e;--teal-deep:#16737A;--green:#3FA079;--coral-bg:#FFF0EA;--coral-ink:#E0763F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;color:var(--ink2);
+    background:radial-gradient(900px 500px at 50% -8%, #d8f0f3 0, rgba(216,240,243,0) 60%),linear-gradient(180deg,#eef6f6,#e7f1f1);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:34px 16px 70px;}
+  h1.page{font-weight:900;font-size:25px;color:var(--ink);letter-spacing:-.01em;}
+  .sub{font-weight:600;font-size:13.5px;line-height:1.55;color:var(--muted);max-width:600px;text-align:center;margin:7px 0 18px;}
+
+  /* ---- prototype-only tier switcher (NOT part of the real app) ---- */
+  .devbar{width:344px;max-width:100%;border:1.5px dashed #A9CFD1;border-radius:20px;background:rgba(255,255,255,.55);
+    padding:12px 12px 13px;margin-bottom:20px;display:flex;flex-direction:column;align-items:center;gap:9px;}
+  .devtag{font-weight:800;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#6f9a9d;}
+  .tierseg{display:flex;gap:5px;background:#EAF4F4;border-radius:14px;padding:4px;width:100%;}
+  .tierbtn{flex:1;border:none;background:transparent;border-radius:11px;padding:7px 4px 6px;cursor:pointer;font-family:inherit;
+    display:flex;flex-direction:column;align-items:center;gap:1px;transition:background .18s,box-shadow .18s;}
+  .tierbtn b{font-weight:800;font-size:12.5px;color:#5b8387;line-height:1.1;}
+  .tierbtn i{font-family:'DM Sans';font-style:normal;font-weight:500;font-size:10px;color:#9bb6b8;}
+  .tierbtn.active{background:#fff;box-shadow:0 4px 12px rgba(3,123,131,.16);}
+  .tierbtn.active b{color:var(--chill);}
+  .tierbtn.active i{color:var(--paradiso);}
+  .devnote{font-weight:600;font-size:11px;color:#89a9ab;text-align:center;line-height:1.4;}
+
+  .phone{width:344px;height:730px;border-radius:54px;background:#0c2f33;padding:11px;box-shadow:0 36px 80px rgba(11,60,64,.30),0 6px 16px rgba(11,60,64,.16);position:relative;}
+  .screen{width:100%;height:100%;border-radius:44px;overflow:hidden;position:relative;display:flex;flex-direction:column;
+    background:linear-gradient(180deg,#D6EFF5 0%,#E3F5F3 42%,#EFF9F8 72%,#FBFDFD 100%);}
+  .statusbar{height:46px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:15px 26px 0;z-index:3;}
+  .statusbar .time{font-family:'DM Sans';font-weight:700;font-size:15px;color:#173c40;}
+  .statusbar .ind{display:flex;align-items:center;gap:6px;}
+  .stage{flex:1;display:flex;min-height:0;}
+
+  /* views: only the active tier's view renders */
+  .view{display:none;flex:1;flex-direction:column;min-height:0;}
+  [data-tier="little"] .view-little{display:flex;}
+  [data-tier="growing"] .view-growing{display:flex;}
+  [data-tier="bigkid"] .view-bigkid{display:flex;}
+  [data-tier="pro"] .view-pro{display:flex;}
+
+  .scroll{flex:1;overflow-y:auto;padding:6px 20px 0;
+    -webkit-mask-image:linear-gradient(180deg,#000 92%,transparent 100%);mask-image:linear-gradient(180deg,#000 92%,transparent 100%);}
+  .scroll::-webkit-scrollbar{display:none;}
+  .scroll{scrollbar-width:none;}
+  .botpad{height:96px;flex:none;}
+
+  /* shared greeting */
+  .ghead{display:flex;align-items:flex-start;justify-content:space-between;margin-top:8px;}
+  .greet{display:flex;align-items:center;gap:12px;}
+  .greet .lolo{width:54px;height:54px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 38% 32%, #F5FBFB,#DEF4F6 46%,#CDF0F2 100%);border:4px solid rgba(255,255,255,.6);box-shadow:0 8px 16px rgba(3,123,131,.18);}
+  .greet .lolo svg{width:28px;height:28px;}
+  .greet h2{font-weight:900;font-size:23px;line-height:1.12;color:var(--teal-deep);letter-spacing:-.01em;}
+  .greet h2 .w{color:#7FB7BB;}
+  .tagline{font-weight:600;font-size:14px;line-height:1.5;color:#5E7C7F;margin-top:13px;}
+
+  /* parent gate */
+  .gate{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.72);border:none;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 14px rgba(20,90,95,.13);cursor:pointer;flex:none;}
+  .gate svg{width:19px;height:19px;}
+  .view-little .gate{position:absolute;top:56px;right:22px;z-index:4;}
+
+  /* mode grid (Big Kid / Pro) */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;}
+  .modes.single{grid-template-columns:1fr;}
+  .mode{background:#fff;border-radius:22px;padding:16px 14px 14px;box-shadow:0 8px 22px rgba(20,90,95,.09);cursor:pointer;
+    transition:transform .15s cubic-bezier(.22,1,.36,1), box-shadow .2s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;}
+  .mode:active{transform:scale(.97);}
+  .mode .ic{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;}
+  .mode .ic svg{width:26px;height:26px;}
+  .mode .t{font-weight:800;font-size:15px;color:#1B7F84;line-height:1.15;}
+  .mode .d{font-weight:600;font-size:12px;color:#7a9a9d;line-height:1.3;}
+  .mode.voice{grid-column:1 / -1;flex-direction:row;align-items:center;gap:14px;
+    background:linear-gradient(135deg,#0E8B93,#037B83);box-shadow:0 12px 26px rgba(3,123,131,.30);}
+  .mode.voice.compact{padding:13px 14px;}
+  .mode.voice .ic{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.18);}
+  .mode.voice.compact .ic{width:50px;height:50px;}
+  .mode.voice .ic svg{width:30px;height:30px;}
+  .mode.voice .t{color:#fff;font-size:17px;}
+  .mode.voice .d{color:rgba(255,255,255,.82);font-size:12.5px;}
+  .mode.voice .go{margin-left:auto;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex:none;}
+  .mode.row{grid-column:1 / -1;flex-direction:row;align-items:center;gap:14px;}
+  .mode.row .txt .t{font-size:16px;}
+  .ic.chat{background:#E4F3F2;}.ic.explore{background:#FFF0E9;}
+
+  .newchip{position:absolute;top:9px;right:9px;background:#FFF0EA;color:#E0763F;font-weight:800;font-size:9.5px;letter-spacing:.02em;
+    padding:3px 8px;border-radius:999px;z-index:2;box-shadow:0 3px 8px rgba(224,118,63,.18);}
+
+  .card{background:#fff;border-radius:26px;padding:20px;margin-top:16px;box-shadow:0 12px 28px rgba(20,90,95,.10);}
+  .card .label{font-weight:800;font-size:13px;color:var(--chill);}
+  .qrow{display:flex;align-items:center;gap:14px;margin-top:10px;}
+  .qmasc{width:74px;height:74px;border-radius:20px;flex:none;background:linear-gradient(160deg,#EAF7F6,#D7EEEF);display:flex;align-items:center;justify-content:center;}
+  .qmasc svg{width:40px;height:40px;}
+  .qtext{font-weight:700;font-size:16px;line-height:1.3;color:#3f6164;}
+  .cta{display:block;width:100%;margin-top:16px;background:linear-gradient(180deg,#2F8E92,#247A7E);color:#fff;font-family:inherit;
+    font-weight:800;font-size:16px;border:none;border-radius:999px;padding:15px;cursor:pointer;box-shadow:0 10px 22px rgba(20,110,114,.26);transition:transform .14s;}
+  .cta:active{transform:scale(.98);}
+
+  /* tap-to-hear QOTD (Growing) */
+  .taphear .qrow{justify-content:space-between;}
+  .playbtn{width:56px;height:56px;border-radius:50%;flex:none;border:none;cursor:pointer;background:linear-gradient(150deg,#12929A,#037B83);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 10px 20px rgba(3,123,131,.28);transition:transform .14s;}
+  .playbtn:active{transform:scale(.94);}
+  .playbtn svg{width:24px;height:24px;margin-left:3px;}
+  .taptext{font-weight:700;font-size:13.5px;color:#5E7C7F;margin-top:12px;}
+
+  .goal{display:flex;align-items:center;gap:14px;}
+  .goal .gmasc{width:56px;height:56px;border-radius:18px;flex:none;background:linear-gradient(160deg,#FFF3EC,#FFE3D6);display:flex;align-items:center;justify-content:center;}
+  .goal .gmasc svg{width:30px;height:30px;}
+  .goal .gt{font-weight:800;font-size:15px;color:#1B7F84;}
+  .goal .gd{font-weight:600;font-size:12.5px;color:#8aa6a8;margin-top:2px;}
+  .goal .ring{margin-left:auto;width:46px;height:46px;flex:none;}
+
+  /* Pro unlock surfaces */
+  .unlockbanner{display:flex;align-items:center;gap:9px;margin-top:16px;background:#FFF0EA;border-radius:16px;padding:11px 14px;}
+  .unlockbanner .sp{width:26px;height:26px;border-radius:8px;background:#FFE1D2;display:flex;align-items:center;justify-content:center;flex:none;}
+  .unlockbanner .sp svg{width:16px;height:16px;}
+  .unlockbanner .ut{font-weight:800;font-size:12.5px;color:#C25E2C;line-height:1.25;}
+  .unlockbanner .ut span{font-weight:600;color:#b58468;}
+  .prorow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;}
+  .protile{background:#fff;border-radius:20px;padding:14px 10px 13px;box-shadow:0 8px 20px rgba(20,90,95,.08);position:relative;
+    display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:transform .15s;}
+  .protile:active{transform:scale(.96);}
+  .protile .pic{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;}
+  .protile .pic svg{width:24px;height:24px;}
+  .pic.studios{background:#EFEAFB;}.pic.books{background:#E4F3F2;}.pic.streaks{background:#FFF0E9;}
+  .protile .pt{font-weight:800;font-size:12.5px;color:#1B7F84;}
+  .protile .pnum{font-family:'DM Sans';font-weight:700;font-size:12px;color:var(--coral-ink);}
+  .protile .newchip{top:7px;right:7px;}
+
+  /* tab bar (shared, Growing/BigKid/Pro) */
+  .tabbar{position:absolute;left:16px;right:16px;bottom:14px;height:66px;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);
+    border-radius:28px;box-shadow:0 12px 32px rgba(11,60,64,.16);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:5;}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:800;font-size:11px;color:#9bb5b8;flex:1;cursor:pointer;}
+  .tab.active{color:#178187;}
+  .pill{width:56px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+  .tab.active .pill{background:#E0F1EE;}
+  .tab svg{width:22px;height:22px;}
+  .home-ind{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:128px;height:5px;border-radius:3px;background:rgba(20,60,64,.18);z-index:6;}
+
+  /* Little tier — one giant "Talk to LoLo" button */
+  .little-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 24px 34px;gap:22px;}
+  .little-hero{position:relative;width:252px;padding:34px 24px 30px;border-radius:46px;background:linear-gradient(150deg,#12929A,#037B83);
+    box-shadow:0 24px 48px rgba(3,123,131,.34);display:flex;flex-direction:column;align-items:center;gap:16px;cursor:pointer;transition:transform .16s;}
+  .little-hero:active{transform:scale(.97);}
+  .little-lolo{width:86px;height:86px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#F5FBFB,#DEF4F6 46%,#CDF0F2 100%);
+    border:5px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;position:relative;z-index:2;}
+  .little-lolo svg{width:48px;height:48px;}
+  .little-mic{width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;position:relative;z-index:2;}
+  .little-mic svg{width:36px;height:36px;}
+  .little-title{font-weight:900;font-size:24px;color:#fff;position:relative;z-index:2;}
+  .little-sub{font-weight:700;font-size:14px;color:rgba(255,255,255,.85);position:relative;z-index:2;}
+  .pulse{position:absolute;inset:0;border-radius:46px;border:2px solid rgba(94,188,193,.55);animation:pulse 2.8s ease-out infinite;z-index:1;}
+  .pulse.p2{animation-delay:1.4s;}
+  @keyframes pulse{0%{transform:scale(1);opacity:.55;}100%{transform:scale(1.16);opacity:0;}}
+
+  .caption{width:344px;max-width:100%;margin-top:18px;font-size:12.5px;color:var(--muted2);text-align:center;line-height:1.6;}
+  .caption b{color:var(--chill);}
+  .notes{margin-top:16px;max-width:540px;font-size:12px;color:#89a9ab;text-align:center;line-height:1.6;}
+  .notes b{color:var(--chill);}
+  @media (prefers-reduced-motion: reduce){*{transition-duration:.08s !important;animation:none !important;}}
+</style>
+</head>
+<body>
+  <h1 class="page">Kid Home · progressive disclosure</h1>
+  <p class="sub">One Home, four ages. Complexity is <b>derived from the child's age</b> — the kid never sees a switch. Flip the preview control to watch the screen grow from a single button (Little) up to the full studio-rich Home (Pro).</p>
+
+  <div class="devbar">
+    <span class="devtag">Preview tier</span>
+    <div class="tierseg">
+      <button class="tierbtn" data-tier="little"><b>Little</b><i>4–5</i></button>
+      <button class="tierbtn" data-tier="growing"><b>Growing</b><i>6–7</i></button>
+      <button class="tierbtn" data-tier="bigkid"><b>Big Kid</b><i>8–9</i></button>
+      <button class="tierbtn" data-tier="pro"><b>Pro</b><i>10–12</i></button>
+    </div>
+    <span class="devnote">Prototype-only dev control. In the real app the tier is derived from the child's birthday (parent may override ±1 in the Grown-up zone).</span>
+  </div>
+
+  <div class="phone"><div class="screen" id="screen" data-tier="little">
+    <div class="statusbar">
+      <span class="time">9:41</span>
+      <span class="ind">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#173c40"/><rect x="5" y="4.5" width="3" height="7.5" rx="1" fill="#173c40"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#173c40"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#173c40" opacity=".35"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 11.2 1 3.7a10.6 10.6 0 0 1 15 0L8.5 11.2Z" fill="none" stroke="#173c40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="22" height="11" rx="3" stroke="#173c40" stroke-width="1.4" fill="none"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#173c40"/><rect x="24" y="4" width="2" height="5" rx="1" fill="#173c40"/></svg>
+      </span>
+    </div>
+
+    <div class="stage">
+
+      <!-- ============ LITTLE (4–5) — one giant button, no grid/QOTD/goal/tab bar ============ -->
+      <section class="view view-little">
+        <button class="gate" aria-label="Grown-up zone">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10.5" width="14" height="9.5" rx="2.5" stroke="#6f9a9d" stroke-width="1.9"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" stroke="#6f9a9d" stroke-width="1.9" stroke-linecap="round"/></svg>
+        </button>
+        <div class="little-stage">
+          <div class="little-hero">
+            <span class="pulse"></span><span class="pulse p2"></span>
+            <div class="little-lolo"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1.1" fill="#fff"/><circle cx="14" cy="11.5" r="1.1" fill="#fff"/><path d="M10.3 13.7c.6.6 2.8.6 3.4 0" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+            <div class="little-mic"><svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+            <div class="little-title">Talk to LoLo</div>
+            <div class="little-sub">Tap and just say hi</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ GROWING (6–7) — Talk hero + Chat tile + tap-to-hear QOTD + 2 tabs ============ -->
+      <section class="view view-growing">
+        <div class="scroll">
+          <div class="ghead">
+            <div class="greet">
+              <div class="lolo"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1.1" fill="#fff"/><circle cx="14" cy="11.5" r="1.1" fill="#fff"/><path d="M10.3 13.7c.6.6 2.8.6 3.4 0" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+              <h2>Hi <span class="w">Mia!</span><br>I'm LoLo</h2>
+            </div>
+            <button class="gate" aria-label="Grown-up zone" style="margin-top:8px">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10.5" width="14" height="9.5" rx="2.5" stroke="#6f9a9d" stroke-width="1.9"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" stroke="#6f9a9d" stroke-width="1.9" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <div class="modes single">
+            <div class="mode voice">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div><div class="t">Talk to LoLo</div><div class="d">Have a voice chat — just say hi</div></div>
+              <div class="go"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 10v4M10.5 6v12M15 9v6M19 11v2" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="mode row">
+              <span class="newchip">New!</span>
+              <div class="ic chat"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#0E8B93" stroke-width="2" stroke-linejoin="round"/></svg></div>
+              <div class="txt"><div class="t">Chat with LoLo</div><div class="d">Type or talk, see the words</div></div>
+            </div>
+          </div>
+
+          <div class="card taphear">
+            <div class="label">Question of the day</div>
+            <div class="qrow">
+              <div class="qmasc"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#0E8B93" stroke-width="1.8"/><path d="M9.2 9.4a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2.2-2.6 3.8" stroke="#0E8B93" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.1" fill="#0E8B93"/></svg></div>
+              <button class="playbtn" aria-label="Hear today's question"><svg viewBox="0 0 24 24"><path d="M8 6v12l10-6z" fill="#fff"/></svg></button>
+            </div>
+            <div class="taptext">Tap to hear today's question</div>
+          </div>
+          <div class="botpad"></div>
+        </div>
+        <div class="tabbar">
+          <div class="tab active"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9h14v-9" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Home</div>
+          <div class="tab"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#9bb5b8" stroke-width="2" stroke-linejoin="round"/></svg></span>Chats</div>
+        </div>
+        <div class="home-ind"></div>
+      </section>
+
+      <!-- ============ BIG KID (8–9) — today's full 3-mode Home + QOTD + goal + 3 tabs ============ -->
+      <section class="view view-bigkid">
+        <div class="scroll">
+          <div class="greet" style="margin-top:8px">
+            <div class="lolo"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1.1" fill="#fff"/><circle cx="14" cy="11.5" r="1.1" fill="#fff"/><path d="M10.3 13.7c.6.6 2.8.6 3.4 0" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+            <h2>Hi <span class="w">Mia!</span><br>I'm LoLo</h2>
+          </div>
+          <p class="tagline">Let's discover something exciting together. What would you like to do today?</p>
+
+          <div class="modes">
+            <div class="mode voice">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div><div class="t">Talk to LoLo</div><div class="d">Have a voice chat — just say hi</div></div>
+              <div class="go"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 10v4M10.5 6v12M15 9v6M19 11v2" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="mode">
+              <div class="ic chat"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#0E8B93" stroke-width="2" stroke-linejoin="round"/></svg></div>
+              <div class="t">Chat with LoLo</div>
+              <div class="d">Type or talk, see the words</div>
+            </div>
+            <div class="mode">
+              <span class="newchip">New!</span>
+              <div class="ic explore"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18" stroke="#E0763F" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="#E0763F" stroke-width="2"/></svg></div>
+              <div class="t">Explorer Mode</div>
+              <div class="d">Point at things &amp; ask</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="label">Question of the day</div>
+            <div class="qrow">
+              <div class="qmasc"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#0E8B93" stroke-width="1.8"/><path d="M9.2 9.4a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2.2-2.6 3.8" stroke="#0E8B93" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.1" fill="#0E8B93"/></svg></div>
+              <div class="qtext">What is a small thing that made you happy this week?</div>
+            </div>
+            <button class="cta">Talk to LoLo about it</button>
+          </div>
+
+          <div class="card goal">
+            <div class="gmasc"><svg viewBox="0 0 24 24" fill="none"><path d="M5 3v10a7 7 0 0 0 14 0V3" stroke="#E0763F" stroke-width="1.8" stroke-linecap="round"/><path d="M5 6h14M8 21h8M12 20v-3" stroke="#E0763F" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div><div class="gt">Today's goal</div><div class="gd">Learn 3 fun facts about space</div></div>
+            <svg class="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="#E6F2F1" stroke-width="5"/><circle cx="22" cy="22" r="18" fill="none" stroke="#0E8B93" stroke-width="5" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="40" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle" font-family="DM Sans" font-weight="700" font-size="12" fill="#0E8B93">2/3</text></svg>
+          </div>
+          <div class="botpad"></div>
+        </div>
+        <div class="tabbar">
+          <div class="tab active"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9h14v-9" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Home</div>
+          <div class="tab"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#9bb5b8" stroke-width="2" stroke-linejoin="round"/></svg></span>Chats</div>
+          <div class="tab"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#9bb5b8" stroke-width="2"/><path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2M6.7 6.7l1.4 1.4M15.9 15.9l1.4 1.4M17.3 6.7l-1.4 1.4M8.1 15.9l-1.4 1.4" stroke="#9bb5b8" stroke-width="2" stroke-linecap="round"/></svg></span>Settings</div>
+        </div>
+        <div class="home-ind"></div>
+      </section>
+
+      <!-- ============ PRO (10–12) — Big Kid + Studios/Storybooks/Streaks + unlock ============ -->
+      <section class="view view-pro">
+        <div class="scroll">
+          <div class="greet" style="margin-top:8px">
+            <div class="lolo"><svg viewBox="0 0 24 24" fill="none"><path d="M6.5 16a4 4 0 0 1 .5-7.96A5 5 0 0 1 17 8.2 3.6 3.6 0 0 1 17 16H6.5Z" fill="#0E7077"/><circle cx="10" cy="11.5" r="1.1" fill="#fff"/><circle cx="14" cy="11.5" r="1.1" fill="#fff"/><path d="M10.3 13.7c.6.6 2.8.6 3.4 0" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+            <h2>Hi <span class="w">Mia!</span><br>I'm LoLo</h2>
+          </div>
+          <p class="tagline">Ready to make something today? Talk, chat, explore — or open a studio.</p>
+
+          <div class="modes">
+            <div class="mode voice compact">
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div><div class="t">Talk to LoLo</div><div class="d">Have a voice chat — just say hi</div></div>
+              <div class="go"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 10v4M10.5 6v12M15 9v6M19 11v2" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="mode">
+              <div class="ic chat"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#0E8B93" stroke-width="2" stroke-linejoin="round"/></svg></div>
+              <div class="t">Chat with LoLo</div>
+              <div class="d">Type or talk, see the words</div>
+            </div>
+            <div class="mode">
+              <div class="ic explore"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18" stroke="#E0763F" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="#E0763F" stroke-width="2"/></svg></div>
+              <div class="t">Explorer Mode</div>
+              <div class="d">Point at things &amp; ask</div>
+            </div>
+          </div>
+
+          <div class="unlockbanner">
+            <span class="sp"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.7 4.1L18 8.8l-4.3 1.7L12 15l-1.7-4.5L6 8.8l4.3-1.7L12 3Z" fill="#E0763F"/></svg></span>
+            <div class="ut">New! You unlocked <span>— Studios are ready to make with.</span></div>
+          </div>
+
+          <div class="prorow">
+            <div class="protile">
+              <span class="newchip">New!</span>
+              <div class="pic studios"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.7 4.1L18 8.8l-4.3 1.7L12 15l-1.7-4.5L6 8.8l4.3-1.7L12 3Z" stroke="#7A5FCB" stroke-width="1.7" stroke-linejoin="round"/><path d="M18 15l.6 1.5L20 17.1l-1.4.6-.6 1.5-.6-1.5L16 17.1l1.4-.6L18 15Z" fill="#7A5FCB"/></svg></div>
+              <div class="pt">Studios</div>
+            </div>
+            <div class="protile">
+              <div class="pic books"><svg viewBox="0 0 24 24" fill="none"><path d="M12 6c-1.6-1.2-3.6-1.5-6-1v12c2.4-.5 4.4-.2 6 1 1.6-1.2 3.6-1.5 6-1V5c-2.4-.5-4.4-.2-6 1Z" stroke="#0E8B93" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 6v12" stroke="#0E8B93" stroke-width="1.7"/></svg></div>
+              <div class="pt">Storybooks</div>
+            </div>
+            <div class="protile">
+              <div class="pic streaks"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3c1 3-1.5 4-1.5 6.5A2.5 2.5 0 0 0 13 12c0-1 .8-1.8.8-1.8.6 1 1.7 2.4 1.7 4.3a3.5 3.5 0 1 1-7 0C8.5 10 12 8 12 3Z" stroke="#E0763F" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+              <div class="pt">Streaks</div>
+              <div class="pnum">5 days</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="label">Question of the day</div>
+            <div class="qrow">
+              <div class="qmasc"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#0E8B93" stroke-width="1.8"/><path d="M9.2 9.4a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2.2-2.6 3.8" stroke="#0E8B93" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.4" r="1.1" fill="#0E8B93"/></svg></div>
+              <div class="qtext">If you could invent one gadget, what would it do?</div>
+            </div>
+            <button class="cta">Talk to LoLo about it</button>
+          </div>
+
+          <div class="card goal">
+            <div class="gmasc"><svg viewBox="0 0 24 24" fill="none"><path d="M5 3v10a7 7 0 0 0 14 0V3" stroke="#E0763F" stroke-width="1.8" stroke-linecap="round"/><path d="M5 6h14M8 21h8M12 20v-3" stroke="#E0763F" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div><div class="gt">Today's goal</div><div class="gd">Finish your dinosaur storybook</div></div>
+            <svg class="ring" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="#E6F2F1" stroke-width="5"/><circle cx="22" cy="22" r="18" fill="none" stroke="#0E8B93" stroke-width="5" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="20" transform="rotate(-90 22 22)"/><text x="22" y="26" text-anchor="middle" font-family="DM Sans" font-weight="700" font-size="12" fill="#0E8B93">3/4</text></svg>
+          </div>
+          <div class="botpad"></div>
+        </div>
+        <div class="tabbar">
+          <div class="tab active"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9h14v-9" stroke="#178187" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Home</div>
+          <div class="tab"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-4 3z" stroke="#9bb5b8" stroke-width="2" stroke-linejoin="round"/></svg></span>Chats</div>
+          <div class="tab"><span class="pill"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#9bb5b8" stroke-width="2"/><path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2M6.7 6.7l1.4 1.4M15.9 15.9l1.4 1.4M17.3 6.7l-1.4 1.4M8.1 15.9l-1.4 1.4" stroke="#9bb5b8" stroke-width="2" stroke-linecap="round"/></svg></span>Settings</div>
+        </div>
+        <div class="home-ind"></div>
+      </section>
+
+    </div>
+  </div></div>
+
+  <p class="caption" id="caption"></p>
+  <p class="notes">Second axis (not shown by the switch): within any tier the <b>goal ring</b>, <b>Question of the Day</b> and <b>Studios</b> are revealed by tenure — session 0 is quiet, they appear after the first conversation / day 2 / ~3 sessions. The <b>New!</b> chips mark a capability the first time it appears.</p>
+
+<script>
+  var screen = document.getElementById('screen');
+  var caption = document.getElementById('caption');
+  var btns = document.querySelectorAll('.tierbtn');
+  var captions = {
+    little:  "Little (4–5) · pre-literate — one full-bleed “Talk to LoLo” button. No mode grid, Question of the Day, goal ring or tab bar. Settings hides behind a grown-up gate.",
+    growing: "Growing (6–7) · early reader — Talk hero + a Chat tile (New!), the Question of the Day as a tap-to-hear card, and a 2-tab bar (Home, Chats).",
+    bigkid:  "Big Kid (8–9) · fluent — the full 3-mode grid with Explorer (New!), Question of the Day and the goal ring. Essentially today’s Home, now scoped to 8–9.",
+    pro:     "Pro (10–12) · tween — everything above plus Studios (New!), Storybooks and Streaks, a denser layout and a smaller hero."
+  };
+  function setTier(t){
+    screen.setAttribute('data-tier', t);
+    for(var i=0;i<btns.length;i++){ btns[i].classList.toggle('active', btns[i].dataset.tier===t); }
+    caption.textContent = captions[t];
+    var active = screen.querySelector('.view-'+t);
+    var scroll = active && active.querySelector('.scroll');
+    if(scroll) scroll.scrollTop = 0;
+  }
+  for(var i=0;i<btns.length;i++){ btns[i].addEventListener('click', function(){ setTier(this.dataset.tier); }); }
+  setTier('little');
+</script>
+</body>
+</html>
