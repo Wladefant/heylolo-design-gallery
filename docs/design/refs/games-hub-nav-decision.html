@@ -1,0 +1,32 @@
+<title>HeyLolo ref — games-hub-nav-decision</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Games Hub navigation — decision memo</h1>
+<p>status: RECOMMENDED (founder can veto) · 2026-07-05
+context: #149 build starts ~W11 (Sep 14); BUILD-GUIDES flagged this as &quot;a nav decision, not code&quot;. Today <code>(child)/(tabs)/_layout.tsx</code> has 3 native tabs.</p>
+<h2>Options</h2>
+<p><strong>A. Push-from-Home (recommended for v1.2).</strong> A &quot;Games&quot; tile/entry on the child home pushes the hub as a screen. No tab-bar change, no native re-layout, zero App Review surface, ships in the v1.2 update without touching the shell. Cost: one extra tap; discovery depends on the home tile being visible.</p>
+<p><strong>B. Fourth native tab.</strong> Best discovery, but: crowds a 3-tab kid UI (each tab loses ~25% width), makes the hub feel core before it has content, and every later experiment (Learning Studio #150 — a 5th tab?) compounds the problem. Tab real estate is the scarcest UI resource in a kids app.</p>
+<p><strong>C. Hub replaces a Home section (games rail on Home).</strong> No nav change at all — the hub IS a horizontally-scrolled rail of game tiles on the child home, with &quot;see all&quot; pushing the full grid. Cheapest, most discoverable for the youngest tier (no navigation concept needed at 4–5).</p>
+<h2>Recommendation</h2>
+<p><strong>C for v1.2, A&#39;s full-grid screen behind its &quot;see all&quot;, revisit B only when ≥6 tiles are live AND usage data shows the rail saturating.</strong> Rationale: (1) the 4–5 tier can&#39;t navigate tabs reliably — a rail on the surface they already live on wins the youngest users; (2) launch tiles are few (chat-games + Connect Four + Memory + quizzes) — a full tab would look empty, a rail looks curated; (3) zero freeze/App-Review interaction; (4) Learning Studio (#150) later follows the same rail pattern, avoiding tab inflation.</p>
+<p>Age-tier note (#105): the rail&#39;s tile set is tier-filtered — T1 sees 3 big tiles, T4 sees the full set with difficulty badges.</p>
+<p>Decision needed from founder by ~Sep 8 (v1.2 build start). Default = C if no veto.</p>

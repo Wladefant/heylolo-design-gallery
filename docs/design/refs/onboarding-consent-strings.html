@@ -1,0 +1,507 @@
+<title>HeyLolo ref — onboarding-consent-strings</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Onboarding + Consent Flow Strings (EN + DE) — W1–W2 Build</h1>
+<p>Covers: #178 (onboarding + handoff), #196 (consent flow + 5.1.2(i)), #179 (opener support strings).</p>
+<p>Status: FINAL v1, paste-ready</p>
+<h2>Table of Contents</h2>
+<ol>
+<li>Onboarding — 4 steps</li>
+<li>COPPA parental-consent screen</li>
+<li>THE 5.1.2(i) card</li>
+<li>Trial start screen</li>
+<li>First-session opener support strings</li>
+<li>Consistency checklist</li>
+</ol>
+<hr>
+<h2>1. Onboarding — 4 steps</h2>
+<p>Sequence (<code>day0-activation-playbook.md</code> §1/§3, <code>onboarding-paywall-teardowns.md</code> §B1): <code>general (name+age) → avatar → interests (1 tap) → handoffPrimer → [first LoLo moment] → Trial screen</code>. Nav chrome listed once at end.</p>
+<h3>Step 1 — Name + Age (<code>general</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Header</td>
+<td>Let&#39;s meet your child</td>
+<td>Wer ist dein Kind?</td>
+</tr>
+<tr>
+<td>Subhead</td>
+<td>A few quick things so LoLo can talk just right with them.</td>
+<td>Ein paar schnelle Angaben, damit LoLo genau richtig mit ihm spricht.</td>
+</tr>
+<tr>
+<td>Field label — name</td>
+<td>Child&#39;s name</td>
+<td>Name des Kindes</td>
+</tr>
+<tr>
+<td>Field label — birthdate</td>
+<td>Birthdate</td>
+<td>Geburtsdatum</td>
+</tr>
+<tr>
+<td><strong>Birthdate rationale microcopy</strong> (below the field)</td>
+<td>We use this so LoLo&#39;s words fit just right — not too grown-up, not too simple.</td>
+<td>Das nutzen wir, damit LoLos Worte genau passen — nicht zu erwachsen, nicht zu einfach.</td>
+</tr>
+<tr>
+<td>Primary button</td>
+<td>Continue</td>
+<td>Weiter</td>
+</tr>
+</tbody></table>
+<p>Rationale: age is &quot;the only input that changes LoLo&#39;s behavior on turn one&quot; — the line makes that value visible instead of asking on faith. No genitive, no Sie.</p>
+<h3>Step 2 — Avatar pick (<code>avatar</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Header</td>
+<td>Pick an avatar</td>
+<td>Wähl einen Avatar</td>
+</tr>
+<tr>
+<td>Subhead</td>
+<td>Make it yours!</td>
+<td>Mach ihn dir zu eigen!</td>
+</tr>
+<tr>
+<td>Primary button</td>
+<td>Continue</td>
+<td>Weiter</td>
+</tr>
+<tr>
+<td>Back button</td>
+<td>Back</td>
+<td>Zurück</td>
+</tr>
+<tr>
+<td>Skip label (safe default exists)</td>
+<td>Skip for now</td>
+<td>Später auswählen</td>
+</tr>
+</tbody></table>
+<p>&quot;Avatar&quot; stays untranslated — naturalized for German kids (gaming/Discord), same tier as &quot;Chat.&quot;</p>
+<h3>Step 3 — ONE interest tap (<code>interests</code>, reduced to a single required tap per the playbook)</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Header</td>
+<td>What does {name} love?</td>
+<td>Was liebt {name}?</td>
+</tr>
+<tr>
+<td>Subhead</td>
+<td>Pick one thing — LoLo will start there.</td>
+<td>Wähl eine Sache — damit fängt LoLo an.</td>
+</tr>
+<tr>
+<td>Caption (under the grid)</td>
+<td>You can add more later.</td>
+<td>Du kannst später mehr dazu wählen.</td>
+</tr>
+<tr>
+<td>Primary button (enabled after 1 tap)</td>
+<td>Continue</td>
+<td>Weiter</td>
+</tr>
+<tr>
+<td>Back button</td>
+<td>Back</td>
+<td>Zurück</td>
+</tr>
+<tr>
+<td>Skip label</td>
+<td>Skip for now</td>
+<td>Später auswählen</td>
+</tr>
+</tbody></table>
+<p>Note: Du-voice throughout per glossary §1, never Sie.</p>
+<h3>Step 4 — Handoff primer card (new, replaces the paywall/PIN wall as onboarding&#39;s last screen)</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Header</td>
+<td>LoLo is awake!</td>
+<td>LoLo ist wach!</td>
+</tr>
+<tr>
+<td>Body</td>
+<td>LoLo already knows {name} loves {interest}. Hand {name} the phone — LoLo will say hi.</td>
+<td>LoLo weiß schon, dass {name} {interest} liebt. Gib {name} das Handy — LoLo sagt gleich Hallo.</td>
+</tr>
+<tr>
+<td>Primary button (baton-pass CTA, not a generic &quot;Start&quot;)</td>
+<td>Hand it over</td>
+<td>Gib es weiter</td>
+</tr>
+<tr>
+<td>Secondary microcopy (small, under the button)</td>
+<td>No login, no gate — just LoLo.</td>
+<td>Kein Login, keine Sperre — nur LoLo.</td>
+</tr>
+<tr>
+<td>Optional voice-line caption (age ≤ 6, plays a 4-s LoLo audio line on the card)</td>
+<td>Tap to hear LoLo say hi first</td>
+<td>Tipp, um LoLo schon jetzt zu hören</td>
+</tr>
+</tbody></table>
+<p>The &quot;No login, no gate&quot; line is load-bearing: &quot;no login wall... that gate is what breaks the handoff&quot; — flags any regression if a gate is inserted later.</p>
+<h3>Shared nav chrome (used across steps 2–4; step 1 has no Back)</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Back</td>
+<td>Back</td>
+<td>Zurück</td>
+</tr>
+<tr>
+<td>Skip</td>
+<td>Skip for now</td>
+<td>Später auswählen</td>
+</tr>
+<tr>
+<td>Continue</td>
+<td>Continue</td>
+<td>Weiter</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>2. COPPA parental-consent screen</h2>
+<p>Fires at child-profile creation (<code>app-review-submission-dossier.md</code> §1 [5.1.1], §2 line 4) — a <strong>separate, earlier</strong> gate than §3 (general data consent; §3 is the AI-specific disclosure right before first message). Legal lines use the impersonal carve-out from glossary §1; checkbox/CTA stay Du.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Header</td>
+<td>Before {name} can start</td>
+<td>Bevor {name} loslegen kann</td>
+</tr>
+<tr>
+<td><strong>What-we-collect summary</strong> (honest, short — 3 lines, matches FAQ Q5/Q10)</td>
+<td>Here&#39;s what we collect and why: {name}&#39;s name, age, and conversations with LoLo — stored in the EU, used only to make LoLo work and to keep {name} safe. We never sell it, and you can delete it anytime.</td>
+<td>Das erheben wir, und warum: Name, Alter und die Gespräche von {name} mit LoLo — gespeichert in der EU, nur genutzt, damit LoLo funktioniert und {name} sicher ist. Wir verkaufen nichts davon, und du kannst es jederzeit löschen.</td>
+</tr>
+<tr>
+<td><strong>Consent checkbox line</strong></td>
+<td>I confirm I am the parent or legal guardian of this child, and I agree to the collection described above.</td>
+<td>Ich bestätige, dass ich Elternteil oder gesetzlich erziehungsberechtigte Person dieses Kindes bin, und stimme der oben beschriebenen Erhebung zu.</td>
+</tr>
+<tr>
+<td>Link label — privacy policy</td>
+<td>Read our full Privacy Policy</td>
+<td>Vollständige Datenschutzerklärung lesen</td>
+</tr>
+<tr>
+<td>Link label — data rights</td>
+<td>Your rights over this data</td>
+<td>Deine Rechte zu diesen Daten</td>
+</tr>
+<tr>
+<td>Primary button</td>
+<td>I agree — continue</td>
+<td>Ich stimme zu — weiter</td>
+</tr>
+<tr>
+<td>Secondary (declines the app for this child)</td>
+<td>Not right now</td>
+<td>Jetzt nicht</td>
+</tr>
+</tbody></table>
+<p>Deliberately narrower than the full Privacy Policy — the &quot;honest, short&quot; summary the brief asks for, checked against FAQ Q5/Q10. Does <strong>not</strong> name Gemini/Vertex — that&#39;s the standalone §3 card, kept separate per Apple&#39;s &quot;not bundled&quot; rule.</p>
+<hr>
+<h2>3. THE 5.1.2(i) card</h2>
+<p>Per <code>app-review-submission-dossier.md</code> §1/§4#1/§6: must be <strong>standalone</strong> (not bundled with mic/notification prompts), <strong>name the provider in plain text</strong>, fire <strong>before the first message ever sends</strong>, single explicit consent action. Fires once, after §2, right before the disc&#39;s first turn. Data line must match <code>faq-help-center-copy.md</code> Q5: EU storage, Gemini processing <strong>currently partly in the US</strong> (never claim all-EU — gated on #177).</p>
+<h3>Variant A — Formal-minimal</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Heading</td>
+<td>How LoLo&#39;s AI works</td>
+<td>Wie LoLos KI funktioniert</td>
+</tr>
+<tr>
+<td>Body</td>
+<td>LoLo&#39;s replies are generated by Google Gemini, an AI system run by Google. To create a reply, {name}&#39;s message is sent to Google&#39;s Vertex AI, processed in the EU and partly in the US, then deleted from Google&#39;s side. We never use it to train Google&#39;s models.</td>
+<td>LoLos Antworten werden von Google Gemini erzeugt, einem KI-System von Google. Um eine Antwort zu erstellen, wird die Nachricht von {name} an Googles Vertex AI gesendet, in der EU und teilweise in den USA verarbeitet und danach auf Googles Seite gelöscht. Wir nutzen sie nie zum Training der Modelle von Google.</td>
+</tr>
+<tr>
+<td>Consent button (single action)</td>
+<td>Agree and continue</td>
+<td>Zustimmen und weiter</td>
+</tr>
+<tr>
+<td>Decline link</td>
+<td>Not now</td>
+<td>Jetzt nicht</td>
+</tr>
+</tbody></table>
+<h3>Variant B — Warm-but-explicit (recommended, see below)</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Heading</td>
+<td>LoLo needs Google&#39;s help to talk</td>
+<td>LoLo braucht Googles Hilfe zum Sprechen</td>
+</tr>
+<tr>
+<td>Body</td>
+<td>Every time {name} talks to LoLo, the message travels to <strong>Google Gemini</strong> — the AI that writes LoLo&#39;s replies — to be turned into an answer. Your child&#39;s data is stored in the EU; Google currently processes the message itself partly in the US (we&#39;re working to bring all of it to the EU). Google never uses it to train their models. (Retention: verify our Vertex zero-retention configuration before shipping this sentence — do not claim instant deletion unless configured; see #177/DPA review.)</td>
+<td>Immer wenn {name} mit LoLo spricht, reist die Nachricht zu <strong>Google Gemini</strong> — der KI, die LoLos Antworten schreibt — um daraus eine Antwort zu machen. Die Daten deines Kindes werden in der EU gespeichert; Google verarbeitet die Nachricht selbst derzeit teilweise in den USA (wir arbeiten daran, das vollständig in die EU zu holen). Google nutzt sie nie zum Training eigener Modelle. (Aufbewahrung: vor dem Versand die Vertex-Zero-Retention-Konfiguration prüfen — keine Sofortlöschung behaupten, solange nicht konfiguriert; siehe #177/DPA-Prüfung.)</td>
+</tr>
+<tr>
+<td>Consent button (single action)</td>
+<td>Yes, let LoLo talk with {name}</td>
+<td>Ja, lass LoLo mit {name} sprechen</td>
+</tr>
+<tr>
+<td>Decline link</td>
+<td>Not right now</td>
+<td>Jetzt nicht</td>
+</tr>
+</tbody></table>
+<p><strong>Decline path (both variants):</strong> Declining does <strong>not</strong> delete the profile or exit onboarding — it returns to the handoff card with chat locked. No text-only fallback (Gemini generates every reply in both modes). Locked-state banner:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Locked-state banner (post-decline)</td>
+<td>Turn on AI chat in Settings whenever you&#39;re ready — {name} can&#39;t talk to LoLo until then.</td>
+<td>Schalte den KI-Chat in den Einstellungen ein, sobald du bereit bist — bis dahin kann {name} nicht mit LoLo sprechen.</td>
+</tr>
+<tr>
+<td>Settings re-surface — row label</td>
+<td>AI processing</td>
+<td>KI-Verarbeitung</td>
+</tr>
+<tr>
+<td>Settings re-surface — row subtitle</td>
+<td>Review or turn off how LoLo&#39;s replies are generated.</td>
+<td>Überprüfe oder schalte aus, wie LoLos Antworten erzeugt werden.</td>
+</tr>
+</tbody></table>
+<h3>Recommendation: ship Variant B (warm-but-explicit)</h3>
+<p>Reasoning: Variant A is legally sufficient but reads like a permissions dialog a parent thumbs past — the &quot;rubber-stamp consent&quot; pattern Apple&#39;s Nov-13-2025 update is hunting (dossier §4 #1, &quot;highest-probability, newest rule&quot;). Variant B keeps every fact <strong>identical</strong> (Gemini named plainly, EU+partial-US line, no-training promise, single action) but reads as LoLo&#39;s own voice — matching onboarding&#39;s warm register (§1) and FAQ Q4/Q5&#39;s &quot;full visibility, not a black box&quot; line. A reviewer is more likely to read B fully than skim A. Both satisfy 5.1.2(i) on the letter; B on the spirit — safer for &quot;the ONE thing to fix before Aug 10&quot; (dossier §6).</p>
+<hr>
+<h2>4. Trial start screen</h2>
+<p>Position: <strong>after</strong> the kid&#39;s first wonder, <strong>never before</strong> (<code>onboarding-paywall-teardowns.md</code> §B1/B2, invest-then-ask). Copy is the settled §B2 canon, reconciled with glossary §4 (#13, #20) and FAQ Q9.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Header</td>
+<td>14 days free. No card. No catch.</td>
+<td>14 Tage kostenlos. Ohne Kreditkarte. Ohne Haken.</td>
+</tr>
+<tr>
+<td>Body</td>
+<td>LoLo is all yours for two weeks — every story, every wonder, every voice chat. We won&#39;t ask for a card until you decide to stay.</td>
+<td>LoLo gehört euch zwei Wochen lang ganz allein — jede Geschichte, jedes Wunder, jeder Sprachchat. Wir fragen erst nach einer Karte, wenn du dich entscheidest zu bleiben.</td>
+</tr>
+<tr>
+<td><strong>Voice-cap framing line</strong> (new — ties the trial to the existing Screen Time/Quiet Hours cap so &quot;unlimited&quot; isn&#39;t overstated)</td>
+<td>Voice chats count toward your child&#39;s daily time, same as everything else — set or change the limit anytime in Settings.</td>
+<td>Sprachchats zählen zur täglichen Zeit deines Kindes, genau wie alles andere — das Limit kannst du jederzeit in den Einstellungen anpassen.</td>
+</tr>
+<tr>
+<td>Primary button</td>
+<td>Start my 14 free days</td>
+<td>Meine 14 kostenlosen Tage starten</td>
+</tr>
+<tr>
+<td>Secondary button (quiet)</td>
+<td>Not now — keep exploring</td>
+<td>Jetzt nicht — weiter entdecken</td>
+</tr>
+<tr>
+<td>Fine print</td>
+<td>On day 14 we&#39;ll email you first. Keep it for $59.99/year (≈$5/mo) or do nothing and it simply ends. Cancel in two taps, anytime.</td>
+<td>Am 14. Tag schreiben wir dir zuerst. Behalte LoLo für 59,99 $/Jahr (≈5 $/Monat), oder tu einfach nichts, dann endet die Testphase von selbst. Kündigen in zwei Tipps, jederzeit.</td>
+</tr>
+</tbody></table>
+<p>Why the line exists: &quot;every voice chat&quot; could read as literally unlimited. The app has a daily Screen Time cap (FAQ Q3 / glossary &quot;Zeitlimit&quot;) regardless of subscription state — this pre-empts &quot;wait, why did it stop?&quot; by naming the real mechanism up front.</p>
+<hr>
+<h2>5. First-session opener support strings (#179)</h2>
+<p>Per <code>day0-activation-playbook.md</code> §1 Phase C: the closed binary ice-breaker must never leave a kid facing a dead mic. {optionA}/{optionB} come from the per-interest content set, not translated here.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Tap-chip fallback header</strong> (shown above the two option buttons alongside the spoken question, available from turn one — not only after a mic failure)</td>
+<td>Or tap one:</td>
+<td>Oder tipp einfach:</td>
+</tr>
+<tr>
+<td>Tap-chip buttons</td>
+<td>{optionA} / {optionB} (verbatim, e.g. &quot;T-Rex&quot; / &quot;Triceratops&quot;)</td>
+<td>{optionA} / {optionB} (unverändert übernommen)</td>
+</tr>
+<tr>
+<td><strong>Dead-mic re-offer line</strong> (spoken by LoLo after ~6s of silence — one gentle re-prompt, per the playbook&#39;s &quot;never leave an open mic into silence&quot;)</td>
+<td>You can just say {optionA} or {optionB}!</td>
+<td>Du kannst einfach {optionA} oder {optionB} sagen!</td>
+</tr>
+<tr>
+<td>Fallback micro-nudge (appears with the re-offer, pointing at the chips already on screen)</td>
+<td>Or just tap one below.</td>
+<td>Oder tipp einfach unten drauf.</td>
+</tr>
+</tbody></table>
+<p>Design note: chips are <strong>on-screen from the first instant</strong>, not summoned only after a mic failure — the re-offer line just nudges toward chips already there (&quot;one gentle re-prompt, then a tap fallback,&quot; §1 Phase C).</p>
+<hr>
+<h2>6. Consistency checklist</h2>
+<p>Every legal-ish string above, cross-referenced to its canon doc. Re-check before any future edit to §2–4.</p>
+<table>
+<thead>
+<tr>
+<th>String / claim</th>
+<th>Canon source</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>COPPA what-we-collect summary</td>
+<td><code>faq-help-center-copy.md</code> Q5, Q10</td>
+<td>Matches &quot;EU-based Google Cloud servers… never sell&quot; verbatim in substance</td>
+</tr>
+<tr>
+<td>Consent checkbox</td>
+<td><code>de-localization-glossary-qa.md</code> §4 row 2</td>
+<td>DE is the glossary&#39;s exact row-2 translation</td>
+</tr>
+<tr>
+<td>5.1.2(i) — naming &quot;Google Gemini&quot; + Vertex AI</td>
+<td><code>app-review-submission-dossier.md</code> §1 row 5.1.2(i), §2 line 5, §4 #1</td>
+<td>Plain-text name, fires before first send, standalone, single consent action</td>
+</tr>
+<tr>
+<td>5.1.2(i) — EU-storage / partial-US-processing line</td>
+<td><code>faq-help-center-copy.md</code> Q5</td>
+<td>Must say &quot;partly in the US&quot; — never &quot;all-EU&quot; (gated on #177)</td>
+</tr>
+<tr>
+<td>5.1.2(i) decline path + Settings re-surface</td>
+<td><code>app-review-submission-dossier.md</code> §2 line 5</td>
+<td>Settings row label matches &quot;AI processing&quot; from Review Notes</td>
+</tr>
+<tr>
+<td>Trial screen header/body/fine print</td>
+<td><code>onboarding-paywall-teardowns.md</code> §B2</td>
+<td>EN copied verbatim from canon; DE is new, not yet glossary-reviewed</td>
+</tr>
+<tr>
+<td>Trial price ($59.99/yr, $9.99/mo)</td>
+<td><code>onboarding-paywall-teardowns.md</code> §B3; <code>faq-help-center-copy.md</code> Q8</td>
+<td>Matches canon, not current <code>pricing.ts</code> $14.99/mo (flagged delta)</td>
+</tr>
+<tr>
+<td>Voice-cap framing line</td>
+<td><code>faq-help-center-copy.md</code> Q3</td>
+<td>New copy, not yet canon — flag for glossary sign-off</td>
+</tr>
+<tr>
+<td>Onboarding step order</td>
+<td><code>day0-activation-playbook.md</code> §1/§3</td>
+<td>Matches Issue A&#39;s file list (<code>model.ts</code>, <code>onboarding-form.tsx</code>, <code>interests-step</code>, new <code>handoff-step</code>)</td>
+</tr>
+<tr>
+<td>Handoff &quot;no login, no gate&quot; line</td>
+<td><code>day0-activation-playbook.md</code> §1 Phase B</td>
+<td>Matches &quot;that gate is what breaks the handoff&quot;</td>
+</tr>
+<tr>
+<td>Ice-breaker chips + dead-mic re-offer</td>
+<td><code>day0-activation-playbook.md</code> §1 Phase C</td>
+<td>Matches &quot;6-s no-utterance → re-offer aloud + tap fallback&quot;</td>
+</tr>
+<tr>
+<td>German voice rules (Du-form, genitive, ß/quotes)</td>
+<td><code>de-localization-glossary-qa.md</code> §1, §3</td>
+<td>All parent DE strings Du-form; legal carve-out only where glossary specifies</td>
+</tr>
+<tr>
+<td>Support email</td>
+<td><code>faq-help-center-copy.md</code> header note</td>
+<td><code>support@heylolo.ai</code> canonical, no <code>support@elumi-kids.com</code> leakage</td>
+</tr>
+</tbody></table>
+<p><strong>Open items not in this doc:</strong> the &quot;Finish setting up&quot; nudge and Story-of-the-Day card — out of scope here, tracked in <code>day0-activation-playbook.md</code> §4 Issues A–C.</p>

@@ -1,0 +1,354 @@
+<title>HeyLolo ref — calm-corner-scripts</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Calm Corner Script Library (#147)</h1>
+<p>Status: COMPLETE · content authoring pass. Ships v1.2. Voice-guided breathing + feeling picker + strategy cards, reusing the shipped haptics engine for breath pacing.</p>
+<h2>Contents</h2>
+<ol>
+<li>Breathing rituals (3, fully scripted EN/DE + haptic markers)</li>
+<li>Feeling picker flow (8 feelings)</li>
+<li>Strategy cards (12)</li>
+<li>Safety boundaries (SAFETY-mode handoff, session cap)</li>
+<li>Production notes (voice config, parent toggle, dashboard line)</li>
+</ol>
+<p><strong>Concept:</strong> <code>NET-NEW-IDEAS.md</code> #7 &quot;Calm Corner / Big-Feelings Coach&quot; — voice-guided breathing + haptics + name-the-feeling + strategy-picker, ages 4–10.
+<strong>Voice register:</strong> borrows Bedtime LoLo (<code>voice-persona-packs.md</code> §1.2) — slow, soft, hushed — layered onto base LoLo devices (<code>kids-voice-conversation-design.md</code>; ≤1–2 devices/turn still applies).
+<strong>Safety spine:</strong> no separate danger detector — inherits the app-wide SAFETY/CARE/AVOID classifier (<code>restrict-topics-deflection-spec.md</code> §4; see §4 below).
+<strong>DE term lock:</strong> glossary reserves <strong>&quot;Ruhe-Ecke&quot;</strong> for Calm Corner — distinct from &quot;Gute-Nacht-Zeit&quot; (Bedtime Wind-Down). Never collapse the two.
+<strong>Haptic pacing:</strong> reuses <code>src/shared/feedback/textures.ts</code>&#39;s <code>useIdleBreath</code> shape — a sinusoidal <code>{amp, sharp}</code> realtime driver (today <code>IDLE_PERIOD_MS=3500</code>). Calm Corner needs the same continuous-texture engine with a <strong>caller-supplied period</strong> (4s/5s/8s per ritual) instead of the fixed idle value. Discrete taps reuse existing verbs as-is: <code>hImpactLight</code>/<code>hImpactMedium</code> mark cycle starts, <code>hSelection</code> marks held phases (square breathing), <code>feedback.success()</code>/<code>hNotifySuccess</code> marks completion. No new haptic primitives.</p>
+<hr>
+<h2>1. Breathing rituals</h2>
+<p>Selection logic: age tier picks the <em>family</em>, feeling picks the <em>variant</em> within T1–T2.</p>
+<table>
+<thead>
+<tr>
+<th>Age tier</th>
+<th>Ritual</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1–T2 (4–7), feeling = Angry/Overwhelmed</td>
+<td><strong>Smell the Flower, Blow the Candle</strong></td>
+<td>Slow forceful exhale gives an angry/overloaded body something physical to <em>do</em> — release, not suppression.</td>
+</tr>
+<tr>
+<td>T1–T2 (4–7), feeling = Sad/Worried</td>
+<td><strong>Belly-Breathing Balloon</strong></td>
+<td>Gentle, comforting, no &quot;blow it out&quot; edge — better for a child who needs soothing, not releasing.</td>
+</tr>
+<tr>
+<td>T3+ (8+), any big feeling</td>
+<td><strong>Square Breathing</strong></td>
+<td>Structured 4-count symmetry suits the more self-regulated, slightly older mind; doubles as a tool they can use silently at school.</td>
+</tr>
+</tbody></table>
+<p>Each ritual is scripted to run <strong>60–120s</strong>, has a fixed entry line (never launches straight into pacing) and a fixed exit line (never cuts off after the last exhale) — per the &quot;never abrupt&quot; requirement. <code>[haptic]</code> markers describe the texture/verb, not exact device API calls — implementation maps these onto the <code>useIdleBreath</code>-variant + discrete verbs above.</p>
+<h3>Ritual A — Belly-Breathing Balloon (4-4 pace, T1-friendly, ~70s)</h3>
+<p><strong>EN</strong></p>
+<blockquote>
+<p><strong>[haptic: hImpactLight — cycle-start tap]</strong>
+LoLo (entry, hushed): <em>&quot;Hey... let&#39;s get calm together. Put your hand right on your belly — it&#39;s going to be our balloon. Ready?&quot;</em>
+<strong>[haptic: breathe-in texture ramps amp 0.08→0.3 over 4s]</strong>
+LoLo: <em>&quot;Breathe in through your nose... fill up your balloon belly, nice and big...&quot;</em>
+<strong>[haptic: breathe-out texture ramps amp 0.3→0.08 over 4s]</strong>
+LoLo: <em>&quot;And let it go, slow and soft... the balloon gets small again...&quot;</em>
+<em>(repeat 4-4 for 7 more cycles, ~64s total; every 2nd–3rd cycle add one short variant line so it&#39;s not a loop of the same words: &quot;Bigger balloon this time...&quot; / &quot;You&#39;re so good at this...&quot; / &quot;One more big breath...&quot;)</em>
+<strong>[haptic: hNotifySuccess — completion]</strong>
+LoLo (exit): <em>&quot;There we go. All done — your balloon breathing was wonderful. How do you feel now?&quot;</em> → routes to strategy cards or back to chat.</p>
+</blockquote>
+<p><strong>DE</strong></p>
+<blockquote>
+<p>LoLo (Einstieg, leise): <em>&quot;Hey... lass uns zusammen ruhig werden. Leg deine Hand auf deinen Bauch — er wird unser Ballon.&quot;</em>
+<em>&quot;Atme durch die Nase ein... dein Bauch-Ballon wird schön groß...&quot;</em>
+<em>&quot;Und lass die Luft langsam raus... der Ballon wird wieder klein...&quot;</em>
+<em>(Variantenzeilen: &quot;Noch ein größerer Ballon...&quot; / &quot;Das machst du wirklich gut...&quot; / &quot;Noch ein tiefer Atemzug...&quot;)</em>
+LoLo (Abschluss): <em>&quot;Fertig. Dein Ballon-Atmen war toll. Wie fühlst du dich jetzt?&quot;</em></p>
+</blockquote>
+<h3>Ritual B — Smell the Flower, Blow the Candle (classic kid pattern, ~80s)</h3>
+<p><strong>EN</strong></p>
+<blockquote>
+<p><strong>[haptic: hImpactLight — cycle-start tap]</strong>
+LoLo (entry): <em>&quot;Let&#39;s do a flower and a candle together. Ready? Here we go.&quot;</em>
+<strong>[haptic: breathe-in texture ramps over ~4s, nose-in]</strong>
+LoLo: <em>&quot;Breathe in... smell the pretty flower... 🌸&quot;</em>
+<strong>[haptic: breathe-out texture ramps down over ~5–6s, slower than the inhale — mouth-out]</strong>
+LoLo: <em>&quot;Now blow out the candle... nice and slow, don&#39;t blow it out too fast... 🕯️&quot;</em>
+<em>(repeat ~7 cycles, ~75s; vary: &quot;A whole garden of flowers this time...&quot; / &quot;Blow it out really gently...&quot; / &quot;One more flower, one more candle...&quot;)</em>
+<strong>[haptic: hNotifySuccess]</strong>
+LoLo (exit): <em>&quot;All the candles are out. Great breathing — you did that all by yourself. How&#39;s your body feeling now?&quot;</em></p>
+</blockquote>
+<p><strong>DE</strong></p>
+<blockquote>
+<p><em>&quot;Lass uns zusammen eine Blume riechen und eine Kerze auspusten.&quot;</em>
+<em>&quot;Atme ein... riech die schöne Blume... 🌸&quot;</em>
+<em>&quot;Und jetzt puste die Kerze aus... ganz langsam... 🕯️&quot;</em>
+<em>(Varianten: &quot;Ein ganzer Blumengarten...&quot; / &quot;Ganz sanft auspusten...&quot; / &quot;Noch eine Blume, noch eine Kerze...&quot;)</em>
+<em>&quot;Alle Kerzen sind aus. Super gemacht. Wie fühlt sich dein Körper jetzt an?&quot;</em></p>
+</blockquote>
+<h3>Ritual C — Square Breathing (T3+, 4-4-4-4, ~90s)</h3>
+<p><strong>EN</strong></p>
+<blockquote>
+<p><strong>[haptic: hImpactLight — cycle-start tap]</strong>
+LoLo (entry): <em>&quot;Let&#39;s trace a square with our breath. Four sides, four counts each. Ready?&quot;</em>
+<strong>[haptic: breathe-in texture ramps up over 4s]</strong> LoLo: <em>&quot;Breathe in... 1, 2, 3, 4... first corner.&quot;</em>
+<strong>[haptic: hSelection ticks × 4, held plateau]</strong> LoLo: <em>&quot;Hold it... 2, 3, 4... second corner.&quot;</em>
+<strong>[haptic: breathe-out texture ramps down over 4s]</strong> LoLo: <em>&quot;Breathe out... 2, 3, 4... third corner.&quot;</em>
+<strong>[haptic: hSelection ticks × 4, held plateau]</strong> LoLo: <em>&quot;And hold... 2, 3, 4... back to the start.&quot;</em>
+<em>(repeat the full square 4 more times, ~80s total; vary: &quot;You&#39;re drawing a perfect square...&quot; / &quot;Nice and steady...&quot;)</em>
+<strong>[haptic: hNotifySuccess]</strong>
+LoLo (exit): <em>&quot;That&#39;s five perfect squares. Really steady breathing. How are you feeling?&quot;</em></p>
+</blockquote>
+<p><strong>DE</strong></p>
+<blockquote>
+<p><em>&quot;Lass uns mit unserem Atem ein Quadrat zeichnen. Vier Seiten, vier Zählzeiten. Bereit?&quot;</em>
+<em>&quot;Atme ein... 1, 2, 3, 4... erste Ecke.&quot;</em> / <em>&quot;Halten... 2, 3, 4... zweite Ecke.&quot;</em> / <em>&quot;Atme aus... 2, 3, 4... dritte Ecke.&quot;</em> / <em>&quot;Und halten... 2, 3, 4... zurück zum Start.&quot;</em>
+<em>(Varianten: &quot;Du zeichnest ein perfektes Quadrat...&quot; / &quot;Schön ruhig...&quot;)</em>
+<em>&quot;Das waren fünf perfekte Quadrate. Wirklich ruhig geatmet. Wie fühlst du dich?&quot;</em></p>
+</blockquote>
+<h2>2. Feeling picker flow</h2>
+<p>The 8 feelings <strong>reuse the existing mood-picker glossary verbatim</strong> (<code>de-localization-glossary-qa.md</code> §2) — &quot;Okay&quot; dropped, it doesn&#39;t need branching.</p>
+<table>
+<thead>
+<tr>
+<th>Feeling</th>
+<th>EN</th>
+<th>DE</th>
+<th>Emoji</th>
+<th>Branch</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Happy</td>
+<td>Glücklich</td>
+<td>😊</td>
+<td>Mild</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Excited</td>
+<td>Aufgeregt</td>
+<td>🤩</td>
+<td>Mild</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tired</td>
+<td>Müde</td>
+<td>😴</td>
+<td>Mild</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Bored</td>
+<td>Gelangweilt</td>
+<td>😐</td>
+<td>Mild</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Sad</td>
+<td>Traurig</td>
+<td>😢</td>
+<td><strong>Big</strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Worried</td>
+<td>Besorgt</td>
+<td>😟</td>
+<td><strong>Big</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Angry</td>
+<td>Wütend</td>
+<td>😠</td>
+<td><strong>Big</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Overwhelmed</td>
+<td>Überfordert</td>
+<td>🥺</td>
+<td><strong>Big</strong></td>
+</tr>
+</tbody></table>
+<p><strong>Branch rule:</strong> Big feelings (Sad/Worried/Angry/Overwhelmed) route to a breathing ritual (§1) <em>first</em>, then to strategy cards after the exit line. Mild feelings (Happy/Excited/Tired/Bored) skip breathing and go straight to strategy cards — a big feeling needs the body calmed before it can pick a strategy; a mild one doesn&#39;t.</p>
+<p><strong>LoLo&#39;s validating response per feeling</strong> — 2–3 variants, rotated so a repeat visit never sounds canned. DE follows the same Du-voice register (<code>de-localization-glossary-qa.md</code> §1) — one worked DE line per big feeling below; the rest translate under the same rules at implementation.</p>
+<ul>
+<li><strong>Happy 😊:</strong> <em>&quot;That&#39;s so good to hear!&quot;</em> / <em>&quot;Yay, I love that!&quot;</em> / <em>&quot;That makes me happy too!&quot;</em></li>
+<li><strong>Excited 🤩:</strong> <em>&quot;Ooh, I can feel that energy!&quot;</em> / <em>&quot;Tell me what&#39;s got you so excited!&quot;</em> / <em>&quot;That&#39;s the best kind of feeling!&quot;</em></li>
+<li><strong>Tired 😴:</strong> <em>&quot;Being tired is okay — your body&#39;s asking for rest.&quot;</em> / <em>&quot;Sounds like a cozy-corner kind of moment.&quot;</em> / <em>&quot;Let&#39;s find something gentle for you.&quot;</em></li>
+<li><strong>Bored 😐:</strong> <em>&quot;Bored happens to everyone sometimes.&quot;</em> / <em>&quot;Let&#39;s shake that boredom loose!&quot;</em> / <em>&quot;I bet we can find something fun.&quot;</em></li>
+<li><strong>Sad 😢 (big):</strong> <em>&quot;It&#39;s okay to feel sad. I&#39;m really glad you told me.&quot;</em> (DE: <em>&quot;Es ist okay, traurig zu sein. Ich bin froh, dass du es mir gesagt hast.&quot;</em>) / <em>&quot;Sad feelings are allowed here — let&#39;s breathe together first.&quot;</em> / <em>&quot;Thank you for sharing that with me.&quot;</em></li>
+<li><strong>Worried 😟 (big):</strong> <em>&quot;Worried feelings can feel really big inside. Let&#39;s breathe together.&quot;</em> (DE: <em>&quot;Sorgen können sich riesig anfühlen. Lass uns zusammen atmen.&quot;</em>) / <em>&quot;It&#39;s okay to feel worried — you&#39;re safe right now.&quot;</em> / <em>&quot;That&#39;s a lot to carry. Let&#39;s slow down together.&quot;</em></li>
+<li><strong>Angry 😠 (big):</strong> <em>&quot;Angry is a real feeling, and it&#39;s okay to have it.&quot;</em> (DE: <em>&quot;Wütend zu sein ist ein echtes Gefühl, das ist okay.&quot;</em>) / <em>&quot;That sounds really frustrating. Let&#39;s get some of that big energy out.&quot;</em> / <em>&quot;I hear you. Let&#39;s breathe it out together.&quot;</em></li>
+<li><strong>Overwhelmed 🥺 (big):</strong> <em>&quot;That&#39;s a lot of feelings all at once — let&#39;s slow down together.&quot;</em> (DE: <em>&quot;Das sind gerade viele Gefühle auf einmal — lass uns gemeinsam langsamer werden.&quot;</em>) / <em>&quot;When everything feels like too much, breathing first always helps.&quot;</em> / <em>&quot;Let&#39;s take this one small breath at a time.&quot;</em></li>
+</ul>
+<h2>3. Strategy cards</h2>
+<p>Offered after the breathing exit line (big feelings) or right after picking a feeling (mild). Each session shows 3–4 relevant cards, not all 12, filtered by the &quot;Offered for&quot; column.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Name EN</th>
+<th>Name DE</th>
+<th>Type</th>
+<th>Offered for</th>
+<th>LoLo&#39;s 2-sentence coaching line</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Shake It Out</td>
+<td>Schüttel&#39;s ab</td>
+<td>Physical</td>
+<td>Angry, Overwhelmed</td>
+<td><em>&quot;Shake your arms and legs like a wet dog — really wiggle it out! That big feeling wants to move, so let&#39;s give it somewhere to go.&quot;</em></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Cozy Corner</td>
+<td>Kuschel-Ecke</td>
+<td>Physical/environmental</td>
+<td>Sad, Overwhelmed, Tired</td>
+<td><em>&quot;Go curl up somewhere soft with a blanket or a favorite toy for a minute. Sometimes the best thing a body needs is just to feel cozy and safe.&quot;</em></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tell a Grown-Up</td>
+<td>Sag es einem Erwachsenen</td>
+<td>Social</td>
+<td>Sad, Worried, Angry, Overwhelmed</td>
+<td><em>&quot;The best person to talk to about this is your mom or dad — they can give you a real hug and really help. I&#39;m right here too, but they&#39;re the ones who can do the most.&quot;</em></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Draw It Out</td>
+<td>Mal es auf</td>
+<td>Cognitive/expressive</td>
+<td>Sad, Angry, Worried</td>
+<td><em>&quot;Grab some paper and draw how you&#39;re feeling — squiggly lines, a stormy cloud, whatever it looks like. Sometimes feelings are easier to let out with a crayon than with words.&quot;</em></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Sip of Water</td>
+<td>Schluck Wasser</td>
+<td>Physical/sensory</td>
+<td>Angry, Overwhelmed</td>
+<td><em>&quot;Go get a glass of water and take a few slow sips. It sounds small, but it really helps your whole body settle down.&quot;</em></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Count 5 Things You See</td>
+<td>Zähl 5 Dinge</td>
+<td>Cognitive/grounding</td>
+<td>Worried, Overwhelmed</td>
+<td><em>&quot;Look around and find 5 things you can see right now — say them out loud. It helps your brain come back to right here, right now.&quot;</em></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Big Squeeze Hug</td>
+<td>Feste Umarmung</td>
+<td>Physical</td>
+<td>Sad, Worried</td>
+<td><em>&quot;Give yourself a big squeeze hug, or hug a stuffed animal really tight. A good squeeze tells your body &#39;you&#39;re safe.&#39;&quot;</em></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Silly Wiggle Dance</td>
+<td>Wackel-Tanz</td>
+<td>Physical</td>
+<td>Bored, Angry, Tired</td>
+<td><em>&quot;Put on your favorite song and wiggle every part of your body for one whole minute. Silly moving is a great way to shake a feeling loose!&quot;</em></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Three Good Things</td>
+<td>Drei schöne Dinge</td>
+<td>Cognitive</td>
+<td>Sad, after any big feeling</td>
+<td><em>&quot;Tell me three good things — even tiny ones, like a yummy snack or a soft blanket. Little good things add up to a happier belly.&quot;</em></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Cat Stretch</td>
+<td>Katzen-Dehnung</td>
+<td>Physical</td>
+<td>Tired, Overwhelmed</td>
+<td><em>&quot;Get on your hands and knees and stretch your back up like a scared cat, then down like a sleepy cat. It wakes your body up and calms it down at the same time.&quot;</em></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Quiet Countdown</td>
+<td>Leiser Countdown</td>
+<td>Cognitive</td>
+<td>Angry, Overwhelmed</td>
+<td><em>&quot;Count backwards from 10 to 1 in your quietest voice. By the time you get to 1, that big wave of feeling usually starts to settle.&quot;</em></td>
+</tr>
+<tr>
+<td>12</td>
+<td>Squeeze and Let Go</td>
+<td>Drücken und Loslassen</td>
+<td>Physical</td>
+<td>Angry, Worried</td>
+<td><em>&quot;Squeeze your fists as tight as you can for 5 seconds, then let them go floppy. Do that a couple times — it&#39;s like wringing the tense feeling right out.&quot;</em></td>
+</tr>
+</tbody></table>
+<p><strong>Mix:</strong> 7 physical/environmental (#1, #2, #5, #7, #8, #10, #12), 4 cognitive/expressive (#4, #6, #9, #11), 1 social (#3) — deliberately body-forward, since physical release is the age group&#39;s most reliable regulation lever.</p>
+<p><strong>Tell a Grown-Up = the CARE bridge card.</strong> Its line reuses the exact bridge shape from <code>restrict-topics-deflection-spec.md</code> §3 (validate → point to the real grown-up → &quot;I&#39;m right here too&quot;) — the natural landing spot if the classifier independently fires CARE mid-ritual (§4).</p>
+<h2>4. Safety boundaries</h2>
+<p><strong>No separate danger detector — Calm Corner inherits the app-wide one.</strong> The same parallel classifier (<code>restrict-topics-deflection-spec.md</code> §4) runs underneath every surface regardless of persona (<code>voice-persona-packs.md</code> §2, invariant #1: SAFETY-OVERRIDE &quot;always wins... regardless of which pack is active&quot;). If <code>SAFETY</code> fires at <em>any</em> point in the flow (picker, mid-ritual, mid-card):</p>
+<ol>
+<li><strong>The script stops mid-line, instantly</strong> — no &quot;let me finish this breath first&quot; (posture table: &quot;any plausible danger signal wins outright&quot;).</li>
+<li><strong>LoLo switches to the SAFETY-OVERRIDE script verbatim</strong> — warmth + validate + bridge to a trusted grown-up <em>now</em> (deflection spec §1). Example: &quot;I want to hurt myself&quot; or &quot;someone at school hits me&quot; mid-picker → no strategy card offered; the <strong>immediate parent alert</strong> fires (ties #133), not the normal Calm Corner digest note.</li>
+<li><strong>Calm Corner never substitutes for the parent-alert path.</strong> Even a fully &quot;successful&quot; ritual still generates its digest note (§5) — a pattern of frequent big-feeling visits stays visible even when no single session triggered SAFETY.</li>
+</ol>
+<p><strong>Session cap — one ritual, then a gentle exit, no loops.</strong> One feeling-picker → breathing → strategy-card cycle per visit. If the child tries to restart right after finishing:</p>
+<blockquote>
+<p><em>&quot;We already took some good calming breaths together. Let&#39;s try one of your strategy cards now, or come back to me a little later if you need more.&quot;</em></p>
+</blockquote>
+<p>Prevents Calm Corner becoming an avoidance loop (same anti-Lure principle as <code>useIdleBreath</code>: decay toward stillness, never escalate). If the child is still visibly distressed after the cap, the exit always includes the Tell a Grown-Up card, never a third ritual.</p>
+<hr>
+<h2>5. Production notes</h2>
+<ul>
+<li><strong>Narration voice:</strong> Bedtime LoLo config (<code>voice-persona-packs.md</code> §1.2), used outside actual bedtime too — <code>voiceId: &quot;Vindemiatrix&quot;</code> (Gentle, F), <code>model: &quot;gemini-2.5-flash-tts&quot;</code>, prompt: <em>&quot;Speak slowly and softly, like reading a bedtime story in a hushed, soothing voice.&quot;</em> A register borrow only — device caps and base identity (<code>kids-voice-conversation-design.md</code>) don&#39;t change. Free for all tiers, same reasoning as Bedtime LoLo.</li>
+<li><strong>Parent toggle:</strong> Settings row under Current Companion (Figma P4) — <em>&quot;Calm Corner&quot;</em> (EN) / <em>&quot;Ruhe-Ecke&quot;</em> (DE), default <strong>ON</strong>: <em>&quot;When your child feels a big feeling, LoLo can offer a short guided breathing exercise and coping strategies. You&#39;ll see a note in your daily summary whenever it&#39;s used.&quot;</em> Off hides the feature entirely; never touches the always-on SAFETY classifier.</li>
+<li><strong>Dashboard surfacing line (digest note, per-session):</strong><ul>
+<li><strong>EN:</strong> <em>&quot;Today {name} used Calm Corner for feeling {feeling}. LoLo guided a breathing exercise and {name} picked &#39;{strategy card}&#39; afterward. 💙&quot;</em></li>
+<li><strong>DE:</strong> <em>&quot;Heute nutzte {name} die Ruhe-Ecke wegen des Gefühls {feeling}. LoLo führte eine Atemübung durch, und {name} wählte danach &#39;{strategy card}&#39;. 💙&quot;</em></li>
+<li>Shape matches the existing CARE/AVOID digest templates (<code>restrict-topics-deflection-spec.md</code> §6) for visual/tonal consistency in the dashboard feed.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>Sources</h2>
+<ul>
+<li><code>docs/_session/feature-catalog/NET-NEW-IDEAS.md</code> #7 — Calm Corner / Big-Feelings Coach concept, reference apps (Breathe-Think-Do with Sesame, Calm Kids, Wondergrade, Feelu).</li>
+<li><code>docs/research/kids-voice-conversation-design.md</code> — LoLo personality devices, humor register, repair scripts (base persona this scripting layers onto).</li>
+<li><code>docs/research/voice-persona-packs.md</code> §1.2, §2 — Bedtime LoLo voice config; SAFETY-OVERRIDE invariant that no persona/feature may override.</li>
+<li><code>docs/research/restrict-topics-deflection-spec.md</code> §1, §3, §4, §6 — SAFETY/CARE/AVOID precedence, CARE bridge shape (reused verbatim for the Tell a Grown-Up card), classifier contract, digest note templates.</li>
+<li><code>docs/research/de-localization-glossary-qa.md</code> §1, §2 — Du-voice register rules; &quot;Calm Corner = Ruhe-Ecke&quot; vs. &quot;Bedtime Wind-Down = Gute-Nacht-Zeit&quot; term lock; mood-picker feeling terms reused verbatim.</li>
+<li><code>src/shared/feedback/textures.ts</code> (<code>useIdleBreath</code>, <code>IDLE_PERIOD_MS</code>/<code>IDLE_BASE</code>/<code>IDLE_SWING</code>/<code>IDLE_SHARP</code>), <code>src/shared/feedback/haptics.ts</code> (<code>hImpactLight</code>, <code>hImpactMedium</code>, <code>hSelection</code>, <code>hNotifySuccess</code>), <code>src/shared/feedback/index.ts</code> (<code>feedback.success()</code>) — the shipped haptics engine reused for breath pacing; no new primitives, only new period tuning.</li>
+<li>Verification lookup (kids&#39; breathing-technique norms/timing): <a href="https://www.kindercare.com/content-hub/articles/2016/october/mindful-breathing-for-kids">KinderCare — deep breathing exercises for kids</a>, <a href="https://copingskillsforkids.com/deep-breathing-exercises-for-kids">Coping Skills for Kids — deep breathing exercises</a>, <a href="https://theinspiredtreehouse.com/calming-breathing-techniques-kids/">The Inspired Treehouse — calming breathing techniques for kids</a> — confirmed balloon breathing (belly expand/contract) and smell-flower/blow-candle as standard ages-3-4+ techniques, box/square breathing (3-3-3-3 or 4-4-4-4) as the standard slightly-older-kid variant.</li>
+</ul>

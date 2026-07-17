@@ -1,0 +1,449 @@
+<title>HeyLolo ref — wonder-shelf-launch-catalog</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Wonder Shelf — Launch Catalog (elumi-kids / HeyLolo)</h1>
+<blockquote>
+<p>Content-design spec for GitHub #142 (Wonder Shelf collections). Makes the shelf
+buildable in W3 (Jul 20) and delightful at launch. Feeds the shelf data model in
+<code>docs/_session/feature-prioritization-2026-07/BUILD-GUIDES-FIRST-WAVE.md §2</code>.</p>
+<p>Design rules already settled (from <code>gamified-ux-winning-mechanics.md</code> +
+<code>SYNTHESIS-WINNING-PLAYBOOK.md</code>): sets of 6–10, completeable, story-tied,
+permanence, NO numbers/XP/streaks, celebrate ONCE per set completion,
+deterministic earn rules, parent toggle.</p>
+</blockquote>
+<p>Status: DRAFT — pending review.</p>
+<h2>Contents</h2>
+<ol>
+<li>The 12 launch collections</li>
+<li>Earn-rule spec table</li>
+<li>Anti-dark-pattern checklist</li>
+<li>Art production plan</li>
+<li>Firestore additions</li>
+</ol>
+<hr>
+<h2>1. The 12 launch collections</h2>
+<p>Every artifact is a small collectible token (a fossil, a shell, a candle) minted by ONE
+deterministic event. Sets are 6–10 items, complete-able, no numbers shown to the child.
+Each set completing fires the set-complete arc ONCE (<code>celebrate(&quot;landmark&quot;)</code>); each single
+artifact drop fires a small tick (<code>celebrate(&quot;whisper&quot;)</code>). Art descriptions are the
+Imagen/Brandy brief (§4 style-lock applies to all).</p>
+<h3>Starter sets (4) — always-on, completable in week 1</h3>
+<p><strong>1. First Adventures — Erste Abenteuer</strong> (6) · theme: the milestones of meeting LoLo. This is the <strong>Day-0 set</strong> (#179): its first artifact is the guaranteed 3-minute earn.</p>
+<table>
+<thead>
+<tr>
+<th>Artifact (EN / DE)</th>
+<th>Art (1-line brief)</th>
+<th>Earn trigger (real event)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hello Spark / Hallo-Funke</td>
+<td>a warm glowing spark with a friendly face</td>
+<td><strong>first voice conversation OR first message sent</strong> (Day-0, &lt;3 min)</td>
+</tr>
+<tr>
+<td>Mood Pebble / Gefühls-Kiesel</td>
+<td>a smooth river pebble with a painted feeling-face</td>
+<td>first mood check-in (shipped)</td>
+</tr>
+<tr>
+<td>Curious Compass / Neugier-Kompass</td>
+<td>a small brass compass, needle is a question-mark</td>
+<td>first question asked</td>
+</tr>
+<tr>
+<td>Wonder Seed / Wunder-Samen</td>
+<td>a glowing seed sprouting one leaf</td>
+<td>first Tomorrow&#39;s Seed payoff (#157)</td>
+</tr>
+<tr>
+<td>Explorer&#39;s Lens / Entdecker-Lupe</td>
+<td>a magnifying glass with a sparkle in the glass</td>
+<td>first Explorer discovery (#140)</td>
+</tr>
+<tr>
+<td>Calm Shell / Ruhe-Muschel</td>
+<td>a pastel spiral shell, soft glow</td>
+<td>first Calm Corner ritual (#147)</td>
+</tr>
+</tbody></table>
+<p><strong>2. LoLo&#39;s Friends — LoLos Freunde</strong> (7) · theme: shared moments with the companion.</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Art</th>
+<th>Earn trigger</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Morning Sunbeam / Morgen-Sonnenstrahl</td>
+<td>LoLo waving in golden light</td>
+<td>first morning-window session (opening ritual)</td>
+</tr>
+<tr>
+<td>Giggle Bubble / Kicher-Blase</td>
+<td>a bubble with tiny laughing LoLo inside</td>
+<td>a session with 3+ back-and-forth turns</td>
+</tr>
+<tr>
+<td>Storyteller&#39;s Feather / Erzähler-Feder</td>
+<td>a quill dripping starlight</td>
+<td>finish a story (#126)</td>
+</tr>
+<tr>
+<td>Bedtime Moon / Gutenacht-Mond</td>
+<td>LoLo asleep on a crescent moon</td>
+<td>first bedtime session (#164)</td>
+</tr>
+<tr>
+<td>Friday Gift Box / Freitags-Geschenk</td>
+<td>a wrapped box with a bow</td>
+<td>open first Friday drop (#152)</td>
+</tr>
+<tr>
+<td>Duo Trophy / Duo-Pokal</td>
+<td>LoLo and child high-fiving</td>
+<td>first game won vs LoLo (#107/#108)</td>
+</tr>
+<tr>
+<td>Growing Heart / Wachsendes Herz</td>
+<td>a heart with a green sprout</td>
+<td>5 sessions total (tenure)</td>
+</tr>
+</tbody></table>
+<p><strong>3. Little Thinkers — Kleine Denker</strong> (8) · theme: curiosity &amp; learning wins.</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Art</th>
+<th>Earn trigger</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Quiz Ribbon / Quiz-Schleife</td>
+<td>a rosette prize ribbon</td>
+<td>complete first quiz deck (#121)</td>
+</tr>
+<tr>
+<td>Why-Machine Gear / Warum-Zahnrad</td>
+<td>a golden cogwheel</td>
+<td>ask 10 questions (cumulative)</td>
+</tr>
+<tr>
+<td>Big-Word Gem / Großes-Wort-Edelstein</td>
+<td>a faceted crystal</td>
+<td>learn a new word (quiz/vocab)</td>
+</tr>
+<tr>
+<td>Number Star / Zahlen-Stern</td>
+<td>a star made of tiny digits</td>
+<td>complete a number/math quiz</td>
+</tr>
+<tr>
+<td>True-Fact Owl / Fakten-Eule</td>
+<td>a wise owl in round glasses</td>
+<td>5 quiz questions right (cumulative)</td>
+</tr>
+<tr>
+<td>Detective Magnifier / Detektiv-Lupe</td>
+<td>a glass hovering over a footprint</td>
+<td>3 quiz decks completed</td>
+</tr>
+<tr>
+<td>Idea Lightbulb / Ideen-Glühbirne</td>
+<td>a bulb sprouting a flower</td>
+<td>finish a story you invented</td>
+</tr>
+<tr>
+<td>Scholar Scroll / Gelehrten-Schriftrolle</td>
+<td>a rolled ribboned certificate</td>
+<td>first certificate (#176, later)</td>
+</tr>
+</tbody></table>
+<p><strong>4. Feelings Garden — Gefühls-Garten</strong> (6) · theme: emotional literacy + calm. Every mood is celebrated, none punished.</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Art</th>
+<th>Earn trigger</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Happy Sunflower / Glücks-Sonnenblume</td>
+<td>a beaming sunflower</td>
+<td>log a happy mood</td>
+</tr>
+<tr>
+<td>Calm Lavender / Ruhe-Lavendel</td>
+<td>a lavender sprig, soft aura</td>
+<td>complete a Calm Corner breathing ritual (#147)</td>
+</tr>
+<tr>
+<td>Brave Poppy / Mutige-Mohnblume</td>
+<td>a red poppy standing tall</td>
+<td>log &quot;nervous/scared&quot; and talk it through</td>
+</tr>
+<tr>
+<td>Gentle Rain Cloud / Sanfte-Regenwolke</td>
+<td>a small smiling cloud, soft drops</td>
+<td>log a sad mood (LoLo listens)</td>
+</tr>
+<tr>
+<td>Rainbow / Regenbogen</td>
+<td>a rounded rainbow arc</td>
+<td>5 mood check-ins total</td>
+</tr>
+<tr>
+<td>Cozy Nightlight / Gemütliches-Nachtlicht</td>
+<td>a warm little nightlight</td>
+<td>complete a bedtime wind-down (#164)</td>
+</tr>
+</tbody></table>
+<h3>Interest sets (4) — tied to onboarding interest; each is an 8-slot dig with a golden capstone</h3>
+<p>The onboarding-chosen interest <em>features</em> one set first; all four are earnable. Slots 1–7 are event-earned; slot 8 (the golden capstone) mints automatically when 1–7 are full — that IS the set-complete arc.</p>
+<p><strong>5. Dino Dig — Dino-Grabung</strong> (8) · dinosaurs.
+T-Rex Tooth/T-Rex-Zahn <em>(first dino question)</em> · Triceratops Frill/Nackenschild <em>(dino quiz Q correct)</em> · Amber Bug/Bernstein-Käfer <em>(generate a dino image)</em> · Fossil Footprint/Fossil-Fußabdruck <em>(dino Explorer capture #140)</em> · Stego Plate/Stego-Platte <em>(3 dino facts)</em> · Pterosaur Wing/Flugsaurier-Flügel <em>(dino quiz deck done)</em> · Raptor Claw/Raptor-Kralle <em>(win a dino game/quiz)</em> · <strong>Golden Egg/Goldenes Ei</strong> <em>(capstone: 7/7 → &quot;hatch&quot;)</em>. Art: each is a warm-toned fossil/amber token; Golden Egg glows.</p>
+<p><strong>6. Star Voyager — Stern-Reisende</strong> (8) · space.
+Moon Rock/Mond-Gestein <em>(first space question)</em> · Ringed Planet/Ring-Planet <em>(space Explorer)</em> · Comet Trail/Kometen-Schweif <em>(generate space image)</em> · Astronaut Helmet/Astronauten-Helm <em>(space quiz Q)</em> · Constellation Map/Sternbild-Karte <em>(3 space facts)</em> · Rocket Badge/Raketen-Abzeichen <em>(space deck done)</em> · Alien Friend/Außerirdischer-Freund <em>(win space game/quiz)</em> · <strong>Golden Star/Goldener Stern</strong> <em>(capstone)</em>.</p>
+<p><strong>7. Animal Friends — Tier-Freunde</strong> (8) · animals.
+Paw Print/Pfoten-Abdruck <em>(first animal question)</em> · Feather/Feder <em>(animal Explorer)</em> · Butterfly/Schmetterling <em>(generate animal image)</em> · Fluffy Tail/Flauschiger-Schwanz <em>(animal quiz Q)</em> · Habitat Leaf/Lebensraum-Blatt <em>(3 animal facts)</em> · Safari Hat/Safari-Hut <em>(win &quot;Which habitat?&quot; game #107 area)</em> · Nest/Nest <em>(animal deck done)</em> · <strong>Golden Acorn/Goldene Eichel</strong> <em>(capstone)</em>.</p>
+<p><strong>8. Ocean Deep — Tiefe See</strong> (8) · ocean.
+Sea Shell/Muschel <em>(first ocean question)</em> · Pearl/Perle <em>(ocean Explorer)</em> · Coral Branch/Korallen-Zweig <em>(generate ocean image)</em> · Jellyfish Glow/Quallen-Leuchten <em>(ocean quiz Q)</em> · Treasure Coin/Schatz-Münze <em>(3 ocean facts)</em> · Diver&#39;s Mask/Taucher-Maske <em>(ocean deck done)</em> · Whale Song/Wal-Gesang <em>(win ocean game/quiz)</em> · <strong>Golden Anchor/Goldener Anker</strong> <em>(capstone)</em>.</p>
+<h3>Seasonal sets (4) — tied to the Friday-drop calendar (#152–#155); re-run annually, nothing permanently missable</h3>
+<p><strong>9. Autumn Treasures — Herbst-Schätze</strong> (7) · Sept–Oct.
+Red Maple Leaf/Rotes-Ahornblatt <em>(open autumn drop #152)</em> · Acorn/Eichel <em>(autumn quiz Q)</em> · Pumpkin/Kürbis <em>(generate autumn image)</em> · Chestnut/Kastanie <em>(autumn Explorer)</em> · Hedgehog/Igel <em>(autumn story finished)</em> · Golden Wheat/Goldener Weizen <em>(3 autumn sessions)</em> · <strong>Cozy Sweater/Gemütlicher Pullover</strong> <em>(capstone)</em>.</p>
+<p><strong>10. Halloween Spooks — Halloween-Spuk</strong> (6) · late Oct · <em>friendly, never scary</em>.
+Friendly Ghost/Freundliches Gespenst <em>(open Halloween drop #152)</em> · Jack-o&#39;-Lantern/Kürbislaterne <em>(generate a pumpkin image)</em> · Candy Corn/Zucker-Mais <em>(Halloween quiz Q)</em> · Bat/Fledermaus <em>(Halloween Explorer)</em> · Magic Broom/Zauber-Besen <em>(Halloween story finished)</em> · <strong>Costume Trunk/Kostüm-Truhe</strong> <em>(capstone: try a persona voice #144)</em>.</p>
+<p><strong>11. St. Martin&#39;s Lantern — Sankt-Martins-Laterne</strong> (6) · Nov 11, DACH (#155).
+Paper Lantern/Papier-Laterne <em>(open St-Martin drop #155)</em> · Candle Flame/Kerzen-Flamme <em>(complete a St-Martin session)</em> · Warm Cloak/Warmer Umhang <em>(finish the St-Martin sharing story)</em> · Martin&#39;s Goose/Martinsgans <em>(St-Martin quiz Q)</em> · Song Note/Lied-Note <em>(say/sing &quot;Laterne, Laterne&quot;)</em> · <strong>Shared Bread/Geteiltes Brot</strong> <em>(capstone: a kindness/share act)</em>.</p>
+<p><strong>12. Advent Calendar — Advents-Kalender</strong> (24) · Dec, DACH December king (#153). <strong>Supersedes the original 10-item outline below</strong> — reconciled against the 24-day narrative calendar in <code>advent-calendar-content.md</code> §2, one Wonder-of-the-Day artifact per door, deterministic &quot;reach Day N&quot; earn trigger, matching that doc&#39;s own door-gating (Production Notes §4: door N unlocks server-side on/after Dec N). Four items from the original 10-item set referenced mechanics absent from the calendar narrative and are retired: Gingerbread Heart <em>(was: &quot;Advent story finished&quot;)</em>, Snowflake <em>(was: &quot;winter Explorer&quot;)</em>, Star of Wonder <em>(was: &quot;Advent quiz completed&quot; — this name collided with the calendar&#39;s own sky MacGuffin, which is the story&#39;s central symbol, not a collectible slot)</em>, and Cocoa Mug <em>(was: &quot;a calm/bedtime session in Dec&quot;)</em>. Their names/triggers are replaced below by the calendar&#39;s own daily artifacts. <strong>Resolved (2026-07-06):</strong> <code>quiz-decks-sep-dec.md</code> Deck 11 (&quot;St. Nikolaus&quot;) was rewired to <strong>Quiz-Ribbon-only</strong>, matching Decks 12/13 — no quiz hooks into this collection; Advent artifacts mint exclusively via daily chapter opens.</p>
+<p><strong>Total artifacts:</strong> 6+7+8+6 + 8+8+8+8 + 7+6+6+24 = <strong>102</strong> (~100).</p>
+<hr>
+<h2>2. Earn-rule spec table</h2>
+<p>Celebration tiers map to the shipped <code>celebrate(tier)</code> feedback module (<code>src/shared/feedback/</code>):
+<strong>tick</strong> = <code>whisper</code> (haptic + micro-sparkle, per single artifact) · <strong>set-complete arc</strong> = <code>landmark</code>
+(the R4 build→≤2–3 s peak→settle, once per set). A first-of-day artifact may bump to <code>moment</code>.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Event (real, shipped/planned)</th>
+<th>Artifact granted</th>
+<th>Collection</th>
+<th>Tier</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>First voice conv / first message</td>
+<td>Hello Spark</td>
+<td>First Adventures</td>
+<td>tick (moment on Day-0)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>First mood check-in</td>
+<td>Mood Pebble</td>
+<td>First Adventures</td>
+<td>tick</td>
+</tr>
+<tr>
+<td>3</td>
+<td>First question asked</td>
+<td>Curious Compass</td>
+<td>First Adventures</td>
+<td>tick</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Tomorrow&#39;s Seed payoff (#157)</td>
+<td>Wonder Seed</td>
+<td>First Adventures</td>
+<td>tick</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Explorer discovery (#140)</td>
+<td>Explorer&#39;s Lens → +interest set slot</td>
+<td>First Adventures / interest</td>
+<td>tick</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Calm Corner ritual (#147)</td>
+<td>Calm Shell / Calm Lavender</td>
+<td>First Adv. / Feelings Garden</td>
+<td>tick</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Quiz deck completed (#121)</td>
+<td>Quiz Ribbon → +interest deck slot</td>
+<td>Little Thinkers / interest</td>
+<td>moment (a gated win)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Game won vs LoLo (#107/#108)</td>
+<td>Duo Trophy → +interest game slot</td>
+<td>LoLo&#39;s Friends / interest</td>
+<td>moment</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Story finished (#126)</td>
+<td>Storyteller&#39;s Feather / Idea Lightbulb</td>
+<td>LoLo&#39;s Friends / Little Thinkers</td>
+<td>moment</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Friday drop opened (#152)</td>
+<td>Friday Gift Box + seasonal slot-1</td>
+<td>LoLo&#39;s Friends / seasonal</td>
+<td>tick</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Bedtime session (#164)</td>
+<td>Bedtime Moon / Cozy Nightlight</td>
+<td>LoLo&#39;s Friends / Feelings Garden</td>
+<td>tick</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Age-up (#158)</td>
+<td>(unlocks next-tier interest set + Age-Up landmark)</td>
+<td>interest</td>
+<td>landmark</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Certificate earned (#176, later)</td>
+<td>Scholar Scroll</td>
+<td>Little Thinkers</td>
+<td>moment</td>
+</tr>
+<tr>
+<td>14</td>
+<td>7/7 slots filled in any set</td>
+<td>Golden capstone (Egg/Star/Acorn/Anchor/…)</td>
+<td>that set</td>
+<td><strong>set-complete arc (landmark)</strong></td>
+</tr>
+</tbody></table>
+<p><strong>Day-0, first 3 minutes (#179):</strong> onboarding → LoLo wakes → first spoken/typed exchange (~60–90 s) mints <strong>Hello Spark</strong> with a whisper tick and the artifact visibly flies to the shelf → the mood check-in (~2 min) mints <strong>Mood Pebble</strong>. Two artifacts before minute 3, no numbers, no gate.</p>
+<p><strong>Something every session (deterministic, never random):</strong> early sessions always hit a First-Adventures / LoLo&#39;s-Friends first-time or tenure rule (5-turn, 5-session, morning-window). Steady-state, a kid asking questions / doing a quiz / an Explorer capture always mints an interest or seasonal slot. The guarantee holds <strong>as long as one incomplete set exists</strong> — and the seasonal cadence (a fresh drop set opening every few weeks, #152) ensures a child is <em>never fully done</em>, so there is always a slot to fill. No fallback RNG is used; if literally every active set is complete, the next seasonal drop is what re-opens earning (by design, not chance).</p>
+<hr>
+<h2>3. Anti-dark-pattern checklist (each rule shown passing)</h2>
+<table>
+<thead>
+<tr>
+<th>Rule (from research anti-list)</th>
+<th>How the catalog passes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>No loss / no decay</strong></td>
+<td>Artifacts are permanent; sets never expire; a missed Friday/seasonal set <strong>re-runs annually</strong> (Toca Gift-Bonanza pattern). Nothing is ever removed or reset.</td>
+</tr>
+<tr>
+<td><strong>No numbers / XP / streaks</strong></td>
+<td>Zero point counts, zero &quot;12/50&quot; bars shown to the child, zero streak calendar. Progress is <em>visual</em> (filled vs empty slot silhouettes on the shelf). Internal <code>progress</code> counters exist BE-side only, never rendered.</td>
+</tr>
+<tr>
+<td><strong>Celebrate once</strong></td>
+<td>Single artifact = <code>whisper</code> tick; set completion = ONE <code>landmark</code> arc. No back-to-back confetti; pacing guard prevents two <code>moment</code>+ celebrations in a row.</td>
+</tr>
+<tr>
+<td><strong>Deterministic earn</strong></td>
+<td>Every row in §2 is a fixed event→artifact rule. No variable-ratio, no mystery box, no wheel. (DSA: random rewards off-by-default for minors — we simply don&#39;t have any.)</td>
+</tr>
+<tr>
+<td><strong>No child-visible paywall pressure</strong></td>
+<td>See gating below — the child UI shows <strong>no padlocks that flaunt a purchase</strong>, no &quot;upgrade to unlock&quot;, no two-class cosmetics (the Prodigy FTC failure mode).</td>
+</tr>
+<tr>
+<td><strong>No social graph</strong></td>
+<td>No &quot;friends&quot; artifacts, no stranger comparison, no shared/global shelf. Family view (siblings) is parent-opt-in only.</td>
+</tr>
+<tr>
+<td><strong>Parent toggle</strong></td>
+<td>The whole shelf + all celebrations sit behind the existing gamification parent switch (BUILD-GUIDES §2d), conservative default; off = surface hidden, engine still records silently.</td>
+</tr>
+<tr>
+<td><strong>No engagement push to child</strong></td>
+<td>Award engine emits nothing to the child device as a notification; &quot;earned while away&quot; lands only in the parent digest (#135).</td>
+</tr>
+</tbody></table>
+<p><strong>Plus-gating recommendation — NONE of the 12 launch sets are child-visibly gated.</strong> All 12 are earnable by any child on any plan at launch; this is the deliberate anti-Prodigy stance and the premium brand&#39;s differentiator. Monetization of the shelf, if ever, is <strong>additive and invisible</strong>: post-launch <em>extra</em> seasonal/interest sets can be Plus-only, but a non-Plus child simply <strong>never sees that set exist</strong> (no teasing padlock, no &quot;ask a grown-up to unlock&quot;). Rationale: the shelf&#39;s job is retention + the parent-visible progress that drives the 2–3× renewal multiplier; turning it into a child-facing upsell would trip Apple Kids 1.3 and hand Fairplay the exact press angle that sank Prodigy. Sell the <em>breadth of sets</em> to the parent on the paywall, never to the child on the shelf.</p>
+<hr>
+<h2>4. Art production plan (~102 artifacts)</h2>
+<p><strong>Engine:</strong> reuse the shipped <strong>Imagen 4 Fast</strong> pipeline (<code>ai-chat.service.ts:165</code>, <code>imagen-4.0-fast-generate-001</code>, <code>europe-central2</code>, ~2.7 s/image, <strong>$0.039/image</strong>). A throwaway batch script calls <code>generateImage(prompt,&quot;illustration&quot;)</code> over the artifact manifest — not a new callable, a one-off tool run.</p>
+<p><strong>Style-lock prompt template</strong> (identical suffix on every artifact, only the object noun changes — same trick the Story pipeline uses for character consistency, §1f of BUILD-GUIDES):</p>
+<blockquote>
+<p><code>&quot;A single {ARTIFACT_OBJECT}, centered, one collectible token, soft rounded chunky shapes, thick clean outlines, matte storybook illustration, warm tide-pool palette (teal, coral, sand, cream), soft drop shadow, gentle inner glow, friendly and cozy, NO text, NO letters, NO background clutter, plain soft-cream background, consistent flat children&#39;s-app icon style.&quot;</code></p>
+</blockquote>
+<p>Per-artifact <code>{ARTIFACT_OBJECT}</code> = the 1-line brief in §1 (e.g. &quot;a T-Rex tooth fossil in warm amber tones&quot;). Seasonal/friendly constraints baked in (&quot;friendly cartoon ghost, not scary&quot; for Halloween).</p>
+<p><strong>Brandy QC pass:</strong> generate ~2–3× overage per slot (Imagen is cheap), Brandy curates the best one per artifact for (a) style/palette consistency across the 88, (b) kid-safety (nothing scary/ambiguous), (c) single-object clarity at 96 px shelf size. Reject/regenerate the ~20–30 % that drift. The golden capstones get a hand-check for the extra glow treatment.</p>
+<p><strong>Effort estimate:</strong> manifest + batch script ~2 h · generation runs ~1 h wall (102 × 2–3 passes, unattended) · Brandy curation+regeneration ~3–4 h · export/rename/pack ~1 h. <strong>≈ 6–8 hours total</strong> (one designer-day with Claude). API cost with 3× overgen ≈ <strong>≈$11.93</strong> (306 images × $0.039).</p>
+<p><strong>File/naming convention:</strong> <code>wonder-shelf/&lt;collection-key&gt;/&lt;artifact-key&gt;.png</code>, kebab-case, e.g. <code>dino-dig/trex-tooth.png</code>, <code>first-adventures/hello-spark.png</code>. 512×512 PNG, transparent or soft-cream background, <code>@2x</code>/<code>@3x</code> optional (single-object icons upscale cleanly, so one size is acceptable v1).</p>
+<p><strong>Where they live:</strong> <strong>bundle all 12 launch sets in-app</strong> under <code>src/shared/assets/wonder-shelf/</code> — mirrors how <code>badges-baseline.html</code> already pulls <code>assets/mood/*.png</code> / <code>assets/ds/*.png</code>; 88 small PNGs (~a few MB) is fine to ship, gives zero-latency offline render and versioning. <strong>Post-launch drop sets</strong> (new seasonal/interest sets delivered via the Friday-drop system without an App Store update) are served from <strong>Firebase Storage</strong> and referenced by URL in the drop config — so the shelf can grow without a binary. Rule of thumb: <em>known-at-launch → bundled; delivered-later → Storage.</em></p>
+<hr>
+<h2>5. Firestore additions to the BUILD-GUIDES shelf schema</h2>
+<p>BUILD-GUIDES §2c already defines earned-state on <strong><code>child-achievements</code></strong> with <code>collections: Array&lt;{key, itemRefs, completedAt}&gt;</code>. Two refinements needed for deterministic per-slot granting, plus one optional config collection for drop-delivered sets.</p>
+<p><strong>5a. Refine <code>collections[]</code> to name the filled slot</strong> (so each artifact-key is idempotently grantable):</p>
+<pre><code>collections: Array&lt;{
+  key: string                       // &quot;dino-dig&quot;, &quot;first-adventures&quot;, ...
+  items: Array&lt;{                    // was itemRefs: string[]
+    artifactKey: string             // &quot;trex-tooth&quot; — the named slot
+    sourceRef: string | null        // id of the message/quiz/story/explorer capture that earned it
+    grantedAt: Timestamp
+  }&gt;
+  completedAt: Timestamp | null     // set when items.length === definition.slotCount
+}&gt;
+</code></pre>
+<p>The award trigger (BUILD-GUIDES §2d, Firestore trigger — deterministic, idempotent) checks <code>artifactKey</code> presence before appending, so replays never double-grant.</p>
+<p><strong>5b. Artifact/collection DEFINITIONS stay as versioned code config by default</strong> — a <code>wonder-collections.config.ts</code> (shape below), same discipline as badge defs / plan rules in <code>feature-access.rules.ts</code> (tamper-proof, versioned, no BE round-trip to render):</p>
+<pre><code>{ key, titleEn, titleDe, theme, tier?, slots: Array&lt;{
+    artifactKey, nameEn, nameDe, art, earnRule   // earnRule = a typed event descriptor
+  }&gt;, capstoneKey?, season?, plusOnly?: boolean }
+</code></pre>
+<p><strong>5c. Optional Firestore <code>wonder-collections</code> config collection — ONLY for drop-delivered sets.</strong> Post-launch seasonal/interest sets that ship via the Friday-drop scheduler (#152&#39;s <code>weekly-drops</code>) live as config <strong>docs</strong> mirroring the §5b shape, so a new set can be added without an app update. The FE merges code-config sets (launch 12) with any <code>wonder-collections</code> docs. Launch does <strong>not</strong> require this collection — the 12 sets ship as code config; add <code>wonder-collections</code> when the first post-launch drop set is authored. <code>plusOnly</code> here is the only gating flag, and it hides the set entirely from non-Plus children (§3), never renders a padlock.</p>
+<p><strong>No new fields</strong> beyond the above; no <code>xp</code>/<code>points</code>/<code>streak</code> anywhere (anti-list). Awarding remains a projection over existing data (messages, <code>imageType:&quot;generated&quot;</code>, <code>stories</code>, quiz completions, Explorer captures, mood docs) — the events already exist; the shelf only maps them to artifact slots.</p>
+<hr>
+<h2>Sources</h2>
+<p><strong>Internal (primary evidence base):</strong></p>
+<ul>
+<li><code>docs/research/gamified-ux-winning-mechanics.md</code> — §1–2 (collections verdict, sets of 6–10, no-numbers), §3 Daily Loop (mint-moment, closing ritual), §4.2 Toca re-run/no-loss, §4.1 Prodigy anti-pattern.</li>
+<li><code>docs/research/SYNTHESIS-WINNING-PLAYBOOK.md</code> — 7 mechanics, anti-list, issue ledger (#152–#158, #164–#177).</li>
+<li><code>docs/_session/feature-prioritization-2026-07/BUILD-GUIDES-FIRST-WAVE.md §2</code> — shelf data model (<code>child-achievements</code>, code-config defs, award trigger), <code>celebrate()</code> tiers, Imagen 4 Fast specs.</li>
+</ul>
+<p><strong>Web (set-size sanity check, this session):</strong></p>
+<ol>
+<li><a href="https://eatplaysay.com/favorites/sticker-books/">https://eatplaysay.com/favorites/sticker-books/</a> — kids sticker-book set conventions.</li>
+<li>Kalysky multi-theme kids sticker line (Farm/Dinosaurs/Vehicle/Space/Ocean/Wild-Animal, ~60/theme) — validates the interest-set theme split — <a href="https://www.walmart.com/ip/5368909878">https://www.walmart.com/ip/5368909878</a></li>
+<li><a href="https://khankids.zendesk.com/hc/en-us/articles/360049358751">https://khankids.zendesk.com/hc/en-us/articles/360049358751</a> — Khan Kids &quot;collect bugs, hats, toys <strong>for the characters</strong>&quot; — the kid-correct collect-for-the-companion shape behind LoLo&#39;s Friends.</li>
+</ol>

@@ -1,0 +1,539 @@
+<title>HeyLolo ref — drawing-templates-content-set</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Drawing Templates Content Set — #139 Guided Draw-Along</h1>
+<p>Status: COMPLETE · 2026-07-05
+Ships: v1.4 (Nov)
+Depends on: #139 (step overlay, template picker, done+share), #141 (parent-gated photo sharing)</p>
+<h2>Contents</h2>
+<ol>
+<li>The step grammar</li>
+<li>12 templates (3 per interest collection: Dino Dig, Star Voyager, Animal Friends, Ocean Deep)</li>
+<li>The share/finish moment</li>
+<li>Production notes</li>
+</ol>
+<p><strong>Scope note:</strong> N2/#139 is distinct from <strong>F24 Coloring</strong> (fill existing line art, #127) and the free <strong>drawing canvas</strong> (#11) — LoLo <em>builds</em> the picture with the child, one shape at a time, narrated. Shares the Skia + gesture-handler stroke scaffold with F10/F19. Finished art feeds the <strong>Wonder Shelf</strong> (#142) and <strong>Brag Card</strong> share loop (#163).</p>
+<p><strong>Assumption:</strong> the brief&#39;s &quot;#141 rules&quot; actually names <strong>quiz share links</strong> in this repo&#39;s numbering (<code>BUILD-GUIDES-FIRST-WAVE.md §3</code>), not a photo-consent spec — no &quot;#141 photo rule&quot; doc exists. §3 below instead applies the real precedent: the <strong>Milestone/Brag Card</strong> spec (#163, <code>parent-digest-content-engine.md</code>) — <em>&quot;no child photo by default,&quot;</em> parent-gated, no PII.</p>
+<hr>
+<h2>1. The step grammar</h2>
+<p>A template is a fixed ordered list of <em>primitive additions</em>. Each step shows a soft &quot;ghost guide&quot; (a traced Skia path) the child draws over — no pass/fail; the overlay just advances when the child lifts a finger. <strong>Step 1 = the anchor</strong> (biggest shape, body or head). <strong>Middle steps add exactly one new part each</strong> — never two new elements in one T1/T2 step. <strong>Last step = the face or signature detail</strong> — it makes the character &quot;come alive&quot; and cues the reveal.</p>
+<p><strong>Difficulty ladder (reuses the #105 age tiers):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Age</th>
+<th>Steps</th>
+<th>Shape budget</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T1</td>
+<td>4–5</td>
+<td>3–4</td>
+<td>One big/simple primitive per step. No paired parts, no detail steps.</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>6–7</td>
+<td>4–5</td>
+<td>Primitives + ONE paired-shape step (two ears, two wings). Still no fine detail.</td>
+</tr>
+<tr>
+<td>T3+</td>
+<td>8–12</td>
+<td>6</td>
+<td>Primitives + 1–2 detail steps after the big shape (spots, pattern, texture, expression).</td>
+</tr>
+</tbody></table>
+<p><strong>The encouragement script — 3 slots, every step:</strong> (1) a delight beat naming the shape just added (Gasp/Sound-Effect device, <code>kids-voice-conversation-design.md</code> §2.2); (2) <strong>zero correction, ever</strong> — never &quot;not quite,&quot; &quot;stay in the lines,&quot; or any mention of wobble; (3) a forward nudge into the next step (&quot;Now let&#39;s...&quot;).</p>
+<p><strong>&quot;Every X looks different, that&#39;s what makes yours YOURS&quot;</strong> fires ONCE per template, at the step where variation shows most (usually the face/pattern step) — never every step, per the ≤1–2-devices-per-turn repetition rule.</p>
+<p><strong>The reveal line</strong> follows the last step: a Gasp + naming the finished creature + an invitation toward the done-screen. Never comparative — always presenting-tense wonder.</p>
+<hr>
+<h2>2. 12 templates — 3 per Wonder Shelf interest collection</h2>
+<p>Each completed template mints that collection&#39;s existing <strong>&quot;generate an image&quot;</strong> shelf slot (Amber Bug / Comet Trail / Butterfly / Coral Branch — <code>wonder-shelf-launch-catalog.md</code> §1 sets 5–8) — a hand-drawn creation counts the same as an AI-generated one for that slot. This needs <strong>zero schema change</strong>: the award trigger already treats the slot as filled-once (idempotent), so if a child draws two templates in the same collection, only the first mints; the second is just fun. No new Firestore field, no new abstraction.</p>
+<h3>Dino Dig — Dino-Grabung</h3>
+<p><strong>2.1 T-Rex / T-Rex</strong> · Tier T1 · 4 steps</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Ooh, a big round dino belly — let&#39;s start there!</td>
+<td>Ooh, ein großer runder Dino-Bauch — fangen wir da an!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Now a big chunky head, right up front!</td>
+<td>Jetzt ein kräftiger Kopf, ganz vorne!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Teeny tiny arms — SO tiny!</td>
+<td>Ganz, ganz kleine Ärmchen!</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Stomping legs, a swishy tail, and — RAAWR — a face! Every dino looks different, and that&#39;s what makes yours YOURS.</td>
+<td>Stampf-Beine, ein schwingender Schwanz und — RAAWR — ein Gesicht! Jeder Dino sieht anders aus, und genau das macht deinen zu DEINEM.</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Whoa — look at that T-Rex! Ready? Let&#39;s find out what it says... RAAWR!&quot;</em> / <em>&quot;Whoa — schau dir diesen T-Rex an! Los geht&#39;s — was sagt er wohl? RAAWR!&quot;</em> · <strong>Feeds:</strong> Amber Bug slot · <strong>Art:</strong> chunky rounded T-Rex, amber/olive, thick outline, big smile.</p>
+<p><strong>2.2 Triceratops / Triceratops</strong> · Tier T2 · 5 steps (body → frill → head+beak → 3 horns → legs/tail/face)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A sturdy oval body — this one&#39;s a tank!</td>
+<td>Ein stabiler, ovaler Körper — der hier ist ein Panzer!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Ooh, a big bony frill like a shield!</td>
+<td>Ooh, ein großer knöcherner Kragen wie ein Schild!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>A tough little beak-face.</td>
+<td>Ein kleines, kräftiges Schnabel-Gesicht.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>One, two, three horns — pointy and proud!</td>
+<td>Eins, zwei, drei Hörner — spitz und stolz!</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Sturdy legs, a swooshy tail, and there&#39;s the face!</td>
+<td>Feste Beine, ein schwingender Schwanz — und da ist das Gesicht!</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Whoa, three horns AND a shield — that&#39;s one brave Triceratops!&quot;</em> / <em>&quot;Whoa, drei Hörner UND ein Schild — was für ein mutiger Triceratops!&quot;</em> · <strong>Feeds:</strong> Amber Bug (if unfilled) · <strong>Art:</strong> same palette, frill reads soft/shield-like, not spiky.</p>
+<p><strong>2.3 Pterosaur / Flugsaurier</strong> · Tier T3 · 6 steps (body → wing L → wing R → head+beak → feet+crest → eye+texture)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A slim little body — this one FLIES.</td>
+<td>Ein schlanker kleiner Körper — der hier FLIEGT.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>One giant wing, stretching out!</td>
+<td>Ein riesiger Flügel, weit ausgestreckt!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>And the other wing — now it can soar!</td>
+<td>Und der andere Flügel — jetzt kann er gleiten!</td>
+</tr>
+<tr>
+<td>4</td>
+<td>A long pointy beak for catching fish.</td>
+<td>Ein langer, spitzer Schnabel zum Fischefangen.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Little clawed feet, and a fancy head-crest!</td>
+<td>Kleine Krallenfüße und ein schicker Kamm auf dem Kopf!</td>
+</tr>
+<tr>
+<td>6</td>
+<td>One curious eye, and some swooshy wing lines. Every flyer looks different — that&#39;s what makes yours YOURS.</td>
+<td>Ein neugieriges Auge und ein paar schwungvolle Flügellinien. Jeder Flieger sieht anders aus — genau das macht deinen zu DEINEM.</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Whoosh — look at it fly! Ready? Let&#39;s find out how high it goes!&quot;</em> / <em>&quot;Whoosh — schau, wie er fliegt! Los geht&#39;s — wie hoch fliegt er wohl?&quot;</em> · <strong>Feeds:</strong> Amber Bug (if unfilled) · <strong>Art:</strong> long wings, sunset-amber wash, friendly round eye.</p>
+<h3>Star Voyager — Stern-Reisende</h3>
+<p><strong>2.4 Rocket Ship / Rakete</strong> · Tier T1 · 4 steps (body → nose → fins → window+flame)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A tall rocket body — straight up to space!</td>
+<td>Ein hoher Raketen-Körper — direkt ins All!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>A pointy nose on top — WHOOSH-shaped!</td>
+<td>Eine spitze Nase oben drauf — WHOOSH-Form!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Two little fins so it flies straight.</td>
+<td>Zwei kleine Flossen, damit sie gerade fliegt.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>A round window to look out of, and — WHOOSH — fire at the bottom! Every rocket looks different, that&#39;s what makes yours YOURS.</td>
+<td>Ein rundes Fenster zum Rausschauen, und — WHOOSH — Feuer ganz unten! Jede Rakete sieht anders aus, genau das macht deine zu DEINER.</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Ooh, 3-2-1... look at it GO!&quot;</em> / <em>&quot;Ooh, 3-2-1... schau, wie sie fliegt!&quot;</em> · <strong>Feeds:</strong> Comet Trail slot · <strong>Art:</strong> chunky retro rocket, teal/coral, warm not sterile.</p>
+<p><strong>2.5 Ringed Planet / Ring-Planet</strong> · Tier T2 · 5 steps (planet → ring → moons → craters → stars)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A big round planet — hello, new world!</td>
+<td>Ein großer runder Planet — hallo, neue Welt!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Ooh, a wide ring going all the way around!</td>
+<td>Ooh, ein breiter Ring, ganz drumherum!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Two tiny moons, floating close by.</td>
+<td>Zwei winzige Monde, ganz in der Nähe.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>A couple of bumpy craters — this planet&#39;s been through a lot!</td>
+<td>Ein paar holprige Krater — dieser Planet hat schon viel erlebt!</td>
+</tr>
+<tr>
+<td>5</td>
+<td>And a sprinkle of stars all around. Ready? Let&#39;s find out what it&#39;s called!</td>
+<td>Und ein paar Sterne drumherum. Los geht&#39;s — wie heißt er wohl?</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Whoa — your very own ringed planet!&quot;</em> / <em>&quot;Whoa — dein ganz eigener Ring-Planet!&quot;</em> · <strong>Feeds:</strong> Comet Trail (if unfilled) · <strong>Art:</strong> simplified Saturn-like, soft pastel ring.</p>
+<p><strong>2.6 Astronaut / Astronaut</strong> · Tier T3 · 6 steps (helmet → suit → arms/legs → backpack → boots/gloves → visor detail)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A big round helmet — ready for space!</td>
+<td>Ein großer runder Helm — bereit fürs All!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>A puffy space suit to keep warm.</td>
+<td>Ein gepolsterter Raumanzug, schön warm.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Two arms, two legs — floating already!</td>
+<td>Zwei Arme, zwei Beine — schwebt schon los!</td>
+</tr>
+<tr>
+<td>4</td>
+<td>A big backpack full of air to breathe.</td>
+<td>Ein großer Rucksack voller Luft zum Atmen.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Chunky boots and gloves — nothing gets in!</td>
+<td>Klobige Stiefel und Handschuhe — nichts kommt rein!</td>
+</tr>
+<tr>
+<td>6</td>
+<td>A shiny visor with tiny stars inside it. Every astronaut looks different — that&#39;s what makes yours YOURS.</td>
+<td>Ein glänzendes Visier mit winzigen Sternen darin. Jeder Astronaut sieht anders aus — genau das macht deinen zu DEINEM.</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Ooh — a real space explorer! Ready? Let&#39;s find out what&#39;s out there!&quot;</em> / <em>&quot;Ooh — ein echter Weltraum-Entdecker! Los geht&#39;s — was gibt&#39;s wohl da draußen?&quot;</em> · <strong>Feeds:</strong> Comet Trail (if unfilled) · <strong>Art:</strong> puffy suit, tiny star in the visor, teal/coral on white.</p>
+<h3>Animal Friends — Tier-Freunde</h3>
+<p><strong>2.7 Fox / Fuchs</strong> · Tier T1 · 4 steps (head → ears → body → tail+face)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A round little fox head — hello there!</td>
+<td>Ein runder kleiner Fuchskopf — hallo du!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Two pointy ears, listening for everything!</td>
+<td>Zwei spitze Ohren, die alles hören!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>A soft oval body underneath.</td>
+<td>Ein weicher, ovaler Körper darunter.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>A big fluffy tail, and — there&#39;s the face! Every fox looks different, that&#39;s what makes yours YOURS.</td>
+<td>Ein großer, buschiger Schwanz — und da ist das Gesicht! Jeder Fuchs sieht anders aus, genau das macht deinen zu DEINEM.</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Ooh, what a clever little fox!&quot;</em> / <em>&quot;Ooh, was für ein schlauer kleiner Fuchs!&quot;</em> · <strong>Feeds:</strong> Butterfly slot · <strong>Art:</strong> rounded fox, rust-orange, oversized fluffy tail.</p>
+<p><strong>2.8 Owl / Eule</strong> · Tier T2 · 5 steps (body → head → eyes → wings → feet+branch)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A round, cozy owl body.</td>
+<td>Ein runder, gemütlicher Eulenkörper.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>A big head, right on top — owls have great big heads!</td>
+<td>Ein großer Kopf, oben drauf — Eulen haben riesige Köpfe!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Two HUGE eyes — owls see everything at night!</td>
+<td>Zwei RIESIGE Augen — Eulen sehen alles, sogar nachts!</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Two folded wings, snug against the body.</td>
+<td>Zwei zusammengefaltete Flügel, ganz eng am Körper.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Little branch-gripping feet, and a branch to sit on!</td>
+<td>Kleine Ast-Krallen-Füße, und ein Ast zum Sitzen!</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Whoo-hoo — look at those eyes!&quot;</em> / <em>&quot;Uhu-huu — schau dir diese Augen an!&quot;</em> · <strong>Feeds:</strong> Butterfly (if unfilled) · <strong>Art:</strong> oversized round eyes, brown/cream feather texture.</p>
+<p><strong>2.9 Butterfly / Schmetterling</strong> · Tier T3 · 6 steps (body → wing TL → wing TR → wings BL/BR → antennae → pattern)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>One thin little body line, right down the middle.</td>
+<td>Eine dünne kleine Körperlinie, genau in der Mitte.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>One big top wing, like a swoop!</td>
+<td>Ein großer oberer Flügel, wie ein Schwung!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>And its matching partner on the other side!</td>
+<td>Und der passende Partner auf der anderen Seite!</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Two smaller wings underneath — now it can really fly.</td>
+<td>Zwei kleinere Flügel darunter — jetzt kann er richtig fliegen.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Two curly antennae on top, like tiny question marks.</td>
+<td>Zwei geschwungene Fühler oben, wie kleine Fragezeichen.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>And some pretty spots and swirls on the wings. Every butterfly looks different — that&#39;s what makes yours YOURS.</td>
+<td>Und ein paar hübsche Punkte und Schwünge auf den Flügeln. Jeder Schmetterling sieht anders aus — genau das macht deinen zu DEINEM.</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Ooh — ready? Let&#39;s find out where it flies to first!&quot;</em> / <em>&quot;Ooh — los geht&#39;s! Wohin fliegt er wohl zuerst?&quot;</em> · <strong>Feeds:</strong> Butterfly slot (mints it directly) · <strong>Art:</strong> symmetric wings, jewel-tone spots.</p>
+<h3>Ocean Deep — Tiefe See</h3>
+<p><strong>2.10 Whale / Wal</strong> · Tier T1 · 4 steps (body → tail → fins → spout+face)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A HUGE round body — whales are the biggest!</td>
+<td>Ein RIESIGER runder Körper — Wale sind die Größten!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>A big swishy tail at the back!</td>
+<td>Ein großer, schwingender Schwanz hinten dran!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Two little side fins for steering.</td>
+<td>Zwei kleine seitliche Flossen zum Steuern.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>A splashy spout on top, and — there&#39;s the face! Every whale looks different, that&#39;s what makes yours YOURS.</td>
+<td>Eine spritzige Fontäne oben drauf — und da ist das Gesicht! Jeder Wal sieht anders aus, genau das macht deinen zu DEINEM.</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Whoosh! Listen — I bet it&#39;s singing a whale song!&quot;</em> / <em>&quot;Whoosh! Hör mal — ich wette, er singt ein Walgesang!&quot;</em> · <strong>Feeds:</strong> Coral Branch slot · <strong>Art:</strong> friendly whale, deep teal, pale belly, splash at the spout.</p>
+<p><strong>2.11 Sea Turtle / Meeresschildkröte</strong> · Tier T2 · 5 steps (shell → head → front flippers → back flippers → pattern+eye)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A big rounded shell — like a shield on its back!</td>
+<td>Ein großer, runder Panzer — wie ein Schild auf dem Rücken!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>A little head peeking out the front.</td>
+<td>Ein kleiner Kopf, der vorne rausschaut.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Two big front flippers for gliding through water!</td>
+<td>Zwei große vordere Flossen zum Gleiten durchs Wasser!</td>
+</tr>
+<tr>
+<td>4</td>
+<td>And two more flippers steering from the back!</td>
+<td>Und noch zwei Flossen, die hinten steuern!</td>
+</tr>
+<tr>
+<td>5</td>
+<td>A pretty shell pattern, and one gentle eye.</td>
+<td>Ein hübsches Panzer-Muster, und ein sanftes Auge.</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Ooh — a slow, steady ocean traveler!&quot;</em> / <em>&quot;Ooh — ein langsamer, geduldiger Ozean-Reisender!&quot;</em> · <strong>Feeds:</strong> Coral Branch (if unfilled) · <strong>Art:</strong> rounded shell, soft hexagon pattern, sandy-teal.</p>
+<p><strong>2.12 Octopus / Oktopus</strong> · Tier T3 · 6 steps (head → legs pair 1 → pair 2 → pair 3 → pair 4 → suckers+eyes)</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>LoLo (EN)</th>
+<th>LoLo (DE)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>One big round head — this one&#39;s SO squishy!</td>
+<td>Ein großer runder Kopf — der ist SO weich!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Two curly legs waving hello!</td>
+<td>Zwei geschwungene Arme, die winken!</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Two more legs, reaching out to the sides.</td>
+<td>Noch zwei Arme, die zur Seite greifen.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>And two more behind — that&#39;s four so far, keep going!</td>
+<td>Und noch zwei dahinter — das sind schon vier, weiter geht&#39;s!</td>
+</tr>
+<tr>
+<td>5</td>
+<td>The last two legs — eight altogether, WOW!</td>
+<td>Die letzten zwei Arme — acht insgesamt, WOW!</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Tiny little suckers on the legs, and two big curious eyes. Every octopus looks different — that&#39;s what makes yours YOURS.</td>
+<td>Winzige kleine Saugnäpfe an den Armen, und zwei große neugierige Augen. Jeder Oktopus sieht anders aus — genau das macht deinen zu DEINEM.</td>
+</tr>
+</tbody></table>
+<p><strong>Reveal:</strong> <em>&quot;Whoa — EIGHT legs! Ready? Let&#39;s find out what it&#39;s hiding behind that rock!&quot;</em> / <em>&quot;Whoa — ACHT Arme! Los geht&#39;s — was versteckt er wohl hinter dem Stein?&quot;</em> · <strong>Feeds:</strong> Coral Branch (if unfilled) · <strong>Art:</strong> rounded head, curling tentacles, coral/purple gradient.</p>
+<hr>
+<h2>3. The share/finish moment</h2>
+<p><strong>Done screen flow:</strong></p>
+<ol>
+<li>The finished drawing renders full-screen (the child&#39;s own line art, captured from the Skia canvas).</li>
+<li>LoLo speaks the reveal line (§1) — voice + on-screen text; no thinking-sound needed (not live voice — a short reveal animation covers any gap).</li>
+<li><strong>Auto-mint, no button.</strong> The shelf slot (§2) fills silently the instant the last step completes — the Wonder Shelf &quot;no numbers, no gate&quot; rule. The artifact flies to the shelf as part of the reveal beat, not a separate &quot;claim&quot; tap.</li>
+<li>Two calm affordances below the art: <strong>&quot;Save this drawing&quot;</strong> (camera roll) and <strong>&quot;Draw another&quot;</strong>. No streak, no counter, no &quot;drawing #4 today.&quot;</li>
+</ol>
+<p><strong>What&#39;s shareable vs. gated:</strong></p>
+<ul>
+<li><strong>The drawing itself</strong> — de-identified line art, no name/face/PII — is freely shareable/saveable any time. This is the brief&#39;s &quot;shareable de-identified artwork&quot;; it needs no parent gate because it carries no PII (the constant bar the Brag Card precedent also uses).</li>
+<li><strong>A photo of the drawing-in-progress</strong> (e.g. a future print-and-trace mode where a child photographs a paper page) is different — it can capture a hand, a room, incidental PII. Per the Brag Card precedent (#163): <strong>default OFF</strong>, routed through the same parent-gated toggle used for milestone cards — never a new consent surface.</li>
+<li>The share sheet reuses the <strong>existing Brag Card mechanism</strong> (#163): <code>&quot;{name} drew a {creature}!&quot;</code> caption + art, one-tap to OS share, parent-gated like any other milestone card.</li>
+</ul>
+<hr>
+<h2>4. Production notes</h2>
+<p><strong>What Brandy draws per template:</strong> one full-color <strong>reveal illustration</strong> (Wonder Shelf style-lock — <code>wonder-shelf-launch-catalog.md</code> §4: tide-pool palette, thick outlines, no text) plus a <strong>step-overlay frame per step</strong> (3–6/template), delivered as <strong>clean vector SVG</strong> (not flattened PNG) so engineering converts them into Skia trace-guide <code>Path</code> data — a raster reference isn&#39;t tracing-usable.</p>
+<p><strong>Effort estimate:</strong> 66 assets total (54 step vectors + 12 reveals). Reveals reuse the Imagen 4 Fast pipeline (~2.7s/image, ~$0.039/image) — near-zero cost. Step vectors need hand authoring: ~40 min/template (T1) up to ~90 min (T3). <strong>Total: ~14–16 designer-hours</strong>, one Brandy sprint, + ~1–2 hours batch-export using the wonder-shelf naming convention (<code>drawing-templates/&lt;collection-key&gt;/&lt;template-key&gt;/step-N.svg</code> + <code>reveal.png</code>).</p>
+<p><strong>Seasonal cadence hook:</strong> the Friday-drop engine (#152) can deliver new templates with no App Store update — e.g. a <strong>Halloween pumpkin</strong> (T1, 4 steps: circle → 2 triangle eyes → jagged mouth → stem+glow) live in October. Per the wonder-shelf rule (<em>known-at-launch → bundled; later → Storage</em>): the 12 launch templates ship bundled; seasonal drops (pumpkin, snowflake, flower, heart) are Storage-served on the same drop config as seasonal Wonder Shelf sets — one mechanism, not two.</p>
+<hr>
+<h2>Sources</h2>
+<p>Internal only — no web research for this internal content-design task, per the brief:</p>
+<ul>
+<li><code>docs/_session/feature-prioritization-2026-07/PRIORITIZATION.md:150-156</code> — #139/N2 concept, F24/#11 distinction, F10/F19 shared scaffold, N4/N5 feed.</li>
+<li><code>docs/_session/feature-prioritization-2026-07/BUILD-GUIDES-FIRST-WAVE.md:182-196</code> — real #141 (quiz share links), corrects the brief&#39;s assumption.</li>
+<li><code>docs/research/wonder-shelf-launch-catalog.md</code> §1 (sets 5–8), §4 (Imagen 4 Fast pipeline), §2/§5a (no-numbers, idempotent slot award discipline).</li>
+<li><code>docs/research/kids-voice-conversation-design.md</code> §2.2 (persona devices, repetition rule, repair/never-correct register).</li>
+<li><code>docs/research/de-localization-glossary-qa.md</code> §1 (Du-voice, &quot;Los geht&#39;s!&quot;, genitive avoidance, exclamation-warmth), §2 (Wunder-Regal/Sammlung terminology).</li>
+<li><code>docs/research/parent-digest-content-engine.md:153-164</code> (#163 Milestone/Brag Cards) — the parent-gated, no-PII, no-child-photo-by-default mechanism reused in §3.</li>
+</ul>

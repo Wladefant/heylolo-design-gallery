@@ -1,0 +1,304 @@
+<title>HeyLolo ref — explorer-fact-card-library</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Explorer Discovery Fact-Card Library</h1>
+<blockquote>
+<p>Status: DRAFT · curated wonder-response layer for Explorer mode (#104/#140).
+Grounds every card in <code>kids-voice-conversation-design.md</code> (Gasp, Whisper-Secret
+devices), <code>wonder-shelf-launch-catalog.md</code> (shelf artifacts + celebrate tiers),
+and <code>de-localization-glossary-qa.md</code> (Du-voice, kid-safe DE register).</p>
+</blockquote>
+<h2>Contents</h2>
+<ol>
+<li>Card format</li>
+<li>Fallback grammar (non-library objects)</li>
+<li>&quot;LoLo sees it!&quot; cue spec</li>
+<li>The 40 cards — Household</li>
+<li>The 40 cards — Outdoors</li>
+<li>The 40 cards — Kid-world</li>
+</ol>
+<hr>
+<h2>1. Card format</h2>
+<p>Every card is a fixed record so a card-hit renders identically to a live-model
+fallback (§2) — same shape, curated content:</p>
+<ul>
+<li><strong>Recognition key(s)</strong> — object noun(s) the vision classifier maps to this
+card (synonyms folded in, e.g. <code>cup, mug</code>).</li>
+<li><strong>Gasp + hook, ×2 variants</strong> — the Gasp device + a question back to the
+kid, so a repeat sighting doesn&#39;t feel canned. EN and DE each get their own
+two variants (DE is written to its own rhythm, not a translation, per the
+glossary&#39;s Du-voice + parataxis rules).</li>
+<li><strong>Whisper-secret fact</strong> — one T1-safe common-knowledge fact, delivered as a
+conspiratorial aside, with a <strong>T3 upgrade</strong> folded in after an em-dash for
+the 8–9 tier (a sharper detail on the SAME fact, never a different one, so
+a re-hit at an older age still feels continuous).</li>
+<li><strong>Shelf artifact</strong> — which Wonder Shelf collection this discovery mints
+into via the Explorer-capture earn rule (<code>wonder-shelf-launch-catalog.md</code>
+§2 row 5, &quot;Explorer&#39;s Lens&quot;). A strong thematic match (moon→Star Voyager,
+dog→Animal Friends) mints into that interest set instead of the generic
+First-Adventures slot — same event, richer payoff.</li>
+<li><strong>Share-clip rating</strong> — <code>high</code>/<code>med</code>/<code>low</code>. Best 15s demo clips are
+high-surprise-fact + visible Gasp + kid reaction; everyday objects (spoon,
+key) are <code>low</code> (skip the reel), high-wow objects (moon, snail, rainbow)
+are <code>high</code>.</li>
+</ul>
+<p>All facts below are bulletproof common knowledge — nothing requiring a
+lookup, so nothing to get wrong on-device.</p>
+<hr>
+<h2>2. Fallback grammar</h2>
+<p>When Gemini Live recognizes an object outside the top-40, the response must
+still <em>feel</em> like a card. Prompt fragment for the Explorer system instruction
+(additive, sits alongside the persona-devices block in
+<code>kids-voice-conversation-design.md</code> §5a):</p>
+<pre><code>    WHEN YOU RECOGNIZE SOMETHING IN THE CAMERA:
+    1. GASP first — a genuine, brief reaction of noticing (&quot;Ooh!&quot;, &quot;Whoa—&quot;),
+       before you name it. Never lead with the name.
+    2. NAME it warmly, like you&#39;re delighted to meet it, not identifying a
+       specimen (&quot;A snail!&quot; not &quot;This appears to be a garden snail.&quot;).
+    3. ONE wonder — a single true, simple, common-knowledge fact a curious
+       kid would love. If unsure it&#39;s true, skip it — say what you noticed
+       instead (&quot;Look at that shiny shell!&quot;).
+    4. QUESTION back — end on ONE question that hands the turn to the child
+       (never two), inviting them to look closer, guess, or share.
+    Keep the whole reaction to 1–2 short sentences. Never lecture. Never
+    stack facts.
+</code></pre>
+<p>This is deliberately the same <strong>gasp → name → wonder → question</strong> skeleton as
+every curated card, so the two layers are indistinguishable in feel — only
+the curated layer is guaranteed word-perfect and pre-approved.</p>
+<hr>
+<h2>3. &quot;LoLo sees it!&quot; moment spec</h2>
+<p>The visual+haptic cue (#104) that stamps a recognition as a <em>discovery</em>, not
+just a reply. Maps onto the shipped <code>feedback</code> module
+(<code>src/shared/feedback/index.ts</code>) and the shelf&#39;s tier language
+(<code>wonder-shelf-launch-catalog.md</code> §2: whisper/moment/landmark):</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Confidence</th>
+<th>Cue fires?</th>
+<th>Feedback call</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Card-hit</strong> (one of the 40)</td>
+<td>n/a — curated match is binary</td>
+<td><strong>Always</strong></td>
+<td><code>feedback.success(&quot;S&quot;)</code> + disc/avatar &quot;notice&quot; bloom</td>
+<td>Curated = guaranteed-good content; the cue is a promise the library keeps every time.</td>
+</tr>
+<tr>
+<td><strong>Card-hit → first-ever for this child</strong></td>
+<td>n/a</td>
+<td>Always, upgraded</td>
+<td><code>feedback.success(&quot;M&quot;)</code> + shelf artifact flies to Wonder Shelf</td>
+<td>First sighting mints the Explorer&#39;s Lens / themed artifact (catalog §2 row 5) — a <code>moment</code>, not a <code>whisper</code>.</td>
+</tr>
+<tr>
+<td><strong>Generic (fallback grammar) hit</strong></td>
+<td>model confidence ≥ threshold (tune in QA; start ~0.7)</td>
+<td>Only above threshold</td>
+<td><code>feedback.success(&quot;S&quot;)</code></td>
+<td>Below threshold, LoLo may still answer (§2) but the badge is suppressed — an uncertain guess shouldn&#39;t wear the same badge as a sure one.</td>
+</tr>
+<tr>
+<td><strong>Generic hit, low confidence</strong></td>
+<td>below threshold</td>
+<td>No cue</td>
+<td>none</td>
+<td>Prevents the cue becoming meaningless noise on every camera frame.</td>
+</tr>
+</tbody></table>
+<p><strong>Rule of thumb:</strong> curated hits are cheap to trust (hand-checked at authoring
+time) so they always cue; generic hits are model guesses, so the cue is
+gated — keeping &quot;LoLo sees it!&quot; a signal the child learns to trust.</p>
+<hr>
+<h2>4. Household (14)</h2>
+<p><em>Per card: <strong>object EN/DE</strong> — keys · Gasp v1 (EN / DE) · Gasp v2 (EN / DE) ·
+Whisper T1→T3 fact (EN / DE) · Shelf · Clip.</em></p>
+<p><strong>1. Spoon / Löffel</strong> — spoon, tablespoon
+&quot;Ooh, a spoon — favorite food with it?&quot; / &quot;Ohh, ein Löffel — Lieblingsessen damit?&quot; · &quot;Whoa, spoon-mirror — see yourself upside-down?&quot; / &quot;Wow, Spiegel-Löffel — siehst du dich verkehrt?&quot;
+Old spoons were wood or bone, not metal — the word even means &quot;wood chip&quot;! / Früher aus Holz oder Knochen, nicht Metall — &quot;Löffel&quot; heißt sogar &quot;Holzspan&quot;!
+Little Thinkers · low</p>
+<p><strong>2. Cup / Becher</strong> — cup, mug
+&quot;Ooh, a cup — what&#39;s in it today?&quot; / &quot;Ohh, ein Becher — was ist heute drin?&quot; · &quot;Whoa, cocoa or juice?&quot; / &quot;Wow, Kakao oder Saft?&quot;
+Ancient cups were hollow stones or shells — clinking cups to toast started so a splash proved no poison! / Früher aus Steinen oder Muscheln — beim Anstoßen sollte etwas überschwappen, als Beweis gegen Gift!
+Little Thinkers · low</p>
+<p><strong>3. Toothbrush / Zahnbürste</strong> — toothbrush
+&quot;Ooh, your toothbrush — morning or bedtime?&quot; / &quot;Ohh, deine Zahnbürste — morgens oder abends?&quot; · &quot;Whoa, ready for sparkly teeth?&quot; / &quot;Wow, bereit für glitzernde Zähne?&quot;
+People once brushed with chewed sticks or hair bristles — soft bristles are much newer than clean teeth! / Früher putzte man mit Zweigen oder Borsten — weiche Borsten gibt&#39;s erst seit kurzem!
+Feelings Garden · low</p>
+<p><strong>4. Shoe / Schuh</strong> — shoe, sneaker
+&quot;Ooh, a shoe — your favorite pair?&quot; / &quot;Ohh, ein Schuh — dein Lieblingspaar?&quot; · &quot;Whoa, ready for an adventure in it?&quot; / &quot;Wow, bereit für ein Abenteuer damit?&quot;
+The oldest shoe ever found is thousands of years old — and shoes used to be dead straight, no left/right! / Der älteste Schuh ist tausende Jahre alt — früher waren Schuhe ganz gerade, ohne links/rechts!
+LoLo&#39;s Friends · low</p>
+<p><strong>5. Clock / Uhr</strong> — clock, wall clock
+&quot;Ooh, a clock — what time is it?&quot; / &quot;Ohh, eine Uhr — wie spät ist es?&quot; · &quot;Whoa, tick-tock — favorite time of day?&quot; / &quot;Wow, tick-tack — deine Lieblingszeit?&quot;
+Before clocks, people watched the sun&#39;s shadow — that&#39;s even why hands turn the way they do, copying sundials! / Vor der Uhr beobachtete man Sonnenschatten — deshalb drehen Zeiger genauso wie alte Sonnenuhr-Schatten!
+Little Thinkers · low</p>
+<p><strong>6. Houseplant / Zimmerpflanze</strong> — plant, potted plant
+&quot;Ooh, a plant — do you water it?&quot; / &quot;Ohh, eine Pflanze — gießt du sie?&quot; · &quot;Whoa, a green friend — what does it need to grow?&quot; / &quot;Wow, ein grüner Freund — was braucht er zum Wachsen?&quot;
+Plants breathe backwards from us — they drink the air we breathe out, and give back what we breathe in! / Pflanzen atmen andersherum — sie trinken unsere Ausatemluft und geben uns Einatemluft zurück!
+Feelings Garden · med</p>
+<p><strong>7. Banana / Banane</strong> — banana
+&quot;Ooh, a banana — top or bottom peel first?&quot; / &quot;Ohh, eine Banane — oben oder unten zuerst schälen?&quot; · &quot;Whoa, do you know how it grows?&quot; / &quot;Wow, weißt du, wie sie wächst?&quot;
+Bananas grow on a giant plant, not a tree — and it&#39;s technically a kind of berry! / Bananen wachsen an einer Riesenpflanze, nicht am Baum — und zählen sogar als Beere!
+Little Thinkers · med</p>
+<p><strong>8. Apple / Apfel</strong> — apple
+&quot;Ooh, an apple — red, green, or yellow?&quot; / &quot;Ohh, ein Apfel — rot, grün oder gelb?&quot; · &quot;Whoa, bet you didn&#39;t know it floats!&quot; / &quot;Wow, wusstest du, er schwimmt im Wasser?&quot;
+An apple floats — it&#39;s a quarter air! — and its seeds grow a totally different apple than the parent tree. / Ein Apfel schwimmt — er besteht zu einem Viertel aus Luft! — und seine Kerne tragen ganz andere Äpfel als der Elternbaum.
+Little Thinkers · med</p>
+<p><strong>9. Dog / Hund</strong> — dog, puppy
+&quot;Ooh, a dog — what&#39;s their name?&quot; / &quot;Ohh, ein Hund — wie heißt er?&quot; · &quot;Whoa, sniffing something interesting?&quot; / &quot;Wow, schnuppert er was Spannendes?&quot;
+A wet nose helps a dog smell better — and dogs smell things far better than we ever could! / Eine feuchte Nase hilft Hunden beim Riechen — sie riechen viel, viel besser als wir!
+Animal Friends · high</p>
+<p><strong>10. Cat / Katze</strong> — cat, kitten
+&quot;Ooh, a cat — yours or a friend&#39;s?&quot; / &quot;Ohh, eine Katze — deine oder eine andere?&quot; · &quot;Whoa, play or nap time?&quot; / &quot;Wow, Spielen oder Schlafen?&quot;
+Cats can&#39;t taste anything sweet at all — that&#39;s why they never beg for candy or cake! / Katzen schmecken gar nichts Süßes — deshalb betteln sie nie um Bonbons oder Kuchen!
+Animal Friends · high</p>
+<p><strong>11. Mirror / Spiegel</strong> — mirror
+&quot;Ooh, a mirror — silly face time?&quot; / &quot;Ohh, ein Spiegel — Grimasse ziehen?&quot; · &quot;Whoa, who&#39;s looking back at you?&quot; / &quot;Wow, wer schaut dich da an?&quot;
+Shiny metal mirrors are thousands of years old, way before glass ones — and a mirror always flips your image! / Metallspiegel gibt&#39;s schon seit tausenden Jahren, vor Glasspiegeln — und ein Spiegel dreht dein Bild immer um!
+Little Thinkers · low</p>
+<p><strong>12. Key / Schlüssel</strong> — key
+&quot;Ooh, a key — what does it open?&quot; / &quot;Ohh, ein Schlüssel — was schließt er auf?&quot; · &quot;Whoa, every key has a secret shape!&quot; / &quot;Wow, jeder Schlüssel hat eine geheime Form!&quot;
+Every key&#39;s bumps fit only ONE lock — the first locks and keys, ages ago, were made of wood! / Jeder Schlüssel passt nur zu EINEM Schloss — die ersten Schlösser waren aus Holz!
+Little Thinkers · low</p>
+<p><strong>13. Umbrella / Regenschirm</strong> — umbrella
+&quot;Ooh, an umbrella — rain or shine?&quot; / &quot;Ohh, ein Regenschirm — Regen oder Sonne?&quot; · &quot;Whoa, it started as sun-shade, you know!&quot; / &quot;Wow, er war zuerst ein Sonnenschirm!&quot;
+Umbrellas were first for SUN-shade, not rain — using one against rain came much later! / Regenschirme schützten zuerst vor der SONNE, nicht vor Regen — das kam erst später!
+Feelings Garden · med</p>
+<p><strong>14. Pillow / Kissen</strong> — pillow
+&quot;Ooh, a pillow — favorite for sleeping?&quot; / &quot;Ohh, ein Kissen — Lieblingskissen zum Schlafen?&quot; · &quot;Whoa, big dreams tonight?&quot; / &quot;Wow, große Träume heute Nacht?&quot;
+The first pillows were hard stone, to keep bugs from people&#39;s hair at night — soft ones came much later! / Die ersten Kissen waren aus Stein, gegen Krabbeltiere im Haar — weiche Kissen kamen erst viel später!
+Feelings Garden · med</p>
+<hr>
+<h2>5. Outdoors (14)</h2>
+<p><em>Same line order as §4.</em></p>
+<p><strong>15. Tree / Baum</strong> — tree, trunk
+&quot;Ooh, a tree — older than you, you think?&quot; / &quot;Ohh, ein Baum — älter als du, denkst du?&quot; · &quot;Whoa, perfect for a shady rest!&quot; / &quot;Wow, perfekt für eine schattige Pause!&quot;
+Trees breathe through tiny leaf-holes and can live for centuries — count the rings inside to guess its age! / Bäume atmen durch winzige Blattlöcher und werden uralt — die Ringe im Stamm verraten das Alter!
+Animal Friends · med</p>
+<p><strong>16. Flower / Blume</strong> — flower
+&quot;Ooh, a flower — favorite color?&quot; / &quot;Ohh, eine Blume — Lieblingsfarbe?&quot; · &quot;Whoa, smell that — bees love it too!&quot; / &quot;Wow, riech mal — Bienen mögen das auch!&quot;
+Flowers are bright and smell nice mostly for bees, not us — some flowers need just ONE special insect! / Blumen duften vor allem für Bienen, nicht für uns — manche brauchen nur EIN bestimmtes Insekt!
+Feelings Garden · high</p>
+<p><strong>17. Stone / Stein</strong> — stone, rock, pebble
+&quot;Ooh, a stone — smooth or bumpy?&quot; / &quot;Ohh, ein Stein — glatt oder rau?&quot; · &quot;Whoa, how old do you think it really is?&quot; / &quot;Wow, wie alt es wohl wirklich ist?&quot;
+Some rocks are millions of years old, older than any living thing — and some hide fossils of ancient life inside! / Manche Steine sind Millionen Jahre alt, älter als alles Lebende — manche verstecken sogar uralte Fossilien!
+Dino Dig · high</p>
+<p><strong>18. Cloud / Wolke</strong> — cloud
+&quot;Ooh, a cloud — what shape is that?&quot; / &quot;Ohh, eine Wolke — welche Form?&quot; · &quot;Whoa, you could fly right through it!&quot; / &quot;Wow, du könntest glatt hindurchfliegen!&quot;
+Clouds are tiny water droplets floating in air — a fluffy one can weigh as much as a hundred elephants! / Wolken sind winzige Wassertröpfchen in der Luft — eine kann so viel wiegen wie hundert Elefanten!
+Star Voyager · high</p>
+<p><strong>19. Moon / Mond</strong> — moon
+&quot;Ooh, the moon — full, half, or a sliver?&quot; / &quot;Ohh, der Mond — voll, halb oder Sichel?&quot; · &quot;Whoa, it makes NO light of its own!&quot; / &quot;Wow, er leuchtet gar nicht selbst!&quot;
+The moon just reflects sunlight like a giant mirror — and we&#39;ve only ever seen its ONE same side! / Der Mond spiegelt nur Sonnenlicht wie ein Riesenspiegel — wir sehen immer nur seine EINE Seite!
+Star Voyager · high</p>
+<p><strong>20. Puddle / Pfütze</strong> — puddle
+&quot;Ooh, a puddle — splash or step around?&quot; / &quot;Ohh, eine Pfütze — reinspringen oder drumherum?&quot; · &quot;Whoa, a teeny ocean on the ground!&quot; / &quot;Wow, ein winziger Ozean am Boden!&quot;
+A puddle vanishes when sun turns it into invisible vapor floating skyward — that&#39;s exactly what makes clouds! / Eine Pfütze verschwindet, wenn Sonne sie in Dampf verwandelt, der aufsteigt — genau daraus entstehen Wolken!
+Ocean Deep · med</p>
+<p><strong>21. Snail / Schnecke</strong> — snail
+&quot;Ooh, a snail — slow and steady!&quot; / &quot;Ohh, eine Schnecke — schön langsam!&quot; · &quot;Whoa, that&#39;s its whole HOUSE on its back!&quot; / &quot;Wow, das ganze HAUS auf dem Rücken!&quot;
+A snail&#39;s shell-house grows right along with it — and it can pull its whole body inside to hide! / Das Schneckenhaus wächst mit ihr mit — sie kann sich ganz hineinziehen, um sicher zu sein!
+Animal Friends · high</p>
+<p><strong>22. Bird / Vogel</strong> — bird
+&quot;Ooh, a bird — where&#39;s it flying to?&quot; / &quot;Ohh, ein Vogel — wohin fliegt er?&quot; · &quot;Whoa, its bones are hollow, you know!&quot; / &quot;Wow, seine Knochen sind hohl!&quot;
+Hollow bones help birds fly — and they have no teeth, they swallow tiny stones to grind their food! / Hohle Knochen helfen beim Fliegen — Vögel haben keine Zähne, sie schlucken Steinchen zum Zermahlen!
+Animal Friends · high</p>
+<p><strong>23. Ladybug / Marienkäfer</strong> — ladybug, ladybird
+&quot;Ooh, a ladybug — counting the spots?&quot; / &quot;Ohh, ein Marienkäfer — zählst du die Punkte?&quot; · &quot;Whoa, those spots aren&#39;t just decoration!&quot; / &quot;Wow, die Punkte sind nicht nur schön!&quot;
+Spots warn &quot;I don&#39;t taste good!&quot; — and a ladybug can have just a few, or over twenty! / Die Punkte warnen: &quot;Ich schmecke nicht gut!&quot; — mal nur wenige, mal über zwanzig!
+Animal Friends · high</p>
+<p><strong>24. Butterfly / Schmetterling</strong> — butterfly
+&quot;Ooh, a butterfly — favorite color?&quot; / &quot;Ohh, ein Schmetterling — Lieblingsfarbe?&quot; · &quot;Whoa, it tastes with its FEET!&quot; / &quot;Wow, er schmeckt mit den FÜSSEN!&quot;
+It was once a caterpillar that turned to goo in a cocoon and rebuilt itself completely — wings and all! / Es war eine Raupe, die im Kokon zu Brei wurde und sich komplett neu aufbaute — mit Flügeln!
+Animal Friends · high</p>
+<p><strong>25. Leaf / Blatt</strong> — leaf
+&quot;Ooh, a leaf — what shape is it?&quot; / &quot;Ohh, ein Blatt — welche Form?&quot; · &quot;Whoa, it&#39;s a tiny food factory!&quot; / &quot;Wow, eine winzige Nahrungsfabrik!&quot;
+Green comes from a tiny sunlight-to-food machine inside — autumn fades it to reveal hidden yellow and orange colors! / Das Grün stammt von einer Sonnenlicht-Maschine im Blatt — im Herbst zeigt sich das versteckte Gelb und Orange!
+Autumn Treasures · med</p>
+<p><strong>26. Ant / Ameise</strong> — ant
+&quot;Ooh, an ant — where&#39;s it marching to?&quot; / &quot;Ohh, eine Ameise — wohin marschiert sie?&quot; · &quot;Whoa, it carries SO much more than its size!&quot; / &quot;Wow, sie trägt viel mehr als ihre Größe!&quot;
+An ant can lift many times its own weight, like a person lifting a car — and they &quot;talk&quot; with invisible smell-trails! / Eine Ameise trägt ein Vielfaches ihres Gewichts, wie ein Mensch ein Auto — und sie &quot;sprechen&quot; mit Duftspuren!
+Animal Friends · med</p>
+<p><strong>27. Rainbow / Regenbogen</strong> — rainbow
+&quot;Ooh, a rainbow — which color first?&quot; / &quot;Ohh, ein Regenbogen — welche Farbe zuerst?&quot; · &quot;Whoa, bet you can&#39;t reach its end!&quot; / &quot;Wow, sein Ende erreichst du nie!&quot;
+Sunlight splits into colors through raindrops — you can&#39;t reach the end because it moves exactly as fast as you! / Sonnenlicht teilt sich in Regentropfen in Farben — sein Ende erreichst du nie, es bewegt sich wie du!
+Feelings Garden · high</p>
+<p><strong>28. Sun / Sonne</strong> — sun
+&quot;Ooh, the sun — feel that warmth?&quot; / &quot;Ohh, die Sonne — fühlst du die Wärme?&quot; · &quot;Whoa, that&#39;s a giant star, not a rock!&quot; / &quot;Wow, ein riesiger Stern, kein Fels!&quot;
+The sun is a glowing star, just much closer than others — its light on your face left 8 minutes ago! / Die Sonne ist ein Stern, nur viel näher — ihr Licht auf deiner Haut ist vor 8 Minuten losgeflogen!
+First Adventures · high</p>
+<hr>
+<h2>6. Kid-world (12)</h2>
+<p><em>Same line order as §4.</em></p>
+<p><strong>29. LEGO brick / LEGO-Stein</strong> — lego
+&quot;Ooh, a LEGO brick — what are you building?&quot; / &quot;Ohh, ein LEGO-Stein — was baust du?&quot; · &quot;Whoa, those things last forever!&quot; / &quot;Wow, der hält ja ewig!&quot;
+Old LEGO bricks still fit new ones — and just two bricks can combine in billions of different ways! / Alte LEGO-Steine passen noch zu neuen — schon zwei Steine passen auf Milliarden Arten zusammen!
+Little Thinkers · high</p>
+<p><strong>30. Ball / Ball</strong> — ball, football
+&quot;Ooh, a ball — kick it or throw it?&quot; / &quot;Ohh, ein Ball — kicken oder werfen?&quot; · &quot;Whoa, want the secret of why it bounces?&quot; / &quot;Wow, willst du das Hüpf-Geheimnis wissen?&quot;
+A ball squishes flat for a split second when it hits the ground, then springs back — that&#39;s the bounce! / Ein Ball wird beim Aufprall kurz platt gedrückt und springt zurück in Form — das ist das Hüpfen!
+LoLo&#39;s Friends · med</p>
+<p><strong>31. Book / Buch</strong> — book
+&quot;Ooh, a book — what&#39;s it about?&quot; / &quot;Ohh, ein Buch — wovon handelt es?&quot; · &quot;Whoa, imagine copying every page by HAND!&quot; / &quot;Wow, stell dir vor, alles per Hand abzuschreiben!&quot;
+Every book was once copied by hand, one at a time — the printing press later made hundreds at once! / Früher wurde jedes Buch von Hand abgeschrieben — die Druckerpresse machte später hunderte auf einmal!
+LoLo&#39;s Friends · med</p>
+<p><strong>32. Bicycle / Fahrrad</strong> — bicycle, bike
+&quot;Ooh, a bike — where are you riding to?&quot; / &quot;Ohh, ein Fahrrad — wohin fährst du?&quot; · &quot;Whoa, the first ones had no pedals!&quot; / &quot;Wow, die ersten hatten keine Pedale!&quot;
+Spinning wheels help a bike stay upright — the very first ones were pushed along with feet on the ground! / Drehende Räder halten das Fahrrad stabil — die ersten wurden mit den Füßen am Boden angeschoben!
+LoLo&#39;s Friends · med</p>
+<p><strong>33. Crayon / Buntstift</strong> — crayon
+&quot;Ooh, a crayon — what are you drawing?&quot; / &quot;Ohh, ein Buntstift — was malst du?&quot; · &quot;Whoa, that&#39;s really just colored wax!&quot; / &quot;Wow, das ist eigentlich gefärbtes Wachs!&quot;
+Crayons melt in a hot car but never dissolve in water — wax colors mix very differently than paint! / Buntstifte schmelzen im heißen Auto, lösen sich aber nie im Wasser — Wachsfarben mischen sich anders als Farbe!
+Little Thinkers · low</p>
+<p><strong>34. Teddy Bear / Teddybär</strong> — teddy bear
+&quot;Ooh, your teddy — does he have a name?&quot; / &quot;Ohh, dein Teddy — hat er einen Namen?&quot; · &quot;Whoa, he&#39;s named after a real person!&quot; / &quot;Wow, er ist nach einer echten Person benannt!&quot;
+Teddy bears are named after a US president who once spared a bear cub on a hunt! / Teddybären sind nach einem US-Präsidenten benannt, der einmal ein Bärenjunges verschonte!
+First Adventures · high</p>
+<p><strong>35. Backpack / Rucksack</strong> — backpack
+&quot;Ooh, a backpack — favorite thing inside?&quot; / &quot;Ohh, ein Rucksack — Lieblingsding drin?&quot; · &quot;Whoa, smart way to carry it all!&quot; / &quot;Wow, clever, so alles zu tragen!&quot;
+A backpack puts weight on your back, not your arms — hikers pack the heaviest things closest to their back! / Ein Rucksack legt Gewicht auf den Rücken, nicht die Arme — Wanderer packen Schweres ganz nah an den Rücken!
+LoLo&#39;s Friends · low</p>
+<p><strong>36. Puzzle piece / Puzzleteil</strong> — puzzle piece
+&quot;Ooh, a puzzle piece — know where it goes?&quot; / &quot;Ohh, ein Puzzleteil — weißt du, wohin?&quot; · &quot;Whoa, puzzles used to teach map skills!&quot; / &quot;Wow, Puzzles waren mal zum Landkarten-Lernen!&quot;
+The first jigsaw puzzles were cut-up maps for learning geography, centuries before puzzles became just for fun! / Die ersten Puzzles waren zerschnittene Landkarten zum Geografie-Lernen, lange bevor sie einfach Spaß waren!
+Little Thinkers · low</p>
+<p><strong>37. Balloon / Luftballon</strong> — balloon
+&quot;Ooh, a balloon — party today?&quot; / &quot;Ohh, ein Luftballon — heute eine Feier?&quot; · &quot;Whoa, know why some float UP?&quot; / &quot;Wow, weißt du, warum manche nach OBEN schweben?&quot;
+A gas lighter than air makes a balloon float — the same trick that lifts real hot-air balloons! / Ein leichteres Gas als Luft lässt einen Ballon schweben — derselbe Trick wie bei echten Heißluftballons!
+LoLo&#39;s Friends · high</p>
+<p><strong>38. Kite / Drachen</strong> — kite
+&quot;Ooh, a kite — how high can you get it?&quot; / &quot;Ohh, ein Drachen — wie hoch?&quot; · &quot;Whoa, one of the OLDEST flying inventions!&quot; / &quot;Wow, eine der ÄLTESTEN Flug-Erfindungen!&quot;
+Moving air lifts a kite while its string holds steady — people flew kites long before airplanes existed! / Strömende Luft hebt den Drachen, die Schnur hält ihn — Menschen ließen Drachen steigen, lange vor Flugzeugen!
+Star Voyager · high</p>
+<p><strong>39. Building blocks / Bauklötze</strong> — building blocks
+&quot;Ooh, blocks — how tall can you build?&quot; / &quot;Ohh, Bauklötze — wie hoch baust du?&quot; · &quot;Whoa, real builders use YOUR trick!&quot; / &quot;Wow, echte Baumeister nutzen deinen Trick!&quot;
+A wide base makes a tower sturdier than a skinny one — that&#39;s also why pyramids are so strong! / Eine breite Basis macht einen Turm stabiler — deshalb sind Pyramiden auch so stabil!
+Little Thinkers · med</p>
+<p><strong>40. Toy car / Spielzeugauto</strong> — toy car
+&quot;Ooh, a toy car — vroom, where to?&quot; / &quot;Ohh, ein Spielzeugauto — brumm, wohin?&quot; · &quot;Whoa, know why wheels roll instead of slide?&quot; / &quot;Wow, weißt du, warum Räder rollen statt rutschen?&quot;
+Rolling needs way less push than dragging — that&#39;s why cars, and even ancient carts, use wheels! / Rollen braucht viel weniger Kraft als Ziehen — deshalb haben Autos und uralte Karren Räder!
+LoLo&#39;s Friends · low</p>

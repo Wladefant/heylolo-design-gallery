@@ -1,0 +1,466 @@
+<title>HeyLolo ref — coloring-pages-content-set</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Coloring Pages — Content Set (#127 / #187)</h1>
+<p><strong>Status:</strong> DRAFT — content-design inventory, pending review.
+<strong>Scope:</strong> in-app coloring (color images on the phone, #127) + the conversation-to-printables hook (#187).</p>
+<h2>Contents</h2>
+<ol start="0">
+<li>TL;DR</li>
+<li>Line-art generation spec</li>
+<li>The launch set — 24 pages</li>
+<li>In-app coloring UX content</li>
+<li>Conversation-to-coloring hook (#187)</li>
+<li>Sources</li>
+</ol>
+<hr>
+<h2>0. TL;DR</h2>
+<p><strong>24 launch pages</strong>: 12 evergreen (3 × 4 interest collections, matching Wonder Shelf&#39;s Dino Dig / Star Voyager / Animal Friends / Ocean Deep) + 8 seasonal (autumn, Halloween, St. Martin, winter/Christmas — timed to the <code>content-drop-economy.md</code> §7 calendar) + 4 LoLo-themed (descriptor-locked to LoLo, Pip the ghost, Anneli the owl). Pure black-and-white line art via Imagen 4 Fast, tiered by line density (T1 simple → T3 detailed), QC&#39;d for closed regions, printable at A4.</p>
+<hr>
+<h2>1. Line-art generation spec</h2>
+<p><strong>Engine:</strong> reuse the shipped Imagen 4 Fast pipeline (<code>imagen-4.0-fast-generate-001</code>, <code>europe-central2</code>, ~2.7s/image, $0.039/image — <code>ai-chat.service.ts:165</code>). Coloring pages are pure <strong>line art</strong>, so the prompt swaps the wonder-shelf/story-pack color-lock suffix for a monochrome-lock suffix — same discipline, opposite palette instruction.</p>
+<p><strong>Prompt template</strong> (subject + tier clause + fixed style-lock suffix):</p>
+<blockquote>
+<p><code>&quot;A single {SUBJECT_DESCRIPTION}, {TIER_LINE_CLAUSE}, pure black-and-white line-art coloring-book illustration, bold clean unbroken outlines, every region fully enclosed for flood-fill, ZERO shading, ZERO gray fills, ZERO gradients, ZERO cross-hatching, ZERO background texture, plain white background, NO text, NO letters, NO watermark, friendly rounded storybook shapes matching HeyLolo&#39;s house style, centered composition, printable at A4.&quot;</code></p>
+</blockquote>
+<p><strong>Tier line-density clause (<code>{TIER_LINE_CLAUSE}</code>)</strong> — mirrors the F2 age tiers (T1 4–5 / T2 6–7 / T3 8–9 / T4 10–12):</p>
+<ul>
+<li><strong>T1 (simple):</strong> <code>&quot;5–8 large simple regions, extra-thick outlines (~6–8pt at print scale), one clear subject, no background clutter, smallest region no smaller than a thumbprint&quot;</code></li>
+<li><strong>T2:</strong> <code>&quot;8–14 medium regions, thick outlines (~4–6pt), one subject + light background detail&quot;</code></li>
+<li><strong>T3 (detailed):</strong> <code>&quot;15–25 varied regions, medium outlines (~3–4pt), one subject + a fuller scene background, fine detail allowed inside large shapes only&quot;</code></li>
+<li>(T4 reuses T3&#39;s density — coloring pages top out at T3 detail; older kids get freehand brush + finer palettes, not denser line art.)</li>
+</ul>
+<p><strong>QC criteria (Brandy pass, same discipline as the Wonder Shelf art QC):</strong></p>
+<ol>
+<li><strong>Closed regions only</strong> — every outline forms a fully bounded loop; a flood-fill tester must not &quot;leak&quot; into a neighboring region or off the page. This is the #1 reject reason.</li>
+<li><strong>No gray fills / no anti-aliasing halos</strong> — lines must be pure black on pure white (high-contrast threshold), not soft-edged gray, or the in-app bucket-fill tool mis-detects edges.</li>
+<li><strong>Minimum region size</strong> — no enclosed region smaller than ~6mm at printed A4 scale (T1) / ~4mm (T2–T3) — small-finger tap-to-fill fails on regions that small.</li>
+<li><strong>Single coherent subject</strong>, no embedded text/letters, no scary/ambiguous elements (brand rule, same as seasonal-friendly constraints in the Wonder Shelf catalog).</li>
+<li><strong>Style consistency</strong> across the 24-page set (same line weight family, same &quot;friendly rounded&quot; house shape language) — reject/regenerate outliers.</li>
+</ol>
+<p>Generate 2–3× overage per page (Imagen is cheap), curate the best pass — identical production discipline to the Wonder Shelf&#39;s 88-artifact batch (§4 of that catalog).</p>
+<p><strong>Print variant (A4):</strong> portrait A4 (210×297mm), 300 DPI export for print, pure 1-bit-style black line on white (no color layer). Safe margins: 15mm left (binder/hole-punch allowance), 10mm top/right/bottom. Reserve a ~20mm footer strip with a small LoLo logo mark + a hand-write line <code>&quot;Name: _______ / Für: _______&quot;</code> (EN/DE). Export as PDF (print) alongside the in-app PNG/vector-ish raster (flood-fill target).</p>
+<hr>
+<h2>2. The launch set — 24 pages</h2>
+<p>All subject descriptions plug into <code>{SUBJECT_DESCRIPTION}</code> in §1&#39;s template. Collection names match the Wonder Shelf&#39;s 4 interest sets (<code>wonder-shelf-launch-catalog.md</code> §1) so a colored page can later mint the matching shelf artifact (§3).</p>
+<h3>Evergreen — 12 (3 per interest collection)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Name (EN)</th>
+<th>Name (DE)</th>
+<th>Collection</th>
+<th>Subject description</th>
+<th>Tier</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Roaring Hello</td>
+<td>Brüllendes Hallo</td>
+<td>Dino Dig</td>
+<td>a big friendly rounded T-Rex roaring happily at two butterflies</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Fern Meadow Family</td>
+<td>Familie in der Farnwiese</td>
+<td>Dino Dig</td>
+<td>a Triceratops family (parent + baby) grazing in a fern meadow</td>
+<td>T2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Volcano Island Flight</td>
+<td>Flug über die Vulkaninsel</td>
+<td>Dino Dig</td>
+<td>a pterosaur soaring over a small volcano island with palm trees</td>
+<td>T3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Ringed Planet Fly-By</td>
+<td>Vorbeiflug am Ringplaneten</td>
+<td>Star Voyager</td>
+<td>a chunky rocket ship flying past a friendly ringed planet</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Starry Float</td>
+<td>Sterniges Schweben</td>
+<td>Star Voyager</td>
+<td>an astronaut floating among smiling star shapes</td>
+<td>T2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Moon Picnic</td>
+<td>Mond-Picknick</td>
+<td>Star Voyager</td>
+<td>a friendly alien having a picnic on the moon with craters around</td>
+<td>T3</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Bamboo Hug</td>
+<td>Bambus-Umarmung</td>
+<td>Animal Friends</td>
+<td>a sleepy round panda hugging a bamboo stalk</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Leaf-Den Foxes</td>
+<td>Fuchsfamilie in der Laubhöhle</td>
+<td>Animal Friends</td>
+<td>a fox family curled up in a den made of autumn leaves</td>
+<td>T2</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Safari Parade</td>
+<td>Safari-Parade</td>
+<td>Animal Friends</td>
+<td>a parade of a giraffe, elephant, and zebra walking together</td>
+<td>T3</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Heart Splash</td>
+<td>Herz-Fontäne</td>
+<td>Ocean Deep</td>
+<td>a happy whale blowing a heart-shaped splash of water</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Coral Current</td>
+<td>Korallen-Strömung</td>
+<td>Ocean Deep</td>
+<td>a sea turtle gliding past a bed of coral and small fish</td>
+<td>T2</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Undersea Castle</td>
+<td>Unterwasserschloss</td>
+<td>Ocean Deep</td>
+<td>an undersea castle with fish, seahorses, and bubbles around it</td>
+<td>T3</td>
+</tr>
+</tbody></table>
+<h3>Seasonal — 8 (timed to the drop calendar, <code>content-drop-economy.md</code> §7)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Name (EN)</th>
+<th>Name (DE)</th>
+<th>Season</th>
+<th>Subject description</th>
+<th>Tier</th>
+<th>Drop week</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>13</td>
+<td>Acorn Gathering</td>
+<td>Eicheln sammeln</td>
+<td>Autumn</td>
+<td>a squirrel gathering acorns under falling autumn leaves</td>
+<td>T1</td>
+<td>wk Oct 16</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Cozy Winter Burrow</td>
+<td>Gemütliche Winterhöhle</td>
+<td>Autumn</td>
+<td>a hedgehog family tucking in for winter sleep, leaves for blankets</td>
+<td>T2</td>
+<td>wk Oct 16</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Pumpkin-Patch Peek</td>
+<td>Kürbisfeld-Guck</td>
+<td>Halloween</td>
+<td>a small friendly ghost peeking out from behind pumpkins</td>
+<td>T1</td>
+<td>Oct 23</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Cozy Witch&#39;s Tea</td>
+<td>Gemütlicher Hexentee</td>
+<td>Halloween</td>
+<td>a kind witch pouring tea for a black cat at a round table</td>
+<td>T3</td>
+<td>Oct 30</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Night Lantern Walk</td>
+<td>Laternenlauf bei Nacht</td>
+<td>St. Martin</td>
+<td>a child carrying a glowing paper lantern on a night walk</td>
+<td>T1</td>
+<td>Nov 13</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Sharing the Cloak</td>
+<td>Der geteilte Umhang</td>
+<td>St. Martin</td>
+<td>St. Martin on his horse sharing half his cloak with a traveler</td>
+<td>T3</td>
+<td>Nov 13</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Snow Friend</td>
+<td>Schnee-Freund</td>
+<td>Winter</td>
+<td>a snowman building a smaller snowman friend beside it</td>
+<td>T1</td>
+<td>Dec 11</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Cozy Winter Village</td>
+<td>Gemütliches Winterdorf</td>
+<td>Christmas</td>
+<td>a small village with wrapped gifts, lanterns, and snow-topped roofs</td>
+<td>T3</td>
+<td>Dec 18–25</td>
+</tr>
+</tbody></table>
+<h3>LoLo-themed — 4 (descriptor-locked)</h3>
+<p>Locked descriptors (verbatim, reused from <code>story-pack-1-halloween.md</code> §&quot;Character bible&quot; and <code>advent-calendar-content.md</code> §2 cast) — a single static illustration per page, so the descriptor-lock control arm (spike protocol candidate C) is sufficient; no multi-page consistency problem to solve here.</p>
+<ul>
+<li><strong>LoLo:</strong> small round warm-teal companion, plush cloud-like body, big curious dark eyes, soft golden glow at the chest, gentle friendly posture.</li>
+<li><strong>Pip:</strong> tiny round ghost, pale lavender-white with a soft blue inner glow, two small oval eyes, a wavy trailing hem, shy half-smile.</li>
+<li><strong>Anneli:</strong> a wise snow-owl, soft rounded feathers, big gentle eyes, frost-tipped wing details.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Name (EN)</th>
+<th>Name (DE)</th>
+<th>Subject description</th>
+<th>Tier</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>21</td>
+<td>LoLo Says Hi</td>
+<td>LoLo sagt Hallo</td>
+<td>LoLo (locked) waving cheerfully, one paw raised</td>
+<td>T1</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Sharing a Lantern</td>
+<td>Eine Laterne teilen</td>
+<td>LoLo (locked) and Gundel the goose (locked, St. Martin pack) walking side-by-side, sharing one glowing lantern</td>
+<td>T2</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Stargazing Together</td>
+<td>Gemeinsam Sterne schauen</td>
+<td>LoLo (locked) and Anneli (locked) sitting on a branch looking up at stars</td>
+<td>T2</td>
+</tr>
+<tr>
+<td>24</td>
+<td>Shelf of Wonders</td>
+<td>Regal voller Wunder</td>
+<td>LoLo (locked) standing proudly beside a shelf lined with small collectible treasures</td>
+<td>T3</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>3. In-app coloring UX content</h2>
+<p><strong>Palette sets</strong> — one shared &quot;tide-pool&quot; base palette (matches the Wonder Shelf art style-lock, §4 of that catalog) reused across every theme, so the coloring surface always feels on-brand regardless of subject:</p>
+<table>
+<thead>
+<tr>
+<th>Kid label (EN)</th>
+<th>Kid label (DE)</th>
+<th>Swatch</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sunny Yellow</td>
+<td>Sonnengelb</td>
+<td>warm yellow</td>
+</tr>
+<tr>
+<td>Coral Pink</td>
+<td>Korallenrosa</td>
+<td>coral pink</td>
+</tr>
+<tr>
+<td>Tide Teal</td>
+<td>Gezeiten-Türkis</td>
+<td>teal</td>
+</tr>
+<tr>
+<td>Sandy Beige</td>
+<td>Sandbeige</td>
+<td>sand</td>
+</tr>
+<tr>
+<td>Leaf Green</td>
+<td>Blattgrün</td>
+<td>green</td>
+</tr>
+<tr>
+<td>Sky Blue</td>
+<td>Himmelblau</td>
+<td>sky blue</td>
+</tr>
+<tr>
+<td>Berry Purple</td>
+<td>Beerenlila</td>
+<td>purple</td>
+</tr>
+<tr>
+<td>Warm Brown</td>
+<td>Warmbraun</td>
+<td>brown</td>
+</tr>
+<tr>
+<td>Cream White</td>
+<td>Cremeweiß</td>
+<td>cream</td>
+</tr>
+</tbody></table>
+<p>Seasonal pages add one accent swatch on top of the base nine: <strong>Pumpkin Orange / Kürbisorange</strong> (Halloween/autumn), <strong>Snow White / Schneeweiß</strong> (winter/Christmas), <strong>Lantern Gold / Laternengold</strong> (St. Martin).</p>
+<p><strong>The finish moment:</strong> completing one page fires a <code>moment</code>-tier <code>celebrate()</code> (a gated win, same tier as a finished quiz deck or story) — the finished page visibly settles, no confetti spam. Completing <strong>any 3 pages within one collection</strong> fires the <code>landmark</code> arc (once) and mints a new Wonder Shelf artifact for that collection:</p>
+<table>
+<thead>
+<tr>
+<th>Artifact (EN / DE)</th>
+<th>Art</th>
+<th>Earn trigger</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Colorist&#39;s Brush / Pinsel des Malers</td>
+<td>a small paintbrush with a rainbow-tipped bristle</td>
+<td>first 3 pages colored in any one collection/season</td>
+</tr>
+</tbody></table>
+<p>This follows the shipped shelf discipline exactly (deterministic, permanent, no numbers shown to the child — <code>wonder-shelf-launch-catalog.md</code> §2–3).</p>
+<p><strong>LoLo&#39;s ambient commentary</strong> — short, non-judgmental lines LoLo says while the child colors (randomly sampled, never more than one per ~30s, never interrupts):</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Ooh, that color is perfect there!</td>
+<td>Ohh, die Farbe passt perfekt dahin!</td>
+</tr>
+<tr>
+<td>2</td>
+<td>You&#39;re really taking your time — I love that.</td>
+<td>Du lässt dir richtig Zeit — das mag ich.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>There&#39;s no wrong way to color this.</td>
+<td>Es gibt keine falsche Art, das anzumalen.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>I wonder what color the sky will be today.</td>
+<td>Ich bin gespannt, welche Farbe der Himmel heute bekommt.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Look at all that color coming to life!</td>
+<td>Schau nur, wie viel Farbe da entsteht!</td>
+</tr>
+<tr>
+<td>6</td>
+<td>You can always change your mind and color over it.</td>
+<td>Du kannst es dir jederzeit anders überlegen und drüber malen.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>That&#39;s such a cozy color choice.</td>
+<td>Das ist so eine gemütliche Farbwahl.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Almost done — you&#39;re doing such a good job.</td>
+<td>Fast fertig — du machst das richtig gut.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>I could watch you color all day.</td>
+<td>Ich könnte dir den ganzen Tag beim Malen zusehen.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Ready to add it to your shelf?</td>
+<td>Bereit, es auf dein Regal zu stellen?</td>
+</tr>
+</tbody></table>
+<p>Tone matches the anti-dark-pattern discipline already set for the Wonder Shelf: no scoring language, no &quot;hurry up,&quot; no comparison to other kids.</p>
+<hr>
+<h2>4. Conversation-to-coloring hook (#187)</h2>
+<p><strong>Trigger rule:</strong> if a child spends <strong>≥5 cumulative minutes</strong> exploring one topic in a single conversation (chat or Explorer), LoLo makes <strong>one</strong> soft, in-chat offer — never a push notification, never repeated if declined (matches the DSA-safe &quot;no engagement push to the child&quot; discipline already applied to drops, <code>content-drop-economy.md</code> §1/§4): <em>&quot;Want a [topic] page to color? I could make you one!&quot;</em> / <em>&quot;Möchtest du ein [Thema]-Bild zum Ausmalen? Ich kann dir eins machen!&quot;</em></p>
+<p><strong>Resolution order on &quot;yes&quot;:</strong></p>
+<ol>
+<li><strong>Match first</strong> — if the topic maps to one of the 24 pre-vetted launch pages (§2) or a future seasonal/collection page, offer that page instantly (zero generation cost, guaranteed QC-passed).</li>
+<li><strong>Generate fresh</strong> only if no match exists — build <code>{SUBJECT_DESCRIPTION}</code> from the conversation topic, run it through the §1 prompt template at the child&#39;s age tier (F2), and generate via Imagen 4 Fast.</li>
+</ol>
+<p><strong>Generation guardrail (freshly-generated pages only):</strong> any page not from the pre-vetted launch set must pass, in order:</p>
+<ol>
+<li>The existing image content-safety moderation pass (the same classifier gating chat-generated images, per the F30 safety pipeline) — reject anything scary, ambiguous, or off-brand.</li>
+<li>The §1 region-QC heuristic (closed-region check, no gray-fill detection) — reject anything the flood-fill tool can&#39;t parse.</li>
+<li><strong>On any failure, fail silently to the child</strong> — no error shown — and fall back to offering the closest-matching pre-vetted evergreen page from §2 instead. The child never sees a rejected or broken image.</li>
+</ol>
+<p>This is the off-app bridge concept from the feature-mining research (N25, &quot;Conversation-to-Printable&quot;): it converts screen time into an off-screen, fridge-worthy artifact, using the same export/print path as §1, and is deliberately distinct from F24&#39;s in-app coloring of fixed/pack line-art — #187 is <em>generate-from-conversation</em>, #127 is <em>color what already exists</em>.</p>
+<hr>
+<h2>5. Sources</h2>
+<p><strong>Internal (primary evidence base):</strong></p>
+<ul>
+<li><code>docs/_session/feature-catalog/CATALOG.md</code> — F24 (Coloring pages), F2 (age tiers T1–T4).</li>
+<li><code>docs/research/feature-mining-new-issues.md</code> §N25 — Conversation-to-Printable concept, demand evidence, dedupe note vs F24.</li>
+<li><code>docs/research/wonder-shelf-launch-catalog.md</code> — collection names (Dino Dig/Star Voyager/Animal Friends/Ocean Deep), art style-lock template, celebrate() tiers, anti-dark-pattern checklist, Imagen batch-production discipline.</li>
+<li><code>docs/research/content-drop-economy.md</code> §7 — seasonal drop calendar (autumn wk Oct 16, Halloween Oct 23/30, St. Martin Nov 13, winter/Christmas Dec 11–25); §4 DSA no-child-push constraint.</li>
+<li><code>docs/research/storybook-consistency-spike-protocol.md</code> — descriptor-lock control arm (candidate C), used for the 4 LoLo-themed single-illustration pages.</li>
+<li><code>docs/research/story-pack-1-halloween.md</code> — locked LoLo + Pip character descriptors.</li>
+<li><code>docs/research/advent-calendar-content.md</code> §2 — locked Anneli (snow-owl) descriptor.</li>
+</ul>

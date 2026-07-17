@@ -1,0 +1,617 @@
+<title>HeyLolo ref — content-drop-economy</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>The Content-Drop Economy in Kids Products</h1>
+<p><strong>Deep research dossier — how recurring content drops drive retention + recurring revenue, and how an AI-native app (HeyLolo) does drops at near-zero marginal cost.</strong></p>
+<p>Date: 2026-07-05
+Status: COMPLETE — 25+ sources (web + repo), full COGS math, 16-week calendar, Advent spec, 5 issue drafts</p>
+<hr>
+<h2>0. TL;DR / Verdict</h2>
+<p><strong>The content-drop economy is real and proven in kids products</strong> — Tonies makes 2.4× more from recurring content (figurines €447m) than hardware (€161m); Toca Boca, Moshi, Yoto, Pok Pok and Prodigy all run their retention (and much of their revenue) on scheduled content cadence. The AI-native twist: HeyLolo can press a &quot;figurine&quot; (a quiz deck) for <strong>~$0</strong> and a whole story pack for <strong>~$1.50</strong>, vs Tonies&#39; €15 of COGS+logistics. <strong>Cadence is the moat AI hands us for free.</strong></p>
+<h3>The cadence verdict (concrete)</h3>
+<p>Run <strong>two clocks</strong>:</p>
+<ol>
+<li><strong>FREE — every Friday: a themed quiz deck</strong> drops for all users (Toca &quot;Friday gift&quot; + Moshi &quot;weekly story&quot; model). Pure LLM, <strong>$0 marginal COGS</strong>, no paywall. This is the retention engine — batch-author the whole Sep–Dec run once (§7, D3). Starts <strong>Sep 18</strong> (already scheduled, #121).</li>
+<li><strong>PAID/Plus — ~monthly: a human-curated Story Pack</strong> (4–5 illustrated, narrated mini-stories, <strong>~$1.50 COGS produced once, ≈$0/user cached</strong>). Included in <strong>Plus ($14.99/mo)</strong> or <strong>$2.99–3.99 à-la-carte</strong> for Family. Begins after storybooks ship (v1.3, w/c Oct 20): 🎃 Halloween (~Oct 23) → 🏮 St. Martin (~Nov 13) → 🎄 Christmas (~Dec 11).</li>
+<li><strong>Seasonal tentpoles</strong> anchored to the school/holiday calendar spike DAU 30–50% (live-ops evidence) and double as App-Store + press beats: back-to-school, Halloween, <strong>St. Martin (DACH)</strong>, <strong>Advent</strong>.</li>
+</ol>
+<p><strong>Mechanic discipline (non-negotiable, DSA + anti-list):</strong> drops are <strong>deterministic, loss-free appointment mechanics</strong> — &quot;a new deck appeared this Friday&quot; (scheduled, everyone gets it), never a mystery box, never a streak-you-can-lose, never a push notification to the child. Old drops move to a browsable library, never deleted. FOMO limited to soft &quot;featured this week.&quot; This is both legal for minors and on-brand (&quot;premium = what we refuse to do&quot;).</p>
+<p><strong>Quality bar (decides premium vs slop):</strong> the market distrusts &quot;AI-illustrated&quot; as low-effort. Paid story packs must clear the anti-slop bar — <strong>character consistency across pages</strong> (the #1 killer), <strong>Zephyr narration</strong>, and a <strong>human curation/QC gate</strong> before ship. =&gt; Flagship paid packs are <strong>pre-generated + human-reviewed once, served to all</strong> (guarantees quality AND ≈$0/user COGS); on-the-fly personalization (&quot;your child as the hero&quot;) is a <strong>Plus upsell</strong>, not the default.</p>
+<h3>The Advent recommendation (the marquee December play)</h3>
+<p><strong>Build &quot;LoLo&#39;s Advent Calendar&quot; (Dec 1–24)</strong> — the single strongest December retention mechanic in DACH, where the Adventskalender is a native childhood ritual (Tonies and Toca both ship in-app advent events; Tonies&#39; is a 24-chapter serialized story). Each day: <strong>one Wonder-of-the-Day</strong> (→ Wonder Shelf) + <strong>one narrated chapter</strong> of a single 24-part Advent adventure (cliffhanger arc = the reason to return tomorrow). Deterministic, loss-free, DSA-safe by construction. <strong>Whole calendar costs &lt;$3 to produce once</strong>, ≈$0/user cached. Ship <strong>free-for-subscribers year 1</strong> (base-building + reviews + press beat the small IAP revenue); personalized-name variant = Plus upsell. <strong>Native binary with the calendar UI must ship by ~Nov 28.</strong></p>
+<h3>New issues to file (§9)</h3>
+<ul>
+<li><strong>D1</strong> — Drop scheduler + &quot;Fresh this Friday&quot; surface (the cadence engine)</li>
+<li><strong>D2</strong> — LoLo&#39;s Advent Calendar (Dec 1–24) <code>priority:high</code> <code>dach</code></li>
+<li><strong>D3</strong> — Seasonal quiz-deck content run (Sep–Dec, 16 decks, batch-authored)</li>
+<li><strong>D4</strong> — Seasonal Story Packs (Halloween · St. Martin · Christmas)</li>
+<li>(D5 optional) — Personalized &quot;your child as the hero&quot; variant (Plus upsell)</li>
+</ul>
+<hr>
+<h2>Evidence table</h2>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Cadence</th>
+<th>Mechanic</th>
+<th>Numbers</th>
+<th>Lesson for HeyLolo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Tonies</strong> (public)</td>
+<td>Ongoing figurine releases; ≥50 new/yr (Disney deal)</td>
+<td>Razor (box) + blade (content figures)</td>
+<td>Content €447m vs box €161m (2.7×); 10m boxes; +37% figures FY25</td>
+<td>Content cadence IS the business; the &quot;figurine&quot; is our $0 quiz deck</td>
+</tr>
+<tr>
+<td><strong>Yoto Club</strong></td>
+<td>Monthly (new cards 1st weekday)</td>
+<td>Subscription + redeemable credits</td>
+<td>From $4.99/mo; 1–2 credits/mo; credits expire 12mo</td>
+<td>Monthly paid-content appointment + credit currency works</td>
+</tr>
+<tr>
+<td><strong>Toca Boca World</strong></td>
+<td><strong>Weekly (Friday)</strong></td>
+<td>Free gift, 1-week-only; golden-ribbon cross-sell</td>
+<td>Free app + IAP packs</td>
+<td>THE template: free Friday drop + ribbon to paid drop</td>
+</tr>
+<tr>
+<td><strong>Moshi</strong></td>
+<td><strong>Weekly</strong> new sleep story</td>
+<td>Cadence + job-to-be-done (sleep)</td>
+<td>£5.99/mo, £29.99/yr; parents pay <em>more</em> than Calm</td>
+<td>Weekly cadence + a JTBD = durable sub</td>
+</tr>
+<tr>
+<td><strong>Epic!</strong></td>
+<td>Continuous fresh + daily streak</td>
+<td>Novelty + rewards</td>
+<td>40k titles; novelty fuels months 1–3</td>
+<td>Fresh content is Q1 retention fuel; take cadence, drop the streak</td>
+</tr>
+<tr>
+<td><strong>Pok Pok</strong></td>
+<td>Monthly toy updates</td>
+<td>Premium no-dark-pattern sub</td>
+<td>Paid sub, no ads</td>
+<td>Premium kids app survives on monthly cadence alone</td>
+</tr>
+<tr>
+<td><strong>Prodigy</strong></td>
+<td>Seasonal (Pumpkinfest Oct, Winterfest Dec 9–Jan 5)</td>
+<td>Calendar-anchored themed events</td>
+<td>&quot;more time in game&quot;</td>
+<td>Anchor drops to school/holiday calendar; content = the event</td>
+</tr>
+<tr>
+<td><strong>Live-ops (mobile)</strong></td>
+<td>Seasonal/weekend</td>
+<td>Appointment quest; 72h Fri–Sun</td>
+<td><strong>DAU +30–50%</strong>; ARPDAU +15–30%; D7 is the KPI</td>
+<td>Cadence ratchets retention if compulsion stripped</td>
+</tr>
+<tr>
+<td><strong>BedtimeStory.ai / StoryBee</strong></td>
+<td>On-demand AI</td>
+<td>Subscription</td>
+<td>$9.99/mo / $5/mo; voice-clone wow</td>
+<td>Market bears $5–10/mo; our packs are a delighter inside a sub</td>
+</tr>
+<tr>
+<td><strong>Storique.ai</strong></td>
+<td>Per-book premium</td>
+<td>Custom model + <strong>human QC</strong></td>
+<td>26–40pg, 100+ illus</td>
+<td>Anti-slop bar = consistency + human review</td>
+</tr>
+<tr>
+<td><strong>Tonies / Toca Advent</strong></td>
+<td><strong>Daily Dec 1–24</strong></td>
+<td>Serialized 24-chapter story; daily door</td>
+<td>Tonies &quot;Snowflake&quot; 24-episode</td>
+<td>Advent = culturally-native appointment mechanic, DSA-safe</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>1. Context from HeyLolo prioritization docs</h2>
+<p>Pulled from <code>docs/_session/feature-prioritization-2026-07/{PRIORITIZATION.md, MERGED-LAUNCH-CALENDAR.md, BUILD-GUIDES-FIRST-WAVE.md}</code>:</p>
+<ul>
+<li><strong>Launch spine:</strong> feature-freeze Jul 20 · first App Review submission Aug 10 · soft-live CA/AU/NZ ~Aug 25 · <strong>full launch Sept 8</strong> (US/UK/CA/AU/NZ + Product Hunt) · v1.1 update ~Sept 15 · v1.2 (Oct) · <strong>v1.3 = w/c Oct 20</strong> (storybooks moat update).</li>
+<li><strong>Pricing (settled Jul 5):</strong> Family $9.99/mo · Plus $14.99/mo · annual hero <strong>$59.99</strong> (&quot;$5/mo&quot;) · Plus annual $99.99. <strong>No perpetual free voice tier</strong>; 14-day no-card trial, voice-minute capped, tiny text-only free fallback. IAP-only in-app (Guideline 1.3); Stripe + Tolt affiliates on heylolo.ai only.</li>
+<li><strong>Drop cadence already decided:</strong> <em>&quot;Weekly Friday drops start Sep 18 as <strong>quiz decks</strong> (BE-only); story drops join after v1.3.&quot;</em> Quiz engine = <strong>#121</strong> (<code>mode:&quot;quiz&quot;</code> conversation, not a new section — BE-only, no App-Review gate). Wonder Shelf = <strong>#142</strong> (collections, v1.1). Story packs = <strong>#148</strong> follow storybooks <strong>#126</strong> (mid-tier now, ships v1.3 w/c Oct 20).</li>
+<li><strong>Reusable engines in tree:</strong> Imagen 4 Fast (<code>imagen-4.0-fast-generate-001</code>, europe-central2, ~2.7s/image, <strong>$0.039/image</strong> per BE <code>ai-chat.service.ts:165</code>), Gemini-TTS + Zephyr narration (<code>v1_synthesizeSpeech</code>), entitlement/quota gate (<code>feature-access.rules.ts</code>), deep-link scheme <code>elumikids</code>.</li>
+<li><strong>Why quiz decks carry the early drops:</strong> quizzes are <strong>pure LLM</strong> (marginal cost ≈ 0), BE-only (deploy anytime, never gated by App Review), and already have design baselines. Stories are the expensive/hard MID-tier feature — drops must <em>work pre-stories</em> on quiz decks alone from Sep 18 → Oct 20.</li>
+<li><strong>DSA / anti-list constraint (governs every drop mechanic):</strong> EU DSA minors guidelines name <strong>streaks + random-reward mechanics as OFF-by-default for minors</strong>. No engagement push notifications <em>to the child</em> (COPPA separate-consent); any &quot;come back&quot; nudge goes to the <strong>parent</strong> digest, opt-in. Collections &gt; points for under-10s. So drops must be <strong>appointment mechanics without FOMO/loss-framing</strong> — &quot;a new thing appeared,&quot; never &quot;you&#39;ll lose X.&quot;</li>
+</ul>
+<hr>
+<h2>2. Physical-world proof (Tonies, Yoto, LEGO)</h2>
+<p>The physical toy world already proved that <strong>content cadence IS the business</strong> — the hardware is a razor, the recurring content is the blade.</p>
+<h3>Tonies SE (public — XETRA: TNIE)</h3>
+<ul>
+<li><strong>The razor/blade split is explicit in the P&amp;L.</strong> FY2024: Toniebox (hardware) revenue €137m; <strong>Tonies figurines (content) €325m</strong> — content is ~<strong>2.4× the hardware line.</strong> FY2025: box €161m (+18%), <strong>figurines €447m (+37%)</strong> — content growing far faster than hardware. Group revenue €481m (2024) → €630m (2025, +31%).</li>
+<li><strong>10 million Tonieboxes sold worldwide</strong> (milestone Sep 2025); UK installed base &gt;1m boxes. Every box is a recurring-content annuity: the average household keeps buying €15–17 figurines.</li>
+<li><strong>The cadence is licensed and scheduled:</strong> the multi-year Disney/Marvel/NatGeo renewal commits to <strong>&quot;at least 50 new Tonies&quot;</strong> — i.e. a <em>content pipeline</em> is the contractual asset. tonies&#39; own framing: recognizable franchises &quot;drive recurring purchases and secure sustainable revenue growth.&quot;</li>
+<li>First-ever positive free cash flow AND net income in 2024 — the content-annuity model reached profitability.</li>
+<li><strong>Lesson for HeyLolo:</strong> the install (app + subscription) is the box; the <em>drops</em> are the figurines. A subscriber who gets a fresh themed pack every week has a reason to stay subscribed the way a Toniebox owner has a reason to keep buying figures — except HeyLolo&#39;s &quot;figurine&quot; costs ≈ €0 to press.</li>
+</ul>
+<h3>Yoto (private) — the subscription-club drop model</h3>
+<ul>
+<li><strong>Yoto Club</strong> = &quot;VIP membership + monthly subscription rolled into one,&quot; <strong>from $4.99/mo.</strong> Members get <strong>1–2 Club Credits/month</strong> (tier-dependent) to redeem for physical cards.</li>
+<li><strong>The drop is a literal monthly appointment:</strong> &quot;usually 10 cards show up in each category (new-to-club / leaving-the-club) on the <strong>first weekday of each month</strong>.&quot; Leaving-the-club creates scarcity/FOMO (a mechanic HeyLolo should adapt <em>carefully</em> given DSA).</li>
+<li>Credits <strong>expire 12 months</strong> from issue (soft use-it pressure). Perks: exclusive monthly cards, 10% off all cards, free shipping.</li>
+<li>Individual cards retail <strong>£5–10 / $5-11</strong>. Card of the Month + club = predictable content-commerce revenue on top of the box.</li>
+<li><strong>Lesson:</strong> a monthly &quot;new drops arrive on day X&quot; ritual + a redeemable credit currency is a proven kids-audio recurring-revenue engine. HeyLolo&#39;s analog: subscription includes N free packs/month; premium packs à-la-carte.</li>
+</ul>
+<h3>LEGO magazine / content-cadence</h3>
+<ul>
+<li>LEGO Life magazine (free, 5×/year to LEGO Life members ages 5–9) is a decades-old <strong>appointment-content</strong> engine: each issue arrives on a schedule, drives kids back into the LEGO ecosystem, seeds the next set purchase. Content cadence as a retention + merchandising flywheel, not a profit center itself.</li>
+<li><strong>Lesson:</strong> free scheduled content (the weekly quiz deck) is the flywheel that sells the paid content (story packs) — mirror LEGO&#39;s free-magazine-drives-set-sales logic.</li>
+</ul>
+<hr>
+<hr>
+<h2>3. Digital drops (Toca Boca, Epic!, Moshi, PBS Kids, Prodigy, Pok Pok, Duolingo)</h2>
+<h3>Toca Boca World — the canonical &quot;Friday gift&quot; model (THE template for HeyLolo)</h3>
+<ul>
+<li><strong>Every Friday, a free gift lands in the in-game Post Office</strong> — furniture, outfits, decorations, pets, digital stickers. <strong>Each item is available for one week only</strong> (soft scarcity, no loss-of-owned-items).</li>
+<li>Gifts that tie to a paid content update are marked with a <strong>golden ribbon</strong> — the free drop <em>previews/cross-sells</em> the paid drop. New paid updates ship with complimentary themed gift packs.</li>
+<li>Base app free; 40+ characters, 11+ locations; monetization via IAP content packs on top.</li>
+<li><strong>This is the single closest analog to HeyLolo&#39;s Friday quiz drop.</strong> The mechanic: a <em>predictable weekly appointment</em> (Friday), a <em>fresh free item</em> that expires (creates the return habit), and a <em>golden-ribbon tie</em> from the free drop to the paid drop. HeyLolo should copy this almost verbatim: free Friday quiz deck (this week only featured) + a &quot;ribbon&quot; pointing to the season&#39;s paid story pack.</li>
+</ul>
+<h3>Epic! — daily streaks + endless-fresh library</h3>
+<ul>
+<li>40,000+ titles; <strong>daily reading-streak</strong> tracking + badges/milestones + Reading Buddies + quizzes.</li>
+<li>Documented engagement decay curve: months 1–3 driven by <em>novelty + rewards</em>; months 4–8 need <em>fresh-genre nudges to prevent stagnation</em>; months 9–12 = habit/schoolwork integration. <strong>The lesson: novelty is the retention fuel for the first quarter — exactly the window a weekly drop refreshes.</strong> Content that &quot;runs out&quot; is the churn driver; a drop cadence is the antidote.</li>
+<li>Note: Epic&#39;s streak is a <em>dark-pattern risk</em> HeyLolo must NOT copy (DSA off-by-default for minors). Take the <em>fresh-content cadence</em>, leave the streak.</li>
+</ul>
+<h3>Moshi — one new sleep story EVERY WEEK</h3>
+<ul>
+<li>Explicit model: <strong>&quot;a new story/sound is added every week&quot;; the annual subscription unlocks new stories weekly.</strong> Pricing £5.99/mo · <strong>£29.99/yr</strong> · £149.99 lifetime; 7-day free trial.</li>
+<li>Retention evidence is qualitative but strong: parents switch <em>from Calm</em> and pay <em>more</em> because the content demonstrably works (kids fall asleep). <strong>Weekly cadence + a job-to-be-done (sleep) = durable subscription.</strong> HeyLolo&#39;s bedtime mini-story drop can occupy the exact same nightly-appointment slot.</li>
+</ul>
+<h3>PBS Kids, Prodigy, Pok Pok, Duolingo ABC (cadence patterns)</h3>
+<ul>
+<li><strong>Prodigy</strong> runs <strong>seasonal in-game events</strong> (math/English) tied to the school calendar and holidays — event-driven re-engagement is core to its live-ops. (Detail expanded in §4.)</li>
+<li><strong>Pok Pok</strong> ships <strong>monthly toy/digital updates</strong> (&quot;new toys added regularly&quot;) to its premium Montessori playroom — a paid-subscription app whose retention rests on a <em>monthly content drop</em> rhythm. Proof that a premium (no-ads, no-dark-pattern) kids app sustains a subscription purely on cadence.</li>
+<li><strong>Duolingo (ABC / Stories)</strong> adds new Stories units on a rolling cadence; Duolingo&#39;s broader live-ops (leagues/streaks) is the anti-model for kids, but the <em>Stories content cadence</em> itself is the retention layer HeyLolo can borrow.</li>
+<li><strong>PBS Kids</strong> rotates featured shows/games seasonally (free, ad-light) — rotation-as-freshness keeps a free audience returning without new SKUs.</li>
+</ul>
+<p><strong>Cross-cutting digital lesson:</strong> the winning free-app cadence is <strong>weekly (Toca Friday, Moshi weekly)</strong>; the winning paid-content cadence is <strong>monthly (Yoto Club, Pok Pok)</strong>. HeyLolo should run <em>both clocks</em>: free weekly quiz drop + monthly paid pack.</p>
+<hr>
+<hr>
+<h2>4. Live-ops science (seasonal events, appointment mechanics, DSA-safe framing)</h2>
+<p>The mobile-games industry has quantified what content drops do to engagement — the numbers transfer to kids apps <em>if</em> the compulsion mechanics are stripped out.</p>
+<h3>The numbers</h3>
+<ul>
+<li><strong>A well-executed quarterly/seasonal event spikes DAU by 30–50%</strong> for its duration (Playio / industry consensus).</li>
+<li><strong>Segmented, personalized live-ops lifts ARPDAU 15–30%</strong> vs one-size-fits-all; a 7-day festival with exclusive bundles lifts ARPU <strong>20%+</strong> during the window.</li>
+<li>The KPI that separates a <em>sugar-high</em> from real retention: <strong>D7 retention AFTER the event ends</strong>, not just DAU-during. A drop that only spikes day-one and fades is a failure; the goal is a cadence that <em>ratchets</em> baseline retention.</li>
+</ul>
+<h3>The mechanics that matter (and their DSA-safe translation)</h3>
+<ul>
+<li><strong>Appointment mechanic</strong> (&quot;Attendance Quest&quot; / cumulative daily rewards across an event) sustains DAU across the window instead of spiking then dropping. → HeyLolo-safe version: an <strong>Advent-style daily reveal</strong> where each day unlocks a new small wonder/mini-story. It&#39;s an appointment WITHOUT a punishment for missing a day (the door is just still there tomorrow — no streak-loss).</li>
+<li><strong>The 72-hour weekend event (Fri→Sun)</strong> is the &quot;gold standard&quot; — aligns with kids&#39; leisure (out of school). → HeyLolo&#39;s <strong>Friday drop</strong> deliberately lands the fresh content for the weekend when kids have screen time.</li>
+<li><strong>Personalized, state-aware re-engagement</strong> (&quot;you were exploring dinosaurs&quot;) beats generic blasts. → HeyLolo: any nudge goes to the <strong>parent digest</strong> (COPPA/DSA — no push to the child) and references what the child was into (&quot;Mia loved space week — the new star pack is out&quot;).</li>
+</ul>
+<h3>DSA / DSA-safe framing (the hard constraint — this is a kids app, not a mid-core RPG)</h3>
+<ul>
+<li><strong>EU DSA minors guidelines + the app&#39;s own anti-list:</strong> streaks, hearts/lives, XP, leaderboards, and <strong>variable-ratio/random rewards are OFF-by-default for minors.</strong> A loot-box &quot;surprise drop&quot; is <em>illegal-adjacent</em> here.</li>
+<li><strong>Therefore the drop must be DETERMINISTIC and LOSS-FREE:</strong> &quot;a new deck appeared this Friday&quot; (fact, scheduled, everyone gets it) — never &quot;open your mystery box,&quot; never &quot;log in 5 days in a row or lose your reward,&quot; never a randomized pull. FOMO is limited to <em>soft</em> freshness (&quot;this week&#39;s featured deck&quot;) à la Toca&#39;s one-week-only gift, and even that must not punish — old decks remain available in a library, they just aren&#39;t the &quot;new&quot; one.</li>
+<li><strong>No engagement push to the child.</strong> The appointment is discovered <em>in-app</em> (a new tile glows on the shelf) or surfaced to the <em>parent</em>. This is both law-compliant and on-brand (&quot;premium = what we refuse to do&quot;).</li>
+</ul>
+<p><strong>Net:</strong> take live-ops&#39; proven <strong>30–50% DAU lift + cadence-ratchets-retention</strong> finding; implement it with <strong>appointment + freshness</strong>, discard <strong>streak-loss + random-reward + child-push</strong>.</p>
+<h3>Prodigy — the kids-education proof of seasonal live-ops (calendar-anchored)</h3>
+<p>Prodigy Math runs a <strong>full seasonal event calendar</strong> — the clearest evidence a <em>learning</em> app (not a casino) sustains engagement on drops:</p>
+<ul>
+<li><strong>Pumpkinfest</strong> (Halloween): ~<strong>Oct 1–31</strong>, earn Candy Corn currency → event-shop items.</li>
+<li><strong>Winterfest</strong>: ~<strong>Dec 9 – Jan 5</strong>, earn magic snowflakes → limited-edition gear.</li>
+<li><strong>Summerfest</strong>: ~<strong>Jul 14 – Aug 11</strong>, quests unlock wands/costumes/pets.</li>
+<li>Stated goal, verbatim: getting kids excited about the event &quot;leads to more time in the game… turns screen time into a math-powered adventure, making practice feel like play instead of homework.&quot;</li>
+<li><strong>The exact model HeyLolo should mirror:</strong> anchor drops to the school-year/holiday calendar; wrap the learning content (quizzes, mini-stories) in a seasonal theme so the <em>content is the event</em>. Note Prodigy uses an earnable soft-currency + limited gear — HeyLolo keeps the <em>theme + fresh-content</em> half and drops the currency-grind half (DSA).</li>
+</ul>
+<hr>
+<hr>
+<h2>5. AI-native drops (BedtimeStory.ai, Oscar, StoryBee, Luna) — pricing, QA, quality bar</h2>
+<h3>Who&#39;s already doing AI-generated kids content + what they charge</h3>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Model</th>
+<th>Price</th>
+<th>Notable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>BedtimeStory.ai</strong></td>
+<td>text+image, deep personalization (family as characters, art styles, embedded morals)</td>
+<td>free 5 stories → <strong>$9.99/mo or $99/yr</strong> unlimited (Alpha Pro $8.25/mo)</td>
+<td>text/image focus, no strong voice</td>
+</tr>
+<tr>
+<td><strong>StoryBee</strong></td>
+<td>text+illustration+<strong>audio narration</strong>, ages 3–12, <strong>voice cloning</strong> (parent&#39;s voice in 5 min)</td>
+<td><strong>from $5/mo</strong>; voice-clone + publishing licenses on higher tiers</td>
+<td>reviews: &quot;coherent, funny, genuinely creative&quot;; voice-clone is the wow</td>
+</tr>
+<tr>
+<td><strong>Oscar Stories</strong></td>
+<td>AI bedtime stories, classic-literature worlds, lessons</td>
+<td>freemium/sub</td>
+<td>education/lessons framing</td>
+</tr>
+<tr>
+<td><strong>Storique.ai</strong> (premium bar)</td>
+<td>custom-trained image model, <strong>26–40 page hardcover</strong>, 100+ illustrations, <strong>human editorial review</strong></td>
+<td>premium print product</td>
+<td>the &quot;anti-slop&quot; gold standard: consistency across 40 pages + human QC</td>
+</tr>
+</tbody></table>
+<p><strong>Price band the market bears for AI kids stories: ~$5–10/mo subscription</strong>, or per-book premium. HeyLolo&#39;s advantage: stories are <em>inside</em> an already-premium companion subscription ($9.99–14.99), so packs are an <em>add-on delighter</em>, not the whole product — lower price sensitivity.</p>
+<h3>The quality bar — what makes AI content feel PREMIUM vs SLOP (critical for HeyLolo)</h3>
+<p>The market is <strong>flooded with bad AI kids books</strong> and consumers now <strong>actively distrust &quot;AI-illustrated&quot;</strong> as a low-effort signal. The craft markers that separate premium from slop:</p>
+<ol>
+<li><strong>Character consistency across pages</strong> — the #1 killer. &quot;A red-haired girl on page 1 becomes a slightly different red-haired girl on page 5&quot; = instant slop tell. Free Gemini-image drifts; premium tools use custom-trained models / locked references / consistent seeds. <strong>This is HeyLolo&#39;s hardest problem (per BUILD-GUIDES §1f) and the single thing that decides whether a story pack feels premium.</strong></li>
+<li><strong>Narrative coherence + age-appropriateness</strong> — not rambling, not generic, has a real arc.</li>
+<li><strong>Narration quality</strong> — a good voice (HeyLolo has this: Gemini-TTS Zephyr, the founder-liked voice) instantly lifts perceived quality above text+image tools.</li>
+<li><strong>Human oversight / curation / QC</strong> — &quot;what keeps the result from feeling like generic AI slop.&quot; Purely on-the-fly generation is riskier than <strong>pre-curated, human-reviewed packs.</strong></li>
+</ol>
+<p><strong>Strategic implication for HeyLolo&#39;s drops:</strong> the <em>free weekly quiz decks</em> are low-risk (pure text, LLM is good at trivia). The <em>paid story packs</em> live or die on <strong>character consistency + narration + a curation pass.</strong> =&gt; Story packs should be <strong>pre-generated and human-QC&#39;d before shipping</strong> (a themed pack the team reviews), NOT fully on-the-fly per child, at least for the flagship paid drops. This both guarantees the premium quality bar AND slashes per-user COGS (generate once, serve to all subscribers — see §6). On-the-fly personalization (&quot;put my child&#39;s name in&quot;) can be a <em>premium-tier upsell</em> on top of the curated pack.</p>
+<p><strong>Anti-slop craft checklist for HeyLolo packs:</strong> locked character descriptor + reference-image seed reused every page (BUILD-GUIDES §1f) · fixed art-style suffix · Zephyr narration · a human review gate before a pack is marked <code>ready</code> · consistent cover art / pack &quot;spine&quot; so a collection reads as a set (Wonder Shelf).</p>
+<hr>
+<hr>
+<h2>6. Drop economics for HeyLolo (COGS + pricing math)</h2>
+<p><strong>Known unit costs (from codebase + vendor pricing):</strong></p>
+<ul>
+<li><strong>Imagen 4 Fast:</strong> <strong>$0.039 / image</strong> (<code>imagen-4.0-fast-generate-001</code>, ~2.7s each; BE <code>ai-chat.service.ts:165</code>).</li>
+<li><strong>Gemini-TTS (Zephyr, the liked voice <code>gemini-3.1-flash-tts-preview</code>):</strong> $20 / 1M output audio tokens; <strong>25 tokens = 1 sec audio</strong> → <strong>$0.0005/sec = $0.03 / minute</strong> of narration.</li>
+<li><strong>Gemini text (quiz/story writing):</strong> Flash-class, fractions of a cent per generation (a full quiz deck&#39;s tokens cost ~$0.001–0.01).</li>
+</ul>
+<h3>Quiz deck — marginal COGS ≈ $0</h3>
+<p>A 15–20-question themed deck is <strong>pure LLM text</strong>. Generation cost per deck ≈ <strong>$0.005–0.01</strong>. If a deck is <strong>pre-generated once and served to all subscribers</strong> (the recommended model — it&#39;s <code>mode:&quot;quiz&quot;</code> content, not per-child), the <strong>marginal cost per user is effectively $0</strong> (a few KB of JSON). Even fully on-the-fly per child, it&#39;s a fraction of a cent. <strong>=&gt; Free weekly quiz drops are genuinely free to run.</strong> This is the whole point: infinite fresh content at zero marginal cost is the AI-native superpower the physical-toy players (Tonies at €15/figure of COGS+logistics) can never match.</p>
+<h3>Story pack — COGS math</h3>
+<p>Assume a pack = <strong>5 stories × 5 illustrated pages + 1 cover each</strong> (= 30 images) with per-page Zephyr narration (~2 min audio/story = 10 min/pack).</p>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>Qty</th>
+<th>Unit</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Illustrations (Imagen 4 Fast)</td>
+<td>30 images</td>
+<td>$0.039</td>
+<td><strong>$1.17</strong></td>
+</tr>
+<tr>
+<td>Narration (Gemini-TTS)</td>
+<td>10 min</td>
+<td>$0.03/min</td>
+<td><strong>$0.30</strong></td>
+</tr>
+<tr>
+<td>Story text (Gemini)</td>
+<td>5 stories</td>
+<td>~$0.01</td>
+<td><strong>$0.05</strong></td>
+</tr>
+<tr>
+<td><strong>Total to PRODUCE the pack ONCE</strong></td>
+<td></td>
+<td></td>
+<td><strong>≈ $1.52</strong></td>
+</tr>
+</tbody></table>
+<p>Two serving models:</p>
+<ul>
+<li><strong>Curated (recommended for paid flagship packs):</strong> generate + human-QC the pack <strong>once</strong>, <strong>cache the narration audio too</strong>, serve identical pack to every subscriber. Marginal cost per user ≈ <strong>$0</strong> (storage/bandwidth, &lt;$0.001/user). Amortized production cost across even 2,000 buyers = <strong>$0.0008/user.</strong> Also guarantees the anti-slop quality bar (§5) because a human reviews it before ship.</li>
+<li><strong>Personalized on-the-fly (premium upsell — &quot;your child as the hero&quot;):</strong> ~<strong>$1.52 per child per pack</strong> (worst case, images dominate). Against a $2.99–4.99 price that&#39;s still <strong>60–70% gross margin</strong>; against the $9.99–14.99/mo sub it&#39;s a rounding error. Narration synthesized on-demand (per BUILD-GUIDES §1c narration is not stored) adds ~$0.06/story/listen — cache it for heavy re-listeners.</li>
+</ul>
+<h3>What price the market bears</h3>
+<ul>
+<li>Physical anchors: <strong>Toniefigure €15–17</strong>, <strong>Yoto card £5–10/$5–11</strong>.</li>
+<li>Digital norms: <strong>in-app content/level packs $2.99–4.99</strong> (Apple&#39;s standard tiers), <strong>AI-story subscriptions $5–10/mo</strong> (BedtimeStory.ai $9.99, StoryBee $5).</li>
+<li><strong>HeyLolo&#39;s edge:</strong> packs sit <em>inside</em> an already-paid $9.99–14.99/mo companion sub, so they&#39;re a delighter, not the core purchase → lower price sensitivity, and most packs can be <strong>included free</strong> to drive retention, with a few <strong>premium/seasonal packs à-la-carte at $2.99–3.99</strong> or bundled into the <strong>Plus tier</strong>.</li>
+</ul>
+<h3>The free-drop vs paid-pack mix (maximizing BOTH retention AND revenue)</h3>
+<p>The physical + digital evidence converges on a <strong>two-clock model</strong>:</p>
+<ul>
+<li><strong>FREE weekly clock (retention engine):</strong> every <strong>Friday</strong>, a free themed <strong>quiz deck</strong> drops for all users (Toca &quot;Friday gift&quot; + Moshi &quot;weekly story&quot; model). Zero COGS, pure habit fuel, no paywall friction. This is the LEGO-magazine flywheel — free cadence that keeps them in the ecosystem.</li>
+<li><strong>PAID monthly clock (revenue engine):</strong> roughly <strong>monthly</strong>, a <strong>premium themed Story Pack</strong> drops (Yoto Club + Pok Pok model). Included for <strong>Plus</strong> subscribers (upgrade lever), or <strong>$2.99–3.99 à-la-carte</strong> for Family-tier. Human-curated for the quality bar.</li>
+<li><strong>Seasonal tentpoles (both):</strong> back-to-school, Halloween, St. Martin (DACH), <strong>Advent</strong> — bigger drops that spike DAU 30–50% (live-ops evidence) and double as <strong>App-Store &quot;what&#39;s new&quot; + press beats.</strong></li>
+</ul>
+<p><strong>Rule of thumb from the research:</strong> keep the <em>habit</em> content free and frequent (weekly, $0 COGS quizzes); charge for <em>depth</em> content that&#39;s rarer and higher-craft (monthly story packs, ~$1.50 COGS, human-QC&#39;d). Free cadence drives the retention that makes the subscription worth renewing; paid packs are the content-commerce upside on top — exactly Tonies&#39; box-vs-figurine split, but with the figurine costing $0–1.50 to press.</p>
+<hr>
+<hr>
+<h2>7. The Sep–Dec 16-week drop calendar</h2>
+<p>Anchored to: launch <strong>Sept 8</strong>, first Friday quiz drop <strong>Sept 18</strong> (#121), storybooks ship <strong>v1.3 w/c Oct 20</strong> (#126) → story packs (#148) begin. Themed to the school calendar + Northern-Hemisphere seasons + <strong>DACH cultural beats</strong> (St. Martin Nov 11, Nikolaus Dec 6, Advent Dec 1–24). Two clocks: <strong>FREE weekly quiz deck</strong> every Friday · <strong>PAID/premium story pack</strong> roughly monthly starting late Oct. Seasonal tentpoles in <strong>bold</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Wk</th>
+<th>Friday</th>
+<th>Free weekly quiz deck (theme)</th>
+<th>Paid / premium drop</th>
+<th>DACH / school hook</th>
+<th>Feature carrying it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Sep 11</td>
+<td><em>(launch week — no drop yet; onboarding)</em></td>
+<td>—</td>
+<td>Launch Sept 8; schools back</td>
+<td>core chat/voice</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Sep 18</strong></td>
+<td><strong>&quot;Back to School&quot; quiz deck</strong> (school subjects, first-day fun)</td>
+<td>—</td>
+<td>Back-to-school peak</td>
+<td>#121 quiz (<code>mode:&quot;quiz&quot;</code>), BE-only</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sep 25</td>
+<td>&quot;Animal Kingdom&quot; (autumn animals, migration)</td>
+<td>—</td>
+<td>Autumn / Erntedank (harvest)</td>
+<td>#121</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Oct 2</td>
+<td>&quot;Space &amp; Stars&quot;</td>
+<td>—</td>
+<td>Prodigy Pumpkinfest starts Oct 1 (theme cue)</td>
+<td>#121</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Oct 9</td>
+<td>&quot;Dinosaurs&quot;</td>
+<td>—</td>
+<td>—</td>
+<td>#121</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Oct 16</td>
+<td>&quot;Autumn Leaves &amp; Weather&quot;</td>
+<td><em>(v1.3 ships w/c Oct 20 — storybooks live)</em></td>
+<td>Herbstferien (autumn school break, DACH)</td>
+<td>#126 storybooks land</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Oct 23</td>
+<td>&quot;Friendly Spooky&quot; (not-scary Halloween trivia)</td>
+<td><strong>🎃 Halloween Story Pack</strong> (#148) — 4–5 gentle-spooky mini-stories</td>
+<td>Halloween build-up</td>
+<td>#148 story pack (first paid drop)</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Oct 30</strong></td>
+<td><strong>&quot;Halloween Big Quiz&quot;</strong> (tentpole)</td>
+<td>Halloween pack still featured</td>
+<td><strong>Halloween</strong> (Oct 31) — DAU tentpole</td>
+<td>#121 + #148</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Nov 6</td>
+<td>&quot;Kindness &amp; Sharing&quot; (ties to St. Martin&#39;s cloak legend)</td>
+<td>—</td>
+<td><strong>St. Martin / Laternenfest build (Nov 11)</strong></td>
+<td>#121</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Nov 13</strong></td>
+<td><strong>&quot;Lanterns &amp; Light&quot; (Laternenfest)</strong> deck</td>
+<td><strong>🏮 St. Martin / Lichterfest Story Pack</strong> (#148) — the sharing legend, lantern songs</td>
+<td><strong>St. Martin Nov 11 — huge DACH kindergarten beat</strong></td>
+<td>#121 + #148</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Nov 20</td>
+<td>&quot;How Things Work&quot; (curiosity/STEM)</td>
+<td>—</td>
+<td>Toward Advent</td>
+<td>#121</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Nov 27</td>
+<td>&quot;Winter Animals &amp; Snow&quot;</td>
+<td><strong>Advent Calendar teaser</strong> (&quot;something magic starts Dec 1&quot;)</td>
+<td>1st Advent Sunday ~Nov 29; Nikolaus coming</td>
+<td>#121 + Advent tease</td>
+</tr>
+<tr>
+<td>13</td>
+<td><strong>Dec 1→ daily</strong></td>
+<td><em>(quiz folds into Advent)</em></td>
+<td><strong>🎄 ADVENT CALENDAR launches — Dec 1–24 daily reveal</strong> (one wonder + one mini-story/day). Premium pack OR free-with-Plus</td>
+<td><strong>Advent — #1 December retention mechanic in DACH</strong></td>
+<td><strong>NEW Advent feature</strong> (see §8)</td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>Dec 4</strong></td>
+<td>&quot;St. Nikolaus&quot; deck</td>
+<td>Advent daily continues</td>
+<td><strong>Nikolaus Dec 6</strong> (DACH — shoes/treats)</td>
+<td>Advent + #121</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Dec 11</td>
+<td>&quot;Winter Wonderland&quot;</td>
+<td>Advent daily continues; <strong>Christmas Story Pack</strong> (#148)</td>
+<td>Weihnachtsferien approaching</td>
+<td>Advent + #148</td>
+</tr>
+<tr>
+<td>16</td>
+<td><strong>Dec 18 / 25</strong></td>
+<td>&quot;Christmas Around the World&quot;</td>
+<td>Advent finale Dec 24 (big story payoff); Christmas pack featured</td>
+<td><strong>Heiligabend Dec 24</strong> (DACH main gift day)</td>
+<td>Advent finale</td>
+</tr>
+</tbody></table>
+<p><strong>Design notes:</strong></p>
+<ul>
+<li><strong>Every deck is authored + human-glanced in a batch ahead of time</strong> (they&#39;re <code>mode:&quot;quiz&quot;</code> content rows — generate the whole Sep–Dec run in one BE session, schedule the reveal). Zero per-week ops load.</li>
+<li><strong>Story packs align to the monthly paid clock</strong> (Halloween → St. Martin → Advent/Christmas) — 3–4 paid packs across the quarter, each a store &quot;what&#39;s new&quot; + press beat.</li>
+<li><strong>The Advent calendar (wk 13–16) is the tentpole of the whole quarter</strong> and the single strongest DACH retention play — spec below.</li>
+<li><strong>App-Store beats:</strong> Sep 18 (drops-live &quot;fresh every Friday&quot; listing refresh), Oct 23 (first story pack), <strong>Nov 13 (St. Martin — localized DACH press/ASO)</strong>, <strong>Dec 1 (Advent — the marquee December update + press)</strong>.</li>
+</ul>
+<hr>
+<hr>
+<h2>8. Advent-calendar feature deep-dive + spec</h2>
+<h3>Why an Advent calendar is the single best December retention mechanic (esp. DACH)</h3>
+<ul>
+<li><strong>It&#39;s a culturally-native appointment mechanic.</strong> The Adventskalender is a <strong>German invention</strong> and a universal DACH childhood ritual: 24 doors, one opened per day Dec 1–24. Kids already <em>expect</em> it — HeyLolo isn&#39;t inventing a habit, it&#39;s occupying one that exists. The &quot;open one door a day&quot; behavior IS the appointment mechanic live-ops spends millions engineering, handed to us for free by culture.</li>
+<li><strong>The incumbents prove it works in-app:</strong> <strong>Tonies</strong> ships an audio Advent calendar (&quot;open a new door each day to unlock an exclusive audio chapter… a complete 24-episode story by Christmas Day&quot; — the <em>Snowflake</em> serialized story), designed by their German team. <strong>Toca Boca World</strong> runs a December advent-gift collection event. Both convert December into a daily-return machine.</li>
+<li><strong>It&#39;s DSA-SAFE by construction.</strong> Advent is deterministic (door N opens on day N, everyone same), loss-free (miss a day → the door&#39;s still there tomorrow, and the earlier doors stay open), no randomness, no currency grind, no punishment. It is the <em>ideal</em> shape for a kids appointment mechanic — all the DAU upside, none of the regulated dark-pattern risk.</li>
+<li><strong>It&#39;s a serialized-story engine</strong> — a 24-chapter arc (Tonies&#39; model) gives kids a <em>reason to return tomorrow</em> (cliffhanger), which is exactly the D7-retention-ratchet live-ops prizes, achieved through narrative not compulsion.</li>
+</ul>
+<h3>Feature spec — &quot;LoLo&#39;s Advent Calendar&quot; (Dec 1–24)</h3>
+<p><strong>Concept:</strong> a festive calendar surface (natural home: a special seasonal tile on Home / the Wonder Shelf) with 24 doors. <strong>Door N is openable only on/after Dec N</strong> (past doors stay open; future doors are visibly locked with a gentle &quot;not yet — comes on Dec N&quot;). Each day delivers <strong>two small gifts</strong>:</p>
+<ol>
+<li><strong>One &quot;Wonder of the Day&quot;</strong> — a tiny illustrated fact/surprise that lands on the <strong>Wonder Shelf (#142)</strong> (e.g. &quot;Did you know reindeer eyes turn blue in winter?&quot; + one Imagen image). Reinforces the collection loop.</li>
+<li><strong>One &quot;mini-story of the day&quot;</strong> — a ~1-page narrated micro-story (Zephyr TTS + one illustration) that is <strong>one chapter of a single 24-part Advent adventure</strong> (Tonies&#39; serialized model — a cliffhanger arc, e.g. &quot;LoLo and the Lost Star&quot;). By Dec 24 the child has the whole story.</li>
+</ol>
+<p><strong>DSA / safety posture:</strong> no push notifications to the child (the parent digest may mention &quot;today&#39;s door is ready&quot;); no streak, no loss, no random reward; every door&#39;s content is fixed and pre-curated/human-QC&#39;d. Parent toggle to enable/disable the seasonal calendar (conservative-default posture).</p>
+<p><strong>Monetization options (pick one):</strong></p>
+<ul>
+<li><strong>(A) Retention play — free for all subscribers.</strong> Maximizes the December DAU tentpole + reviews + word-of-mouth (&quot;my kid runs to open LoLo&#39;s door every morning&quot;). Recommended for a launch-quarter still building base.</li>
+<li><strong>(B) Plus-tier perk.</strong> Advent calendar included in <strong>Plus ($14.99/mo)</strong>; Family tier sees a teaser + upgrade prompt (in the <em>parent</em> UI). Drives Nov→Dec upgrades.</li>
+<li><strong>(C) À-la-carte seasonal pack, $3.99.</strong> Sold in late Nov. Matches Tonies&#39; paid-advent model. Lowest-friction revenue but caps reach.</li>
+<li><strong>Recommendation: (A) free-for-subscribers this first year</strong> (base-building + press + reviews &gt; small IAP revenue), with the <em>personalized</em> variant (&quot;put my child&#39;s name in the Advent adventure&quot;) as a <strong>Plus upsell</strong>. Next year, once base is larger, test (B)/(C).</li>
+</ul>
+<p><strong>COGS (whole calendar, produced once, curated):</strong> 24 wonders (24 images = $0.94) + 24 mini-story chapters (24 images = $0.94 + ~24 min narration = $0.72 + text ~$0.24) ≈ <strong>$2.84 to produce the entire 24-day calendar one time.</strong> Cache narration audio → marginal cost per child ≈ <strong>$0.</strong> A curated Advent calendar for the whole user base costs <strong>under $3 to make.</strong> (Personalized-name variant: ~$2.84/child, still trivial vs a $14.99 Plus upgrade it drives.)</p>
+<p><strong>Build cost:</strong> MEDIUM. Reuses everything — Imagen pipeline, <code>v1_synthesizeSpeech</code>, the story data model (BUILD-GUIDES §1c, a 24-page &quot;story&quot; = the calendar), Wonder Shelf surface (#142). The <em>new</em> bits: (1) a <code>advent-calendar</code> surface with 24 date-gated doors (date-gate is trivial client logic + server date), (2) content authored/curated ahead (the 24-chapter arc — could be one BE generation session), (3) a festive door-opening animation + <code>celebrate(&quot;moment&quot;)</code> earcon on open. <strong>All BE + content is non-App-Review-gated</strong> — must ship the <em>native binary</em> with the calendar surface <strong>before Dec 1</strong> (so it rides the v1.2/v1.3 December build; freeze the calendar UI by ~mid-Nov). Content itself can be finalized/scheduled server-side up to launch day.</p>
+<p><strong>Ship deadline:</strong> the Advent calendar UI must be in a <strong>shipped App-Store binary by ~Nov 28</strong> (Dec 1 go-live). Given v1.3 is w/c Oct 20, this fits a <strong>December point-release</strong> — file the issue now, build content in November.</p>
+<hr>
+<hr>
+<h2>9. NEW issue proposals (Wladefant/heylolo-app)</h2>
+<p>Style matches F1–F34 / N1–N11. Contiguous numbers after the current backlog. Each ends with &quot;Depends / gated by.&quot;</p>
+<h3>D1 — Drop scheduler + &quot;Fresh this Friday&quot; surface (the cadence engine)</h3>
+<p><code>feat(engagement): weekly drop scheduler + &quot;new this Friday&quot; surface</code>
+<strong>Labels:</strong> <code>feature</code> <code>engagement</code> <code>backend</code> <code>content</code> <code>size:M</code></p>
+<p>The infrastructure every content drop rides on. A server-scheduled catalog of dated content items (<code>drops</code> collection: <code>{ id, type: &quot;quiz&quot;|&quot;story-pack&quot;|&quot;advent&quot;|&quot;wonder&quot;, theme, publishAt, featuredUntil, tier: &quot;free&quot;|&quot;plus&quot;, assetRefs }</code>) + a Home/Shelf surface that shows <strong>&quot;✨ New this Friday&quot;</strong> when a drop&#39;s <code>publishAt</code> has passed, with the previous drop moving into a browsable <strong>library</strong> (never deleted — no loss). Deterministic, date-gated, DSA-safe (no random reward, no streak, no child push — a new tile simply <em>appears</em>). This is the Toca &quot;Friday gift&quot; mechanic, generalized. Powers quiz decks (#121), story packs (#148), and the Advent calendar (D2).</p>
+<p><strong>Depends / gated by:</strong> soft-dep #121 (quiz content), #142 (Wonder Shelf surface). BE-schedulable, so it can deploy pre-freeze; the <em>surface</em> ships in a binary.</p>
+<h3>D2 — LoLo&#39;s Advent Calendar (Dec 1–24 daily reveal)</h3>
+<p><code>feat(seasonal): LoLo&#39;s Advent Calendar — 24 date-gated daily wonders + serialized mini-story</code>
+<strong>Labels:</strong> <code>feature</code> <code>seasonal</code> <code>engagement</code> <code>dach</code> <code>content</code> <code>size:M</code> <code>priority:high</code></p>
+<p>24-door festive calendar (Dec 1–24). Door N unlocks on day N (past doors stay open, future doors gently locked). Each day = <strong>one Wonder-of-the-Day</strong> (lands on the Wonder Shelf #142) + <strong>one narrated mini-story chapter</strong> of a single 24-part Advent adventure (Tonies&#39; serialized model). Deterministic + loss-free + no child push (DSA-safe). The single strongest December retention mechanic in DACH, where the Adventskalender is a native childhood ritual (Tonies + Toca both ship in-app advent events). Free-for-subscribers year 1 (base-building + reviews + press), with a personalized-name variant as a Plus upsell. Whole calendar COGS &lt;$3 to produce once (curated, cached). Reuses Imagen + <code>v1_synthesizeSpeech</code> + the story data model.</p>
+<p><strong>Depends / gated by:</strong> story pipeline (#126 engines), Wonder Shelf (#142), D1 drop scheduler. <strong>Native binary with the calendar UI must ship by ~Nov 28 for Dec 1 go-live.</strong></p>
+<h3>D3 — Seasonal quiz-deck content run (Sep–Dec, batch-authored)</h3>
+<p><code>feat(content): Sep–Dec seasonal quiz-deck run — 16 themed decks, batch-authored</code>
+<strong>Labels:</strong> <code>content</code> <code>engagement</code> <code>backend</code> <code>size:S</code></p>
+<p>Author + human-glance the full <strong>16-week Sep–Dec quiz-deck calendar</strong> (§7) in one BE session and schedule the reveals via D1: Back-to-School → Animals → Space → Dinosaurs → Autumn → Friendly-Spooky → <strong>Halloween</strong> → Kindness → <strong>Laternenfest</strong> → How-Things-Work → Winter-Animals → (Advent) → <strong>Nikolaus</strong> → Winter-Wonderland → Christmas. Pure LLM, ~$0 COGS, BE-only (no App-Review gate). Front-loads the entire quarter&#39;s free cadence with near-zero ongoing ops.</p>
+<p><strong>Depends / gated by:</strong> #121 quiz engine, D1 scheduler. Deployable anytime.</p>
+<h3>D4 — Seasonal Story Packs: Halloween · St. Martin · Christmas (paid/Plus)</h3>
+<p><code>feat(monetization): seasonal Story Packs — Halloween, St. Martin/Laternenfest, Christmas</code>
+<strong>Labels:</strong> <code>feature</code> <code>monetization</code> <code>content</code> <code>creative-studio</code> <code>dach</code> <code>size:M</code></p>
+<p>Three human-curated seasonal story packs (4–5 illustrated, narrated mini-stories each) dropping ~monthly on the paid clock: <strong>🎃 Halloween</strong> (gentle-spooky, ~Oct 23), <strong>🏮 St. Martin / Lichterfest</strong> (the cloak-sharing legend + lantern songs — a DACH-native beat rivals ignore, ~Nov 13), <strong>🎄 Christmas</strong> (~Dec 11). Included for Plus, or $2.99–3.99 à-la-carte for Family. ~$1.50 COGS/pack to produce once (curated + cached ≈ $0/user). Each is an App-Store &quot;what&#39;s new&quot; + localized-press beat. Extends #148 (story packs).</p>
+<p><strong>Depends / gated by:</strong> #126 storybooks (v1.3, w/c Oct 20) — St. Martin + Christmas packs land after; #148 story-pack framework, entitlement gate.</p>
+<p><strong>(Optional D5 — Personalized-hero upsell)</strong> <code>feat(monetization): &quot;your child as the hero&quot; personalized story/advent variant (Plus)</code> — on-the-fly name/character personalization of any curated pack or the Advent adventure, gated to Plus. ~$1.52/child COGS, 60–70% margin at pack prices; a concrete Plus upgrade lever. Depends on #126 + D2/D4.</p>
+<hr>
+<hr>
+<h2>10. Sources</h2>
+<p><strong>Physical-world (Tonies, Yoto, LEGO)</strong></p>
+<ul>
+<li>Tonies Investor Relations — <a href="https://ir.tonies.com/">https://ir.tonies.com/</a></li>
+<li>tonies FY2024 results (revenue split box vs figurines, FCF+net income positive) — <a href="https://ir.tonies.com/news/tonies-achieves-fy-2024-guidance-with-strong-revenue-growth-and-improved-profitability-free-cash/e0893fb2-9164-4e36-a30c-e2087e31c55d">https://ir.tonies.com/news/tonies-achieves-fy-2024-guidance-with-strong-revenue-growth-and-improved-profitability-free-cash/e0893fb2-9164-4e36-a30c-e2087e31c55d</a></li>
+<li>tonies FY2025 record results (figurines €447m, box €161m, 10m boxes) — <a href="https://www.mynewsdesk.com/us/tonies/pressreleases/tonies-continues-profitable-growth-with-record-results-in-2025-expansion-of-ecosystem-around-toniebox-2-proves-a-global-success-3442746">https://www.mynewsdesk.com/us/tonies/pressreleases/tonies-continues-profitable-growth-with-record-results-in-2025-expansion-of-ecosystem-around-toniebox-2-proves-a-global-success-3442746</a></li>
+<li>Tonies Annual Report 2024 (MarketScreener) — <a href="https://www.marketscreener.com/quote/stock/TONIES-SE-122145259/news/Tonies-Annual-Report-2024-including-the-consolidated-financial-statements-tonies-Annual-Report202-49702061/">https://www.marketscreener.com/quote/stock/TONIES-SE-122145259/news/Tonies-Annual-Report-2024-including-the-consolidated-financial-statements-tonies-Annual-Report202-49702061/</a></li>
+<li>Yoto Club (subscription, credits, monthly cards, from $4.99) — <a href="https://us.yotoplay.com/yoto-club">https://us.yotoplay.com/yoto-club</a></li>
+<li>Yoto Club support (10 cards/month, credit expiry) — <a href="https://support.yotoplay.com/en-US/articles/yoto-club-8025">https://support.yotoplay.com/en-US/articles/yoto-club-8025</a></li>
+<li>Yoto Club overview (Everyday Reading) — <a href="https://everyday-reading.com/all-about-yoto-club/">https://everyday-reading.com/all-about-yoto-club/</a></li>
+</ul>
+<p><strong>Digital drops</strong></p>
+<ul>
+<li>Toca Boca World weekly Friday gift (1-week-only, golden ribbon) — <a href="https://tocaboca.helpshift.com/hc/en/3-toca-boca-world/faq/4-how-can-i-claim-my-free-weekly-gift-in-toca-boca-world/?p=ios">https://tocaboca.helpshift.com/hc/en/3-toca-boca-world/faq/4-how-can-i-claim-my-free-weekly-gift-in-toca-boca-world/?p=ios</a></li>
+<li>Toca Life World gift events wiki — <a href="https://toca-life-world.fandom.com/wiki/Post_Office/Gift_Events">https://toca-life-world.fandom.com/wiki/Post_Office/Gift_Events</a></li>
+<li>Epic! reading app (engagement decay curve, streaks) — <a href="https://kidedtools.com/blog/epic-books-digital-library-kids-review-2026/">https://kidedtools.com/blog/epic-books-digital-library-kids-review-2026/</a></li>
+<li>Epic! honest review (fresh content) — <a href="https://app.starredin.com/blog/epic-reading-app-honest-review-after-1-year-of-use">https://app.starredin.com/blog/epic-reading-app-honest-review-after-1-year-of-use</a></li>
+<li>Moshi (weekly new story, pricing) — <a href="https://www.educationalappstore.com/app/moshi-sleep-and-mindfulness">https://www.educationalappstore.com/app/moshi-sleep-and-mindfulness</a></li>
+<li>Moshi Kids site — <a href="https://www.moshikids.com/">https://www.moshikids.com/</a></li>
+<li>Prodigy Pumpkinfest (Oct event) — <a href="https://www.prodigygame.com/main-en/blog/pumpkinfest-parents">https://www.prodigygame.com/main-en/blog/pumpkinfest-parents</a></li>
+<li>Prodigy Winterfest (Dec 9–Jan 5) — <a href="https://www.prodigygame.com/main-en/blog/prodigy-winterfest">https://www.prodigygame.com/main-en/blog/prodigy-winterfest</a></li>
+<li>Prodigy festivals (Zendesk) — <a href="https://prodigygame.zendesk.com/hc/en-us/sections/4409332045716-Festivals">https://prodigygame.zendesk.com/hc/en-us/sections/4409332045716-Festivals</a></li>
+</ul>
+<p><strong>Live-ops science</strong></p>
+<ul>
+<li>Playio — Seasonal marketing for mobile games (DAU +30–50%) — <a href="https://blog.playio.co/seasonal-marketing-tactics-mobile-games">https://blog.playio.co/seasonal-marketing-tactics-mobile-games</a></li>
+<li>Udonis — Live events revolutionizing engagement — <a href="https://www.blog.udonis.co/mobile-marketing/mobile-games/live-events">https://www.blog.udonis.co/mobile-marketing/mobile-games/live-events</a></li>
+<li>Adjust — What is live-ops — <a href="https://www.adjust.com/blog/what-is-live-ops/">https://www.adjust.com/blog/what-is-live-ops/</a></li>
+<li>Game Growth Advisor — LiveOps playbook (appointment mechanic, ARPDAU +15–30%) — <a href="https://gamegrowthadvisor.com/blog/2026-03-31-liveops-strategy-mobile-games-guide/">https://gamegrowthadvisor.com/blog/2026-03-31-liveops-strategy-mobile-games-guide/</a></li>
+</ul>
+<p><strong>AI-native drops + quality bar</strong></p>
+<ul>
+<li>BedtimeStory.ai — <a href="https://www.bedtimestory.ai/">https://www.bedtimestory.ai/</a></li>
+<li>StoryBee (voice cloning, ages 3–12) — <a href="https://storybee.app/">https://storybee.app/</a></li>
+<li>Oscar Stories — <a href="https://oscarstories.com/">https://oscarstories.com/</a></li>
+<li>Best AI bedtime story generators (tested 8; pricing) — <a href="https://www.bedtime-stories.fun/blog/best-ai-bedtime-story-generators">https://www.bedtime-stories.fun/blog/best-ai-bedtime-story-generators</a></li>
+<li>&quot;Children Deserve Better Than AI-Generated Stories&quot; (slop distrust) — <a href="https://medium.com/the-kidlit-creators-chronicle/children-deserve-better-than-ai-generated-stories-how-to-avoid-ai-scams-create-an-authentic-book-da4b8e55ef54">https://medium.com/the-kidlit-creators-chronicle/children-deserve-better-than-ai-generated-stories-how-to-avoid-ai-scams-create-an-authentic-book-da4b8e55ef54</a></li>
+<li>Best AI storybook makers 2026 (character consistency, human QC) — <a href="https://magicalhekaya.com/blog/best-ai-storybook-makers-2026-tested-compared">https://magicalhekaya.com/blog/best-ai-storybook-makers-2026-tested-compared</a></li>
+<li>AI children&#39;s book illustration mistakes (consistency) — <a href="https://www.neolemon.com/blog/mistakes-first-time-authors-make-when-illustrating-childrens-books-with-ai/">https://www.neolemon.com/blog/mistakes-first-time-authors-make-when-illustrating-childrens-books-with-ai/</a></li>
+<li>Childbook.ai — <a href="https://www.childbook.ai/">https://www.childbook.ai/</a></li>
+</ul>
+<p><strong>Pricing / COGS</strong></p>
+<ul>
+<li>Google Cloud Text-to-Speech pricing — <a href="https://cloud.google.com/text-to-speech/pricing">https://cloud.google.com/text-to-speech/pricing</a></li>
+<li>Gemini TTS pricing ($20/1M output tokens, 25 tokens/sec) — <a href="https://the-rogue-marketing.github.io/google-gemini-tts-speech-audio-api-pricing-may-2026/">https://the-rogue-marketing.github.io/google-gemini-tts-speech-audio-api-pricing-may-2026/</a></li>
+<li>Gemini 3.1 Flash TTS (OpenRouter) — <a href="https://openrouter.ai/google/gemini-3.1-flash-tts-preview">https://openrouter.ai/google/gemini-3.1-flash-tts-preview</a></li>
+<li>Apple IAP pricing tiers ($0.29–$10,000; $2.99/$4.99 standard) — <a href="https://developer.apple.com/help/app-store-connect/reference/pricing-and-availability/in-app-purchase-and-subscriptions-pricing-and-availability">https://developer.apple.com/help/app-store-connect/reference/pricing-and-availability/in-app-purchase-and-subscriptions-pricing-and-availability</a></li>
+<li>(Imagen 4 Fast $0.039/image — from repo <code>elumi-kids-api/functions/src/api/ai-chat/ai-chat.service.ts:165</code>)</li>
+</ul>
+<p><strong>DACH culture + Advent</strong></p>
+<ul>
+<li>Laternelaufen / St. Martin (Nov 11, DACH kindergarten ritual) — <a href="https://en.wikipedia.org/wiki/Laternelaufen">https://en.wikipedia.org/wiki/Laternelaufen</a></li>
+<li>St. Martin&#39;s Day in Germany — <a href="https://www.lingoda.com/blog/en/martins-day-germany/">https://www.lingoda.com/blog/en/martins-day-germany/</a></li>
+<li>Tonies Advent Calendar (24-door serialized audio &quot;Snowflake&quot;) — <a href="https://support.tonies.com/hc/en-us/articles/29317515807506--Quick-Guide-Advent-Calendar-Tonies">https://support.tonies.com/hc/en-us/articles/29317515807506--Quick-Guide-Advent-Calendar-Tonies</a></li>
+<li>Tonies Advent Calendar product — <a href="https://tonies.com/en-gb/accessories/christmas-advent-calendar/">https://tonies.com/en-gb/accessories/christmas-advent-calendar/</a></li>
+<li>Toca Boca World advent gifts event — <a href="https://apps.apple.com/ca/iphone/story/id1850699357">https://apps.apple.com/ca/iphone/story/id1850699357</a></li>
+</ul>
+<p><strong>Internal (repo)</strong></p>
+<ul>
+<li><code>docs/_session/feature-prioritization-2026-07/{PRIORITIZATION.md, MERGED-LAUNCH-CALENDAR.md, BUILD-GUIDES-FIRST-WAVE.md}</code></li>
+<li>Issues referenced: #121 (quiz engine), #126 (storybooks), #142 (Wonder Shelf), #148 (story packs)</li>
+</ul>
+<hr>
+<p><em>Status: COMPLETE — 2026-07-05.</em></p>

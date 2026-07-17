@@ -1,0 +1,340 @@
+<title>HeyLolo ref — celebration-choreography-spec</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Celebration Choreography Spec — HeyLolo</h1>
+<blockquote>
+<p>The definitive micro-spec of every reward moment in HeyLolo. Every celebrate
+moment made buildable: haptic + sound + motion + LoLo voice line, per tier,
+per trigger. Unifies the gamified-UX mechanics, wonder-shelf catalog, mascot
+motion state machine, voice-conversation design, and the real feedback API.</p>
+</blockquote>
+<p>Status: COMPLETE · 2026-07-06. For GitHub #54 (feedback module) + #128 (mascot) + #142/#146/#158/#176 (celebrate-able events).
+<strong>Builds on (does not repeat):</strong> <code>gamified-ux-winning-mechanics.md</code> §3 (the R4 arousal arc; &quot;no big-bang confetti on routine events&quot;), <code>wonder-shelf-launch-catalog.md</code> §2 (earn-rule → tier table), <code>mascot-motion-state-machine-spec.md</code> §1.1 (states S6–S10), <code>kids-voice-conversation-design.md</code> §2.2 (the Gasp / Whisper-Secret devices), <code>calm-corner-scripts.md</code> (the <code>[haptic: verb]</code> notation style), and the SHIPPED feedback API in <code>src/shared/feedback/</code>.</p>
+<p><strong>The one-line thesis (research verdict):</strong> the rare-celebration <em>choreography</em> is where premium kids apps win. Juice must &quot;hit the eyes, the ears, and the hands simultaneously&quot; — but overused it becomes a crutch that gets the feature turned off (<a href="https://www.gamedesign.gg/knowledge-base/game-design/game-feel-feedback/secrets-of-game-feel-and-juice/">gamedesign.gg</a>; <a href="https://www.wayline.io/blog/the-seductive-squeeze-when-juice-in-game-development-becomes-a-crutch">wayline.io</a>). Apple says the same for haptics: &quot;use them sparingly… overuse gets the feature turned off&quot; (<a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics">Playing haptics, HIG</a>). So HeyLolo&#39;s celebration system is a <strong>rarity budget</strong>: magnitude scales with meaning, the biggest beats fire ~once in a child&#39;s lifetime, silence is a deliberate tier.</p>
+<p><strong>Variable-MAGNITUDE, not variable-PROBABILITY (the deterministic-tier rule):</strong> variable-<em>ratio</em> schedules — reward after an unpredictable number of responses — are the compulsion engine, and the loot-box↔gambling link is <em>stronger</em> in minors (<a href="https://www.supportivecareaba.com/aba-therapy/variable-ratio-schedules">supportivecareaba</a>; gamified §2). HeyLolo never varies <em>whether</em> or <em>how likely</em> a celebration is, only <em>how big</em> — a deterministic function of the trigger. Surprise lives only in <em>content</em> (which wonder), never in the schedule. That is the whole ethical difference from a slot machine.</p>
+<hr>
+<h2>1. The tier system (unified)</h2>
+<p>Four tiers, escalating. <strong>The real shipped API is <code>feedback.success(&quot;S&quot; | &quot;M&quot; | &quot;L&quot;)</code> + <code>feedback.error()</code> + discrete haptic verbs (<code>hSelection</code>, <code>hImpactLight/Medium</code>, <code>hNotifySuccess</code>)</strong> — there is <em>no</em> <code>celebrate()</code> function yet (the other docs use <code>celebrate(tier)</code> as shorthand). The mapping below is the canonical translation, and §5 proposes the thin <code>celebrate(tier)</code> wrapper that unifies haptic + sound + mascot + voice into one call (today only the haptic+sound half exists).</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>TICK</strong></th>
+<th><strong>WHISPER</strong></th>
+<th><strong>MOMENT</strong></th>
+<th><strong>LANDMARK</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>What it marks</strong></td>
+<td>routine effort — a turn taken, a face tapped, a slot silently filled</td>
+<td>a small <em>named</em> win — one artifact minted, a nice exchange, first-of-something</td>
+<td>a <em>gated</em> real win — quiz deck done, game won vs LoLo, story finished</td>
+<td>a rare peak — a <strong>set completed</strong>, an <strong>age-up (#158)</strong>, a <strong>certificate (#176)</strong></td>
+</tr>
+<tr>
+<td><strong>Duration budget</strong></td>
+<td>≤120 ms</td>
+<td>≤600 ms</td>
+<td>≤1.2 s (build→peak→settle)</td>
+<td>≤2.5 s (the R4 arc, full)</td>
+</tr>
+<tr>
+<td><strong>Haptic (real verb)</strong></td>
+<td><code>hSelection</code> or <code>hImpactLight</code> — discrete, <strong>no <code>success()</code></strong></td>
+<td><code>feedback.success(&quot;S&quot;)</code> → <code>SUCCESS_S</code> (rising 2-bump)</td>
+<td><code>feedback.success(&quot;M&quot;)</code> → <code>SUCCESS_M</code> (3 rising taps + swell)</td>
+<td><code>feedback.success(&quot;L&quot;)</code> → <code>SUCCESS_L</code> (4-tap crescendo, near-peak amp)</td>
+</tr>
+<tr>
+<td><strong>Sound (earcon)</strong></td>
+<td><strong>silent</strong> (haptic-only — feel policy)</td>
+<td><strong>silent-to-soft</strong> — one warm <code>marimba</code> note, OR silent (see §5 gap)</td>
+<td>the shipped 3-note pentatonic arpeggio C5→E5→G5 (<code>feedback.success</code> sound)</td>
+<td>a <strong>distinct bigger</strong> earcon — arpeggio + a <code>bell()</code> shimmer top + longer tail (NEW, §5)</td>
+</tr>
+<tr>
+<td><strong>Mascot state</strong></td>
+<td>none (stays in base S2/S3/S5)</td>
+<td><strong>S8 celebrating-small</strong> — a bob + sparkle-of-one</td>
+<td><strong>S9 celebrating-medium</strong> — a hop + small burst</td>
+<td><strong>S10 celebrating-large</strong> — full jump + arms up + particle bloom</td>
+</tr>
+<tr>
+<td><strong>LoLo voice line</strong></td>
+<td><strong>never</strong> — silence is the point</td>
+<td><strong>usually silent</strong>; at most a soft aside (Whisper-Secret register)</td>
+<td><strong>yes, short</strong> — process praise, ONE line (&quot;You finished the whole deck!&quot;)</td>
+<td><strong>yes, a beat</strong> — she <em>notices out loud</em> (&quot;You&#39;re ready for the big-kid questions!&quot;)</td>
+</tr>
+<tr>
+<td><strong>Screen motion</strong></td>
+<td>the target element only (a slot fills, a tick)</td>
+<td>artifact flies to shelf; ONE sparkle; <strong>nothing else moves</strong></td>
+<td>artifact + a small local burst around the mascot; list may settle</td>
+<td>bloom around mascot + a soft full-screen glow-wash — <strong>never confetti rain, never a modal takeover</strong></td>
+</tr>
+<tr>
+<td><strong>Frequency cap</strong></td>
+<td>uncapped</td>
+<td>soft: no more than a few/session</td>
+<td><strong>hard: never two MOMENT+ back-to-back</strong> (pacing guard); ~1–3/session</td>
+<td><strong>very hard: ≤1/session, often ≤1/week</strong>; gated by real milestones only</td>
+</tr>
+</tbody></table>
+<p><strong>What NEVER moves, at any tier (the juice-restraint invariant):</strong> the composer/input bar, the nav/tab bar, the child&#39;s own prior messages, and the parent-facing chrome. Celebration motion is <em>local to the mascot + the earned artifact</em>. No screen-shake (that&#39;s an impact metaphor, wrong for a warm companion), no modal that blocks the next turn, no full-screen confetti except the single soft glow-wash reserved for LANDMARK. Reduce-motion collapses every mascot REACT to its opacity/glow fallback (mascot spec §1.1); the haptic + (rare) earcon still carry the beat.</p>
+<p><strong>Silence as choreography.</strong> TICK is silent-and-still by design; WHISPER is usually voice-silent. This is not underdelivery — it is the rarity budget that makes MOMENT feel like a win and LANDMARK feel like a landmark. A child who gets a spoken &quot;you did it!&quot; on <em>every</em> turn stops hearing it. LoLo&#39;s voice at a celebration is itself a scarce resource.</p>
+<h2>2. Trigger → tier registry (canonical)</h2>
+<p>Every celebrate-able event in the product, its tier, and any special variant. This is the single source of truth; <code>wonder-shelf-launch-catalog.md §2</code> maps the <em>artifact</em> per event, this maps the <em>choreography</em>. Issue numbers on Wladefant/heylolo-app.</p>
+<table>
+<thead>
+<tr>
+<th>Trigger (real event)</th>
+<th>Tier</th>
+<th>Special variant / note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Every turn taken, mood-face scanned</td>
+<td><strong>TICK</strong></td>
+<td><code>hSelection</code>; the ambient &quot;I felt that&quot; — never celebrated as a win</td>
+</tr>
+<tr>
+<td>A single Wonder-Shelf artifact minted (#142)</td>
+<td><strong>WHISPER</strong></td>
+<td>artifact flies to shelf; <strong>Day-0 first-ever artifact bumps to MOMENT</strong> (the guaranteed 3-min payoff, #179)</td>
+</tr>
+<tr>
+<td>First utterance / first message ever</td>
+<td><strong>WHISPER</strong></td>
+<td>bump to MOMENT on Day-0 (mints Hello Spark)</td>
+</tr>
+<tr>
+<td>First mood check-in, first question</td>
+<td><strong>WHISPER</strong></td>
+<td>one artifact each</td>
+</tr>
+<tr>
+<td>Tomorrow&#39;s-Seed payoff on next open (#157)</td>
+<td><strong>WHISPER</strong></td>
+<td>LoLo <em>may</em> speak (it&#39;s a promise kept) — the one WHISPER that often gets a line</td>
+</tr>
+<tr>
+<td>Explorer discovery / capture (#140)</td>
+<td><strong>WHISPER</strong></td>
+<td>+interest-set slot; the Gasp (device #2, mascot S6) often <em>precedes</em> the celebrate</td>
+</tr>
+<tr>
+<td>Calm-Corner ritual completed (#147)</td>
+<td><strong>WHISPER</strong>, hushed</td>
+<td>uses <code>hNotifySuccess</code> in the Bedtime register — <strong>no bright arpeggio</strong> (would break the calm); sound stays off or single soft note</td>
+</tr>
+<tr>
+<td>Quiz deck completed (#121)</td>
+<td><strong>MOMENT</strong></td>
+<td>process praise (&quot;you finished the whole deck!&quot;), never a score</td>
+</tr>
+<tr>
+<td>Quiz <strong>perfect</strong> (all correct)</td>
+<td><strong>MOMENT</strong> + variant</td>
+<td>same tier, richer LoLo line (&quot;every single one!&quot;); <strong>NOT bumped to LANDMARK</strong> — perfection is not rare enough</td>
+</tr>
+<tr>
+<td>Game won vs LoLo (#107/#108)</td>
+<td><strong>MOMENT</strong></td>
+<td>LoLo the gracious loser names the child&#39;s best move</td>
+</tr>
+<tr>
+<td>Game <strong>lost</strong> to LoLo</td>
+<td><strong>none</strong> (not a celebration)</td>
+<td>LoLo offers rematch; NO error earcon, NO sad haptic — losing a game is not a failure event</td>
+</tr>
+<tr>
+<td>Story finished (#126)</td>
+<td><strong>MOMENT</strong></td>
+<td>mints a cover artifact + share link</td>
+</tr>
+<tr>
+<td>Friday drop opened (#152)</td>
+<td><strong>WHISPER</strong></td>
+<td>the <em>gift</em> is the reward; opening it is a soft tick, not a fanfare</td>
+</tr>
+<tr>
+<td>Bedtime session completed (#164)</td>
+<td><strong>WHISPER</strong>, hushed</td>
+<td>Calm register, like Calm Corner</td>
+</tr>
+<tr>
+<td><strong>Set complete</strong> — 7/7 slots + capstone (#142)</td>
+<td><strong>LANDMARK</strong></td>
+<td>the canonical set-complete arc; the golden capstone &quot;hatches&quot;</td>
+</tr>
+<tr>
+<td><strong>Age-up</strong> / tier transition (#158)</td>
+<td><strong>LANDMARK</strong></td>
+<td>LoLo notices growth out loud; 1–2 new capabilities appear</td>
+</tr>
+<tr>
+<td><strong>Certificate earned (#176)</strong></td>
+<td><strong>LANDMARK</strong></td>
+<td>a genuine milestone artifact (Scholar Scroll)</td>
+</tr>
+<tr>
+<td>Level-up / XP threshold (<strong>#146</strong>)</td>
+<td><strong>there is no visible level</strong></td>
+<td>HeyLolo has no XP/levels shown to the child (gamified §2 anti-list). If #146 exists it is an <em>internal</em> difficulty signal — it fires <strong>TICK at most</strong>, silently, and may <em>trigger</em> an age-up evaluation which is the LANDMARK, not the level itself</td>
+</tr>
+<tr>
+<td>Streak day / login count</td>
+<td><strong>NEVER</strong></td>
+<td>no streaks exist (anti-list) — see §3</td>
+</tr>
+</tbody></table>
+<p><strong>Tier-bump rules (deterministic, not random):</strong> (1) the <em>first-ever</em> instance of a WHISPER event on Day-0 bumps one tier to MOMENT (the onboarding delight guarantee, #179); (2) a set-completing artifact fires WHISPER for the mint <strong>then</strong> LANDMARK for the completion — but as ONE choreographed sequence, not two celebrations (the pacing guard collapses them: the artifact flies in, <em>then</em> the capstone blooms). No other bumps. Everything else is a fixed lookup.</p>
+<h2>3. The anti-spec — what NEVER gets celebrated, and why</h2>
+<p>Restraint is the product. Each of these is a place a lesser app fires juice and HeyLolo deliberately stays flat. A celebration here would spend the rarity budget on a non-event and train the child to expect fanfare for nothing — the exact overuse Apple and the game-feel literature warn kills the feature (<a href="https://developer.apple.com/design/human-interface-guidelines/playing-haptics">Playing haptics, HIG</a>; <a href="https://www.wayline.io/blog/the-seductive-squeeze-when-juice-in-game-development-becomes-a-crutch">wayline.io</a>).</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Why it gets NOTHING (not even a TICK, unless noted)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Opening the app / cold start</strong></td>
+<td>LoLo <em>waking</em> is the greeting (mascot S1 <code>WAKE</code>) — that&#39;s character, not reward. Celebrating app-open trains attendance-for-reward, the login-streak psychology we reject (gamified §2).</td>
+</tr>
+<tr>
+<td><strong>Screen / route transitions</strong></td>
+<td>Navigation is not an accomplishment. A <code>hSelection</code> tick on a <em>button press</em> is fine (that&#39;s touch feedback), but arriving on a screen earns nothing.</td>
+</tr>
+<tr>
+<td><strong>Purchases / subscribe / paywall</strong></td>
+<td><strong>The hardest rule.</strong> A celebration on purchase turns the child into the sales channel — the exact Prodigy/FTC failure mode (gamified §4.1). The child UI never celebrates money. The <em>parent</em> may see a plain confirmation; the child sees nothing.</td>
+</tr>
+<tr>
+<td><strong>Parent actions</strong> (settings changed, digest opened, child added)</td>
+<td>The parent surface uses plain system feedback, never the child&#39;s warm celebration vocabulary. Different audience, different register — celebration belongs to the child&#39;s earned moments only.</td>
+</tr>
+<tr>
+<td><strong>A correct answer mid-quiz</strong></td>
+<td>Only the <em>completed deck</em> is a MOMENT. Per-question fanfare turns a quiz into a slot machine of micro-rewards and punishes the wrong answers by contrast. Mid-quiz gets, at most, LoLo&#39;s warmth in <em>voice</em> (a Gasp on a cool fact), never a <code>success()</code>.</td>
+</tr>
+<tr>
+<td><strong>A wrong answer / a game loss / a mishear</strong></td>
+<td>No error earcon, no sad haptic. <code>feedback.error()</code> is reserved for <strong>genuine technical failure only</strong> (no network, recorder died) — never for a child being wrong. A mishear routes to mascot S12 error-kind (a gentle &quot;hmm?&quot;), which is <em>repair</em>, not punishment.</td>
+</tr>
+<tr>
+<td><strong>Streak maintained / daily return</strong></td>
+<td>No streaks exist. Returning is met with delight-in-content (&quot;I found a new wonder&quot;), never a counter that could break.</td>
+</tr>
+<tr>
+<td><strong>Time-limit reached / session end</strong></td>
+<td>The wind-down is a <em>calm</em> register (mascot S11), the opposite of celebration — ending calmly is the parent-side retention win, and a fanfare at the lock screen would spike arousal at exactly the wrong moment.</td>
+</tr>
+</tbody></table>
+<h2>4. Three fully-choreographed examples</h2>
+<p>Timeline notation (calm-corner style): <code>T+Nms</code> · <code>[haptic: verb]</code> · <code>[sound: earcon]</code> · <code>[mascot: state]</code> · <code>[motion: what moves]</code> · <code>LoLo: &quot;…&quot;</code>. <code>T=0</code> is the instant the earning event resolves. All three obey: build → peak (≤2–3 s) → settle; nothing but the mascot + artifact moves; reduce-motion swaps mascot REACT for opacity/glow.</p>
+<h3>4a. WHISPER — a wonder is minted</h3>
+<p><em>Trigger: the child asks their 3rd question and it mints the Curious Compass artifact.</em></p>
+<pre><code>T+0     [mascot: S6 gasp]           LoLo does a quick eyes-wide inhale — the Gasp precedes the reward
+T+120   [haptic: success(&quot;S&quot;)]      the rising 2-bump (SUCCESS_S) — felt, not heard
+T+150   [mascot: S8 celebrating-small]  a single bob
+T+180   [motion: artifact spawns at mascot, arcs to the shelf corner over ~350ms]
+T+200   [sound: one soft marimba note ~C5]   OR silent if session sound-budget spent (§5)
+T+220   [motion: ONE sparkle pops where the artifact lands — nothing else moves]
+T+550   [mascot: settle → back to S3 listening]
+        LoLo (usually SILENT here; if she speaks, the Whisper-Secret register):
+        (soft) &quot;…ooh, that&#39;s one for our shelf.&quot;
+</code></pre>
+<p>One-liner: <em>a gasp, a 2-bump, a bob, and the compass flies to the shelf — she barely says a word.</em></p>
+<h3>4b. MOMENT — a quiz deck is completed</h3>
+<p><em>Trigger: the child answers the last card of a 6-card dino deck (#121); mints the Quiz Ribbon.</em></p>
+<pre><code>T+0     [mascot: S4→hold]           a tiny &quot;here it comes&quot; beat (anticipation — the build)
+T+90    [haptic: success(&quot;M&quot;)]      3 rising taps over a swelling bed (SUCCESS_M), sharpness 0.4→0.6
+T+120   [sound: success arpeggio]   C5→E5→G5, peaks building, sparkle on the top note (the shipped earcon)
+T+140   [mascot: S9 celebrating-medium]  a hop + small sparkle burst
+T+160   [motion: Quiz Ribbon arcs to shelf; a small local burst blooms around the mascot]
+T+600   LoLo (process praise, ONE line — NOT a score):
+        &quot;You finished the WHOLE dino deck! You kept going all the way to the end.&quot;
+T+1200  [mascot: settle → S5 speaking (for the line) → S3]   full beat done under 1.2s of motion
+</code></pre>
+<p>Variant — <strong>quiz perfect:</strong> identical tier/haptic/sound; only LoLo&#39;s line changes (&quot;…and every single one — whoa!&quot;). Deliberately NOT bumped to LANDMARK.
+One-liner: <em>anticipation beat → 3-tap swell + the bright arpeggio → a hop → &quot;you finished the WHOLE deck&quot; — a real win, once per deck.</em></p>
+<h3>4c. LANDMARK — an age-up (#158)</h3>
+<p><em>Trigger: a competence signal + birthday crosses the child from T1 into T2; the rarest beat, ≤1/session and often ≤once in months.</em></p>
+<pre><code>T+0     [mascot: S4 thinking → hold]   LoLo pauses, &quot;notices&quot; — the longest build (this is allowed to breathe)
+T+250   [haptic: success(&quot;L&quot;)]         the 4-tap crescendo (SUCCESS_L), brightest peak amp ~0.85 — allowed
+                                        near-peak ONLY because it fires ~once in a child&#39;s lifetime (rarity = safety)
+T+300   [sound: LANDMARK earcon]        the arpeggio + a bell() shimmer top note + a longer warm tail (NEW, §5)
+T+350   [mascot: S10 celebrating-large]  full jump + arms up + Skia particle bloom
+T+400   [motion: soft full-screen GLOW-WASH (not confetti); 1–2 new capability tiles fade in on the hub]
+T+700   LoLo (she notices growth OUT LOUD — the age-up line):
+        &quot;Hey… you&#39;re getting bigger! I think you&#39;re ready for the big-kid questions now.
+         Look — I brought you some new things to try.&quot;
+T+2000  [mascot: settle → S2 idle]      the glow-wash dissolves; total ≤2.5s
+        [parent digest gets a &quot;LoLo is growing with them&quot; line — the renewal signal, gamified §5]
+</code></pre>
+<p>One-liner: <em>LoLo pauses, notices you grew, the 4-tap crescendo + bell shimmer bloom, and new tiles quietly appear — the rarest beat, earned, never repeated.</em></p>
+<h2>5. Implementation notes — what exists vs what needs adding</h2>
+<h3>What EXISTS in <code>src/shared/feedback/</code> (the real API)</h3>
+<ul>
+<li><strong><code>feedback.success(&quot;S&quot;|&quot;M&quot;|&quot;L&quot;)</code></strong> → <code>playSuccessPattern()</code> plays the shaped Pulsar haptics <code>SUCCESS_S/M/L</code> (<code>haptic-patterns.ts</code>), degrading to <code>hNotifySuccess</code> when the native module is absent/incapable. This is the whole haptic half of WHISPER/MOMENT/LANDMARK — <strong>already built.</strong></li>
+<li>The reward <strong>earcon</strong>: <code>success()</code> plays the C5→E5→G5 marimba/voice arpeggio on the shared audio context (<code>index.ts:135</code>, <code>synth.ts</code> <code>marimba</code>/<code>voice</code>/<code>bell</code>).</li>
+<li>Discrete verbs for TICK: <code>hSelection</code>, <code>hImpactLight/Medium</code> (<code>haptics.ts</code>).</li>
+<li><code>playLandmarkPattern()</code> exists (<code>haptic-patterns.ts:130</code>) but is <strong>wired to nothing</strong> — &quot;no such event exists in the app yet.&quot;</li>
+<li>Graceful degradation, the global Vibrations toggle, and the parent gamification toggle are all already respected.</li>
+</ul>
+<h3>GAPS — what this spec requires that is NOT built</h3>
+<ol>
+<li><strong>No <code>celebrate(tier)</code> wrapper.</strong> Callers today must call <code>feedback.success(mag)</code> for the haptic+sound, then <em>separately</em> drive the mascot and any voice line. This spec&#39;s whole point is that the four channels are ONE choreography. <strong>Add <code>celebrate(tier, opts)</code></strong> that: fires the haptic magnitude, fires the tier&#39;s earcon, sets the mascot <code>celebrate</code>+<code>celebrateTier</code> inputs (mascot spec §1.3), and emits the voice-line policy. One call, four channels.</li>
+<li><strong>Sound does not scale with tier.</strong> <code>success()</code> plays the <em>same</em> arpeggio for S/M/L. Per §1 the tiers need distinct earcons: WHISPER = one soft <code>marimba</code> note (or silent under budget); MOMENT = the current arpeggio; <strong>LANDMARK = a NEW bigger earcon</strong> — arpeggio + a <code>bell()</code> shimmer top + a longer tail. <code>bell()</code> already exists in <code>synth.ts</code>; this is a small additive recipe, not new infra.</li>
+<li><strong>TICK must NOT call <code>success()</code>.</strong> It&#39;s a discrete <code>hSelection</code>/<code>hImpactLight</code> only — silent, no mascot celebrate state. Make sure the registry routes TICK away from the success path.</li>
+<li><strong>No pacing guard.</strong> &quot;Never two MOMENT+ back-to-back&quot; is unenforced. Add a module-level timestamp latch in <code>celebrate()</code>: a MOMENT/LANDMARK within ~N s of a prior one downgrades to a silent artifact-only mint or defers the fanfare. Deterministic.</li>
+<li><strong>Mascot celebrate states S8/S9/S10 are Rive phase-2</strong> (mascot spec §2), not shipped. Until then celebration motion is the Skia sparkle/bloom + artifact arc only; wire the mascot inputs now so they light up when Rive lands.</li>
+<li><strong>LoLo voice line on celebrate has no mechanism.</strong> Voice is BE-persona-driven. v1: a small client line-bank keyed by tier+trigger, in LoLo&#39;s Gasp/Whisper registers, TTS&#39;d via the existing path; silence is default for TICK/WHISPER. Later: a BE <code>[celebrate:moment]</code> marker the persona fills.</li>
+<li><strong>Session sound-budget.</strong> Cap audible earcons per session (WHISPER goes silent after the first 1–2); haptic always fires. A counter on the earcon context.</li>
+</ol>
+<h3>The config shape</h3>
+<p>A single <code>celebration-registry.ts</code> (versioned code config, same discipline as <code>wonder-collections.config.ts</code>):</p>
+<pre><code class="language-ts">type Tier = &quot;tick&quot; | &quot;whisper&quot; | &quot;moment&quot; | &quot;landmark&quot;;
+// TIER_SPEC = the §1 table verbatim, keyed by Tier:
+//   { haptic: &quot;selection&quot;|&quot;S&quot;|&quot;M&quot;|&quot;L&quot;, earcon: &quot;none&quot;|&quot;soft&quot;|&quot;arpeggio&quot;|&quot;landmark&quot;,
+//     mascot: null|&quot;S8&quot;|&quot;S9&quot;|&quot;S10&quot;, voice: &quot;never&quot;|&quot;optional&quot;|&quot;short&quot;|&quot;beat&quot;,
+//     maxMotion: &quot;target&quot;|&quot;artifact&quot;|&quot;burst&quot;|&quot;glowwash&quot;,
+//     cap: { perSession?, cooldownMs? } }
+// TRIGGERS = the §2 registry, keyed by event → { tier, variant?, bumpDay0? }.
+//   Anti-spec events are simply ABSENT — no entry = no celebration.
+
+celebrate(&quot;set.complete&quot;, { childId, artifactKey });
+</code></pre>
+<p>The anti-spec (§3) is enforced by <em>absence</em>: no registry entry → nothing. The pacing guard and Day-0 bump live in <code>celebrate()</code>, deterministically.</p>
+<hr>
+<h2>Sources</h2>
+<p><strong>Internal (build-on, not re-cited):</strong> <code>gamified-ux-winning-mechanics.md</code> §2–§5 (arousal arc, anti-list, Prodigy failure mode, age-up as LTV); <code>wonder-shelf-launch-catalog.md</code> §2–§3 (earn→tier table, anti-dark-pattern); <code>mascot-motion-state-machine-spec.md</code> §1.1/§1.3/§2 (states S6–S12, Rive inputs, phase plan); <code>kids-voice-conversation-design.md</code> §2.2 (Gasp, Whisper-Secret); <code>calm-corner-scripts.md</code> (haptic notation, Bedtime register); <code>src/shared/feedback/{index,haptics,haptic-patterns,synth,earcon-context}.ts</code> (the shipped API).</p>
+<p><strong>Web (this session):</strong></p>
+<ol>
+<li>Game feel / juice — multi-sensory (eyes+ears+hands), the celebration choreography: gamedesign.gg/knowledge-base/game-design/game-feel-feedback/secrets-of-game-feel-and-juice · garden.bradwoods.io/notes/design/juice</li>
+<li>Juice-as-crutch / overuse warning: wayline.io/blog/the-seductive-squeeze-when-juice-in-game-development-becomes-a-crutch</li>
+<li>Apple HIG — Playing haptics (use sparingly, pair sound+haptic, match weight): developer.apple.com/design/human-interface-guidelines/playing-haptics · …/feedback</li>
+<li>Khan Academy Kids — characters as delight/guides: khankids.zendesk.com/hc/en-us/articles/360049358751</li>
+<li>Variable-ratio schedules — compulsion risk / minors ethics (→ variable-magnitude not -probability): supportivecareaba.com/aba-therapy/variable-ratio-schedules · umbrex.com/resources/tools-for-thinking/what-is-variable-rewards</li>
+</ol>

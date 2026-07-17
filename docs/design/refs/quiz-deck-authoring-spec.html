@@ -1,0 +1,268 @@
+<title>HeyLolo ref — quiz-deck-authoring-spec</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Quiz Deck Authoring + Eval Spec — HeyLolo (elumi-kids)</h1>
+<blockquote>
+<p>Status: DRAFT skeleton — being written. Makes #121 (quiz engine — build starts W3 Jul 20, ships in v1.1 ~Sep 15)
+and #154 (16-deck Sep–Dec run) buildable with consistent quality across age tiers.</p>
+</blockquote>
+<h2>0. Purpose &amp; scope</h2>
+<p>Makes <strong>#121</strong> (quiz engine, <code>mode:&quot;quiz&quot;</code> conversation) and <strong>#154 / D3</strong> (16-deck Sep–Dec batch run) buildable with consistent quality across age tiers and zero per-week authoring drift: one deck format, four tier rulebooks, one generation-and-eval pipeline, the voice-mode playbook, and three ship-ready Friday decks.</p>
+<p><strong>Founder spec:</strong> <strong>5 questions per session.</strong> A &quot;deck&quot; holds a 5-question set <strong>per age tier</strong> (four variants), so one Friday theme serves a 4-year-old and a 12-year-old at the right level.</p>
+<p><strong>Runtime fit.</strong> The authoring JSON below is the source-of-truth content artifact D3 batch-authors and human-QCs; a build step projects each tier variant into the runtime <code>quizzes</code> shape (<code>BUILD-GUIDES §3c</code>: <code>{stem, choices, correctIndex, explanation}</code>) plus the in-voice/artifact fields. Decks are <code>mode:&quot;quiz&quot;</code> content, pre-generated once and served to all (marginal COGS ≈ $0), scheduled via the D1 drop scheduler.</p>
+<hr>
+<h2>1. Deck format spec (JSON schema)</h2>
+<p>One deck = one theme × four tier variants × 5 questions each. Every optional field is <code>.nullish()</code> on the FE schema (<code>src/entities/quiz/model/schemas.ts</code>) and <code>.optional()</code> on the BE row (per repo schema discipline).</p>
+<pre><code class="language-jsonc">{
+  &quot;id&quot;: &quot;animals-starter&quot;,              // stable kebab key
+  &quot;theme&quot;: &quot;animals&quot;,                   // maps to Wonder Shelf interest/seasonal set
+  &quot;titleEn&quot;: &quot;Animal Kingdom&quot;,
+  &quot;titleDe&quot;: &quot;Tierreich&quot;,
+  &quot;kind&quot;: &quot;starter|seasonal|dach&quot;,      // authoring/calendar bucket
+  &quot;season&quot;: null,                       // e.g. &quot;autumn&quot;, &quot;advent&quot; (seasonal decks)
+  &quot;dropWeek&quot;: null,                     // ISO week the D1 scheduler reveals it
+  &quot;artifactHook&quot;: {                     // what completing the deck mints (wonder-shelf-launch-catalog)
+    &quot;collectionKey&quot;: &quot;animal-friends&quot;,
+    &quot;slotKey&quot;: &quot;fluffy-tail&quot;,           // interest-set slot filled on completion
+    &quot;grantsRibbon&quot;: true                // also mints &quot;Quiz Ribbon&quot; (Little Thinkers)
+  },
+  &quot;tiers&quot;: {
+    &quot;T2&quot;: {                             // 4-5=T1, 6-7=T2, 8-9=T3, 10-12=T4
+      &quot;ageBand&quot;: &quot;6-7&quot;,
+      &quot;questions&quot;: [
+        {
+          &quot;id&quot;: &quot;q1&quot;,
+          &quot;type&quot;: &quot;binary|mcq3|open-with-keywords&quot;,
+          &quot;questionEn&quot;: &quot;Do fish breathe underwater?&quot;,
+          &quot;questionDe&quot;: &quot;Atmen Fische unter Wasser?&quot;,
+          &quot;choicesEn&quot;: [&quot;Yes&quot;, &quot;No&quot;],           // binary/mcq3 only; omit for open
+          &quot;choicesDe&quot;: [&quot;Ja&quot;, &quot;Nein&quot;],
+          &quot;correctIndex&quot;: 0,                    // binary/mcq3 only
+          &quot;accepted&quot;: {                         // open-with-keywords only
+            &quot;keywordsEn&quot;: [&quot;gills&quot;, &quot;gill&quot;],
+            &quot;keywordsDe&quot;: [&quot;Kiemen&quot;, &quot;Kieme&quot;],
+            &quot;kidVariantsEn&quot;: [&quot;with their neck holes&quot;, &quot;gilly bits&quot;], // real kid phrasings
+            &quot;kidVariantsDe&quot;: [&quot;mit den Löchern am Hals&quot;]
+          },
+          &quot;lolo&quot;: {                             // in-voice, LoLo persona (see §3 template)
+            &quot;correctEn&quot;: &quot;Yes! Fish have **gills** — like tiny built-in snorkels. 🐟&quot;,
+            &quot;correctDe&quot;: &quot;Ja! Fische haben **Kiemen** — wie eingebaute Schnorchel. 🐟&quot;,
+            &quot;incorrectEn&quot;: &quot;Almost! They don&#39;t use their mouths like us — they use **gills**.&quot;,
+            &quot;incorrectDe&quot;: &quot;Fast! Sie atmen nicht mit dem Mund — sondern mit **Kiemen**.&quot;,
+            &quot;partialEn&quot;: null,                  // open-type only: heard the idea, missing the word
+            &quot;partialDe&quot;: null
+          },
+          &quot;funFactEn&quot;: &quot;A shark never stops swimming — moving water keeps its gills working!&quot;,
+          &quot;funFactDe&quot;: &quot;Ein Hai hört nie auf zu schwimmen — so bleiben seine Kiemen frisch!&quot;
+        }
+        // …5 questions total
+      ]
+    }
+    // …T1, T3, T4 variants
+  }
+}
+</code></pre>
+<p><strong>Field rules.</strong> <code>correctIndex</code>/<code>choices*</code> present iff <code>type ∈ {binary,mcq3}</code>; <code>accepted</code> present iff <code>type = open-with-keywords</code>. <code>lolo.partial*</code> is only meaningful for open questions (child voiced the concept but not the keyword → nudge, don&#39;t fail). <code>funFact*</code> always fires <em>after</em> the reveal (the payoff — never before, or it leaks the answer). <code>artifactHook</code> is deck-level (one mint per completion), not per-question.</p>
+<hr>
+<h2>2. Age-tier writing rules</h2>
+<p>Four bands, four rulebooks. Attention budget = how long the <em>whole 5-question session</em> should run. Vocabulary follows the shipped LoLo guardrail (<code>ai-chat.instructions.ts</code>: short sentences, no jargon, wonder-not-fear) but tightens per band.</p>
+<table>
+<thead>
+<tr>
+<th>Band</th>
+<th>Tier</th>
+<th>Question types allowed</th>
+<th>Vocabulary</th>
+<th>Sentence</th>
+<th>Attention budget</th>
+<th>Reveal/praise</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>4-5</strong></td>
+<td>T1</td>
+<td><strong>binary only</strong> (Yes/No, picture-ish concrete) — <em>no mcq3, no open</em></td>
+<td>~200 most-common words; nameable concrete nouns only</td>
+<td>≤6 words, 1 clause</td>
+<td><strong>≤2 min</strong>, big targets, LoLo reads every question aloud by default</td>
+<td>every answer celebrated; &quot;wrong&quot; reframed as &quot;let&#39;s peek together&quot;</td>
+</tr>
+<tr>
+<td><strong>6-7</strong></td>
+<td>T2</td>
+<td>binary + <strong>mcq3</strong> (3 choices)</td>
+<td>early-reader; one new &quot;big word&quot; per deck, always defined</td>
+<td>≤10 words</td>
+<td>≤3–4 min</td>
+<td>whisper per correct; gentle look-again</td>
+</tr>
+<tr>
+<td><strong>8-9</strong></td>
+<td>T3</td>
+<td>binary + mcq3 + <strong>open-with-keywords</strong> (short spoken/typed answer)</td>
+<td>grade-level; can hold a two-step idea</td>
+<td>≤14 words, may add a clause</td>
+<td>≤5 min</td>
+<td>process praise (&quot;you reasoned that out&quot;)</td>
+</tr>
+<tr>
+<td><strong>10-12</strong></td>
+<td>T4</td>
+<td>all types; open questions favored; mild &quot;why do you think&quot; follow-ups</td>
+<td>richer; abstract terms OK if grounded</td>
+<td>1–2 sentences</td>
+<td>≤6–7 min</td>
+<td>praise the <em>method</em>, invite a deeper why</td>
+</tr>
+</tbody></table>
+<p><strong>Hard tier rules.</strong> T1 is <strong>binary-only and curated-only</strong> (§3d) — LLM factuality is riskiest for the youngest and a wrong fact to a 4-year-old is the worst failure. No timers, hearts, scores-vs-others at any tier (DSA anti-list). One &quot;big word&quot; max per deck at T2, bolded and defined in the same breath. Never negate a stem for T1–T2 (&quot;Which animal does <strong>not</strong>…&quot; confuses early readers) — ask positively.</p>
+<p><strong>One question, rewritten across all four tiers</strong> (theme: animals · concept: how fish breathe):</p>
+<ul>
+<li><strong>T1 (4-5) · binary:</strong> &quot;Do fish live in water?&quot; → Yes/No. <em>(Concrete, observable, one fact.)</em></li>
+<li><strong>T2 (6-7) · mcq3:</strong> &quot;How do fish breathe underwater?&quot; → [With <strong>gills</strong> · With their nose · They hold their breath]. <em>(Introduces + defines &quot;gills&quot;.)</em></li>
+<li><strong>T3 (8-9) · open-with-keywords:</strong> &quot;Fish stay underwater all day — how do they get their oxygen?&quot; → keyword <code>gills</code>; partial if child says &quot;through their sides&quot; without the word. <em>(Requires recall, not recognition.)</em></li>
+<li><strong>T4 (10-12) · open + why:</strong> &quot;Whales live in water too, but must surface for air while fish never do. What&#39;s the difference in how they breathe?&quot; → keywords <code>gills</code> (fish) + <code>lungs</code>/<code>blowhole</code> (whales). <em>(Contrast + reasoning.)</em></li>
+</ul>
+<hr>
+<h2>3. Generation pipeline + eval gate</h2>
+<h3>3a. Generation prompt template (baked style rules)</h3>
+<p>Reuses the LoLo persona and safety block from <code>ai-chat.instructions.ts</code>. One call per deck <strong>per tier</strong> (four calls/deck), so the tier rulebook is injected sharply rather than asking one call to juggle all four.</p>
+<pre><code>SYSTEM: You are LoLo, a warm &quot;Digital Explorer&quot; companion writing a QUIZ DECK for
+children. Output ONLY valid JSON matching the deck tier-variant schema.
+
+DECK: theme=&quot;{theme}&quot;, tier={tier} (ages {ageBand}).
+WRITE 5 questions. Allowed types for this tier: {allowedTypes}. {tierRulebook}
+
+STYLE (LoLo voice):
+- Every question is a warm, curious hook — never a dry exam item.
+- lolo.correct: celebrate + name the key idea in ≤2 short sentences (bold the big word).
+- lolo.incorrect: NEVER &quot;wrong&quot;. Reframe as &quot;almost / let&#39;s look&quot;, then give the fact.
+- lolo.partial (open only): child had the idea but missed the word → supply the word warmly.
+- funFact: a surprising payoff shown AFTER the reveal. Must NOT leak any answer.
+- accepted.kidVariants: list how a real {ageBand}-year-old would actually SAY the answer,
+  including baby-talk and near-misses, EN and DE.
+
+LANGUAGE: write questionEn/questionDe and all lolo.* / funFact in BOTH English and German.
+German is age-native (a real German kid&#39;s phrasing), NOT a literal translation.
+
+SAFETY: wonder over fear; no violence/scary/PII; facts must be TRUE and checkable.
+For any factual claim, prefer the boringly-verified over the surprising-but-shaky.
+</code></pre>
+<p><code>{tierRulebook}</code> = the row from §2 rendered as bullet constraints (word count, sentence length, negation ban, big-word limit).</p>
+<h3>3b. Automated eval gate (must pass before human QC)</h3>
+<p>Every generated tier-variant runs through a scripted gate (a BE/CI script over the deck JSON). Any failure → auto-regenerate that question (max 2 retries), else escalate to human.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Method</th>
+<th>Fail condition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Reading level</strong></td>
+<td>Flesch-Kincaid Grade (EN) + Wiener Sachtextformel (DE) on each <code>questionEn/De</code></td>
+<td>grade &gt; band ceiling (T1≤1, T2≤2, T3≤4, T4≤6)</td>
+</tr>
+<tr>
+<td><strong>Answer leakage</strong></td>
+<td>keyword/choice string not present in stem or <code>funFact</code>; <code>funFact</code> not shown pre-reveal</td>
+<td>correct answer text appears in the question or fun-fact</td>
+</tr>
+<tr>
+<td><strong>Ambiguity</strong></td>
+<td>for mcq3, exactly one choice matches the keyword set; distractors are mutually exclusive</td>
+<td>0 or ≥2 defensible correct choices</td>
+</tr>
+<tr>
+<td><strong>Type legality</strong></td>
+<td>question <code>type</code> ∈ tier&#39;s allowed set</td>
+<td>T1 non-binary, etc.</td>
+</tr>
+<tr>
+<td><strong>Safety classifier</strong></td>
+<td>reuse the chat enrichment/moderation pass (<code>ai-chat-enrichment.service.ts</code>) over every string</td>
+<td>any flag</td>
+</tr>
+<tr>
+<td><strong>DE grammar</strong></td>
+<td>LanguageTool (de-DE) API over German strings</td>
+<td>grammar/agreement error</td>
+</tr>
+<tr>
+<td><strong>Fact spot-check</strong></td>
+<td>second LLM call, &quot;is this claim true for a child, yes/no + source&quot;, low-temp</td>
+<td>&quot;no&quot; or unsure</td>
+</tr>
+<tr>
+<td><strong>Structure</strong></td>
+<td>zod-parse against the deck schema; 5 questions; both languages non-empty</td>
+<td>parse error / missing lang</td>
+</tr>
+</tbody></table>
+<h3>3c. Human QC rubric (10 points — ship at ≥9, T1 requires 10/10)</h3>
+<p>A human reviewer (Brandy) scores each tier variant. 1 pt each: <strong>(1)</strong> every fact true &amp; age-true; <strong>(2)</strong> unambiguous single answer; <strong>(3)</strong> on-band vocabulary; <strong>(4)</strong> LoLo voice (warm hook, not exam); <strong>(5)</strong> <code>incorrect</code> never punishing; <strong>(6)</strong> German is native, not translated; <strong>(7)</strong> fun-fact delights <em>and</em> doesn&#39;t leak; <strong>(8)</strong> no scary/PII/bias; <strong>(9)</strong> kid-variant list is realistic; <strong>(10)</strong> theme-coherent as a set of 5. Below 9 → revise the failing items and re-score.</p>
+<h3>3d. Curated-fallback policy (the 4-5 tier)</h3>
+<p><strong>T1 decks are hand-authored or hand-verified, never auto-shipped</strong> (<code>content-drop-economy §5</code>, <code>BUILD-GUIDES §3f</code>: LLM factuality risk is highest and the stakes highest for the youngest). T1 flow: LLM <em>drafts</em> → automated gate → <strong>human writes/rewrites to 10/10</strong> → locked into a <strong>curated T1 bank</strong>. If a Friday theme has no signed-off T1 variant, the child at T1 gets the <strong>most recent evergreen curated T1 deck</strong> rather than an unreviewed one — the drop never blocks, but an unchecked deck never reaches a 4-year-old. T2–T4 may ship on ≥9 auto+human; T1 is the only tier gated to a curated allowlist.</p>
+<hr>
+<h2>4. Voice-mode adaptation</h2>
+<p>A quiz plays over voice inside the existing <code>mode:&quot;quiz&quot;</code> conversation. LoLo reads the question aloud (<code>v1_synthesizeSpeech</code>, Zephyr), the child answers by speaking, STT transcribes, the client grades locally against <code>accepted</code>/<code>choices</code>.</p>
+<ul>
+<li><strong>STT keyword biasing per question (#165).</strong> Before opening the mic for a question, send that question&#39;s expected answer terms — <code>choices*</code> + <code>accepted.keywords*</code> + <code>kidVariants*</code> — as speech-context <strong>phrase hints</strong> to the chirp_3 streaming server (<code>elumi-kids-api/server</code> :3005). This sharply lifts recognition of the domain word (&quot;gills&quot;, &quot;Kiemen&quot;) the child is most likely to say, which is otherwise easily misheard. Hints are per-question and swapped each turn.</li>
+<li><strong>Grading spoken answers.</strong> Normalize the transcript (lowercase, strip filler &quot;um/ähm&quot;, singular/plural fold) then match against <code>keywords</code> ∪ <code>kidVariants</code>. Binary/mcq3: match spoken choice text or its ordinal (&quot;the first one&quot;). Full keyword hit → <code>correct</code>; concept-without-keyword → <code>partial</code> (open only); no match → <code>incorrect</code>.</li>
+<li><strong>Repair prompts (unclear answer).</strong> If STT returns low confidence or an off-topic transcript, LoLo does <strong>one</strong> warm repair, not a hard re-ask: <em>&quot;I didn&#39;t quite catch that — was it the first one or the second?&quot;</em> (binary/mcq3) / <em>&quot;Tell me again in your own words?&quot;</em> (open). Max <strong>one</strong> repair per question; a second miss reveals the answer gently and moves on — never trap the child.</li>
+<li><strong>Dead-mic pattern reuse (#179).</strong> Reuse the shipped dead-mic guard: if the mic never opens or returns silence within the window, LoLo prompts once (<em>&quot;Your turn — tap the disc and tell me!&quot;</em>), keeps the recorder armed (per <code>reference_open_chat_3turn_audio_pattern</code> — don&#39;t <code>stop()</code> the recorder between turns), and falls back to on-screen tap choices so a broken mic never stalls the quiz.</li>
+<li><strong>No timer.</strong> Voice mode especially must not pressure — the child may think out loud; LoLo waits.</li>
+</ul>
+<hr>
+<h2>5. Three ship-ready example decks</h2>
+<p>Written complete at <strong>T2 (6-7)</strong>, EN+DE, ready as the first Friday drops. Compact notation per question: <code>type · Q (EN / DE) · answer · LoLo correct / incorrect [/ partial] · funFact</code>. Full JSON expands mechanically from §1.</p>
+<h3>Deck A — &quot;Animal Kingdom&quot; / &quot;Tierreich&quot; (starter)</h3>
+<p><code>id: animals-starter · theme: animals · artifactHook: animal-friends/fluffy-tail + Quiz Ribbon</code></p>
+<ol>
+<li><strong>binary</strong> — Do fish breathe with gills? / Atmen Fische mit Kiemen? → <strong>Yes/Ja</strong>. ✔ &quot;Yes! <strong>Gills</strong> are like built-in snorkels. 🐟&quot; / &quot;Ja! <strong>Kiemen</strong> sind wie eingebaute Schnorchel. 🐟&quot; ✘ &quot;Almost — not their mouth, their <strong>gills</strong>.&quot; / &quot;Fast — nicht der Mund, die <strong>Kiemen</strong>.&quot; · Fun: A shark must keep swimming to keep its gills working! / Ein Hai muss immer schwimmen, damit die Kiemen arbeiten!</li>
+<li><strong>mcq3</strong> — Which animal sleeps standing up? / Welches Tier schläft im Stehen? → [<strong>Horse/Pferd</strong> · Cat/Katze · Frog/Frosch] (idx 0). ✔ &quot;Right! A <strong>horse</strong> can lock its legs and doze standing. 🐴&quot; / &quot;Richtig! Ein <strong>Pferd</strong> kann die Beine feststellen und im Stehen dösen. 🐴&quot; ✘ &quot;Good guess — it&#39;s the <strong>horse</strong>.&quot; / &quot;Gute Idee — es ist das <strong>Pferd</strong>.&quot; · Fun: They can run seconds after waking — handy to escape! / Sie können Sekunden nach dem Aufwachen losrennen!</li>
+<li><strong>mcq3</strong> — What do we call an animal that eats only plants? / Wie nennt man ein Tier, das nur Pflanzen frisst? → [Meat-eater/Fleischfresser · <strong>Plant-eater (herbivore)/Pflanzenfresser</strong> · Rock-eater/Steinfresser] (idx 1). ✔ &quot;Yes — a <strong>plant-eater</strong>, like a rabbit. 🥕&quot; / &quot;Ja — ein <strong>Pflanzenfresser</strong>, wie ein Hase. 🥕&quot; ✘ &quot;Look again — the one that eats plants.&quot; / &quot;Schau nochmal — das mit den Pflanzen.&quot; · Fun: A cow can spend 8 hours a day just chewing! / Eine Kuh kaut bis zu 8 Stunden am Tag!</li>
+<li><strong>binary</strong> — Is a butterfly born with wings? / Wird ein Schmetterling mit Flügeln geboren? → <strong>No/Nein</strong>. ✔ &quot;No! It starts as a <strong>caterpillar</strong> first. 🐛&quot; / &quot;Nein! Erst ist er eine <strong>Raupe</strong>. 🐛&quot; ✘ &quot;Almost — first it&#39;s a caterpillar.&quot; / &quot;Fast — zuerst ist er eine Raupe.&quot; · Fun: Inside the cocoon it turns almost to soup, then rebuilds! / Im Kokon wird sie fast zu Suppe und baut sich neu!</li>
+<li><strong>mcq3</strong> — Which sense do dogs use most? / Welchen Sinn nutzen Hunde am meisten? → [Seeing/Sehen · <strong>Smelling/Riechen</strong> · Tasting/Schmecken] (idx 1). ✔ &quot;Right — dogs &#39;see&#39; the world by <strong>smell</strong>! 🐶&quot; / &quot;Richtig — Hunde &#39;sehen&#39; die Welt mit der <strong>Nase</strong>! 🐶&quot; ✘ &quot;Try again — think of their nose.&quot; / &quot;Nochmal — denk an die Nase.&quot; · Fun: A dog&#39;s nose is a million times sharper than yours! / Eine Hundenase riecht millionenfach besser als deine!</li>
+</ol>
+<h3>Deck B — &quot;Autumn Treasures&quot; / &quot;Herbst-Schätze&quot; (seasonal · Sept–Oct)</h3>
+<p><code>id: autumn-seasonal · theme: autumn · season: autumn · artifactHook: autumn-treasures/acorn + Quiz Ribbon</code></p>
+<ol>
+<li><strong>binary</strong> — Do leaves change colour in autumn? / Färben sich Blätter im Herbst? → <strong>Yes/Ja</strong>. ✔ &quot;Yes! Green fades and <strong>red and gold</strong> peek out. 🍁&quot; / &quot;Ja! Das Grün verblasst und <strong>Rot und Gold</strong> kommen hervor. 🍁&quot; ✘ &quot;Almost — autumn brings red and gold.&quot; / &quot;Fast — der Herbst bringt Rot und Gold.&quot; · Fun: The colours were hiding under the green all summer! / Die Farben waren den ganzen Sommer unter dem Grün versteckt!</li>
+<li><strong>mcq3</strong> — Where do squirrels put nuts for winter? / Wo verstecken Eichhörnchen Nüsse für den Winter? → [In a river/Im Fluss · <strong>In the ground/In der Erde</strong> · In the sky/Im Himmel] (idx 1). ✔ &quot;Yes — they <strong>bury</strong> them to dig up later! 🐿️&quot; / &quot;Ja — sie <strong>vergraben</strong> sie und holen sie später! 🐿️&quot; ✘ &quot;Look again — somewhere they can dig.&quot; / &quot;Schau nochmal — wo man graben kann.&quot; · Fun: They forget some — and those grow into trees! / Manche vergessen sie — daraus wachsen Bäume!</li>
+<li><strong>mcq3</strong> — What falls from an oak tree in autumn? / Was fällt im Herbst von einer Eiche? → [Apples/Äpfel · <strong>Acorns/Eicheln</strong> · Pinecones/Zapfen] (idx 1). ✔ &quot;Right — <strong>acorns</strong>, a squirrel&#39;s favourite! 🌰&quot; / &quot;Richtig — <strong>Eicheln</strong>, das Lieblingsessen der Eichhörnchen! 🌰&quot; ✘ &quot;Not quite — the little brown one with a cap.&quot; / &quot;Fast — das kleine Braune mit Hütchen.&quot; · Fun: One big oak can drop thousands of acorns a year! / Eine große Eiche wirft tausende Eicheln pro Jahr ab!</li>
+<li><strong>binary</strong> — Do some birds fly to warm places in autumn? / Fliegen manche Vögel im Herbst in warme Länder? → <strong>Yes/Ja</strong>. ✔ &quot;Yes! It&#39;s called <strong>migration</strong>. 🐦&quot; / &quot;Ja! Das nennt man <strong>Vogelzug</strong>. 🐦&quot; ✘ &quot;Almost — many birds travel far south.&quot; / &quot;Fast — viele Vögel ziehen weit nach Süden.&quot; · Fun: Some swallows fly all the way to Africa! / Manche Schwalben fliegen bis nach Afrika!</li>
+<li><strong>mcq3</strong> — Why do we wear jumpers in autumn? / Warum ziehen wir im Herbst Pullis an? → [It gets <strong>cooler</strong>/Es wird <strong>kühler</strong> · It gets hotter/Es wird heißer · Nothing changes/Nichts ändert sich] (idx 0). ✔ &quot;Right — the air turns <strong>cooler</strong>, so we cosy up! 🧥&quot; / &quot;Richtig — die Luft wird <strong>kühler</strong>, da machen wir&#39;s uns gemütlich! 🧥&quot; ✘ &quot;Think about the weather outside.&quot; / &quot;Denk ans Wetter draußen.&quot; · Fun: The days also get shorter — the sun clocks off early! / Die Tage werden kürzer — die Sonne macht früh Feierabend!</li>
+</ol>
+<h3>Deck C — &quot;Bikes &amp; Road Safety&quot; / &quot;Fahrrad &amp; Verkehr&quot; (DACH · #176)</h3>
+<p><code>id: fahrrad-verkehr-dach · theme: road-safety · kind: dach · artifactHook: little-thinkers/scholar-scroll (certificate #176) + Quiz Ribbon</code></p>
+<ol>
+<li><strong>binary</strong> — Should you wear a helmet when you ride a bike? / Sollte man beim Radfahren einen Helm tragen? → <strong>Yes/Ja</strong>. ✔ &quot;Yes! A <strong>helmet</strong> keeps your head safe. 🚲&quot; / &quot;Ja! Ein <strong>Helm</strong> schützt deinen Kopf. 🚲&quot; ✘ &quot;Always yes — a helmet protects your head.&quot; / &quot;Immer ja — ein Helm schützt den Kopf.&quot; · Fun: A helmet should sit flat, two fingers above your eyebrows! / Der Helm sitzt gerade, zwei Finger über den Augenbrauen!</li>
+<li><strong>mcq3</strong> — What colour light means STOP? / Welche Ampelfarbe heißt HALT? → [Green/Grün · Yellow/Gelb · <strong>Red/Rot</strong>] (idx 2). ✔ &quot;Right — <strong>red</strong> means stop and wait! 🚦&quot; / &quot;Richtig — <strong>Rot</strong> heißt anhalten und warten! 🚦&quot; ✘ &quot;Look again — the top light.&quot; / &quot;Schau nochmal — das obere Licht.&quot; · Fun: Green doesn&#39;t just mean go — you still look both ways first! / Grün heißt nicht nur los — erst schaust du in beide Richtungen!</li>
+<li><strong>mcq3</strong> — Before crossing a street, what do you do? / Was tust du, bevor du eine Straße überquerst? → [Run fast/Schnell rennen · <strong>Stop and look both ways/Stehen bleiben und schauen</strong> · Close your eyes/Augen zu] (idx 1). ✔ &quot;Yes — <strong>stop, look left and right</strong>, then go. 👀&quot; / &quot;Ja — <strong>stehen bleiben, links und rechts schauen</strong>, dann gehen. 👀&quot; ✘ &quot;Not that one — safe means looking first.&quot; / &quot;Nicht das — sicher heißt erst schauen.&quot; · Fun: Even at a green light, a good rider always checks! / Auch bei Grün schaut ein guter Radler immer!</li>
+<li><strong>mcq3</strong> — How do you show you&#39;re turning left on a bike? / Wie zeigst du beim Radfahren, dass du links abbiegst? → [Ring the bell/Klingeln · <strong>Point your left arm out/Linken Arm ausstrecken</strong> · Shout/Rufen] (idx 1). ✔ &quot;Right — you <strong>point your arm</strong> so others know! 💪&quot; / &quot;Richtig — du <strong>streckst den Arm aus</strong>, damit alle es sehen! 💪&quot; ✘ &quot;Almost — use your arm to signal.&quot; / &quot;Fast — zeig es mit dem Arm.&quot; · Fun: Hand signals are like a bike&#39;s blinkers — but it&#39;s you! / Handzeichen sind wie Blinker — nur bist du es!</li>
+<li><strong>binary</strong> — Is it okay to ride a bike on a busy road at night with no lights? / Darf man nachts ohne Licht auf einer Straße Rad fahren? → <strong>No/Nein</strong>. ✔ &quot;No — you need <strong>lights</strong> so cars can see you! 💡&quot; / &quot;Nein — du brauchst <strong>Licht</strong>, damit Autos dich sehen! 💡&quot; ✘ &quot;It&#39;s a no — always use lights in the dark.&quot; / &quot;Es ist nein — im Dunkeln immer Licht.&quot; · Fun: A red light at the back and white at the front — like a little car! / Hinten rot, vorne weiß — wie ein kleines Auto!</li>
+</ol>
+<hr>
+<h2>6. Appendix — sources</h2>
+<p><strong>Internal:</strong> <code>docs/_session/feature-prioritization-2026-07/BUILD-GUIDES-FIRST-WAVE.md §3</code> (quiz <code>mode:&quot;quiz&quot;</code> + <code>quizzes</code> schema, safety), <code>docs/research/content-drop-economy.md §4,§6,§7</code> (16-deck calendar, $0-COGS, curated-quality bar), <code>docs/research/gamified-ux-winning-mechanics.md</code> (celebrate tiers, anti-list: no XP/timer/streak/leaderboard), <code>docs/research/wonder-shelf-launch-catalog.md</code> (quiz→artifact earn rules, Quiz Ribbon + interest/seasonal slots), <code>elumi-kids-api/functions/src/api/ai-chat/ai-chat.instructions.ts</code> (LoLo persona, same-language rule, wonder-not-fear safety block). Voice ties: #165 STT keyword biasing, #179 dead-mic, <code>reference_open_chat_3turn_audio_pattern</code> (keep recorder armed), <code>reference_stt_streaming_server</code> (:3005 chirp_3). DACH beat #176.</p>
+<p><strong>Standards referenced (established, no fetch):</strong> Flesch-Kincaid Grade Level (EN readability), Wiener Sachtextformel (DE readability), LanguageTool de-DE (grammar).</p>
