@@ -1,0 +1,340 @@
+<title>Story Character Voices — TTS Research</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Story character voices — research dossier</h1>
+<p><strong>Question:</strong> For the story-creation feature (stories read aloud to kids 4–12), can HeyLolo give story
+<strong>characters distinct voices</strong> — either (a) <strong>multiple TTS voices</strong> per story (speaker switching) or
+(b) <strong>one voice that ACTS</strong> each character differently (prompted character styling)?</p>
+<p><strong>Date:</strong> 2026-07-16 · <strong>Stack:</strong> Gemini TTS, <code>gemini-3.1-flash-tts-preview</code>, voice &quot;Zephyr&quot;, child-only
+<code>v1_synthesizeSpeech</code>. <strong>Scope note:</strong> this is about <em>in-story</em> character voices, NOT LoLo persona packs
+(<code>docs/research/voice-persona-packs.md</code> — a separate feature; do not conflate).</p>
+<p><strong>TL;DR recommendation:</strong> Ship <strong>(b) narrator = Zephyr + style-prompted acting</strong> first — it&#39;s a
+prompt/annotation change only, <strong>zero FE change, zero cost delta, zero latency delta, zero compliance
+change</strong>. Native multi-speaker is a dead end for this use case (<strong>hard cap of 2 speakers</strong>; a story has
+narrator + several characters). If acting quality proves insufficient, upgrade to <strong>per-speaker-run
+multi-voice chunking</strong> (unlimited voices, some seam risk) using the <em>same</em> LLM annotations — never native
+<code>multiSpeakerMarkup</code>.</p>
+<hr>
+<h2>1. The real backend contract (path:line — map recommendations onto this)</h2>
+<p>The TTS path is <strong>single-voice, streaming, one WAV per assistant message</strong>. There is no story/segment concept today.</p>
+<ul>
+<li><strong>Provider interface</strong> — <code>elumi-kids-api/functions/src/api/text-to-speech/providers/tts-provider.ts:9-28</code><ul>
+<li><code>synthesize(text, { languageCode?, voice?, onAudioChunk? })</code>. Every driver streams <strong>raw PCM16-LE mono @24kHz</strong>; swapping providers needs <strong>zero FE change</strong>.</li>
+</ul>
+</li>
+<li><strong>Gemini provider</strong> — <code>.../providers/gemini.provider.ts</code><ul>
+<li><code>DEFAULT_GEMINI_MODEL = &quot;gemini-3.1-flash-tts-preview&quot;</code> (<code>:17</code>); GA fallback <code>gemini-2.5-flash-tts</code> (<code>:24</code>).</li>
+<li>The <strong>style prompt is ALREADY wired</strong>: <code>const prompt = voicePreference?.style ?? DEFAULT_GEMINI_PROMPT</code> (<code>:77</code>), default <code>&quot;Read aloud in a warm, welcoming tone.&quot;</code> (<code>:30</code>).</li>
+<li>Streaming call (<code>synthesizeStreaming</code>, <code>:119-202</code>): <strong>one</strong> <code>IVoiceSelectionParams</code> voice (<code>name</code>, <code>languageCode</code>, <code>modelName</code>, <code>:79-83</code>) written to <code>streamingConfig.voice</code>; text+prompt ride the input chunk: <code>stream.write({ input: { text, prompt } })</code> (<code>:134</code>). <strong>This is the single-speaker shape</strong> — no <code>multiSpeakerVoiceConfig</code>.</li>
+<li>Latency budget: <code>FIRST_CHUNK_TIMEOUT_MS = 4_000</code> (<code>:47</code>), <code>STREAM_INACTIVITY_TIMEOUT_MS = 15_000</code> (<code>:48</code>). <strong>Any character-voice scheme must keep first audio &lt; 4 s and never gap &gt; 15 s</strong>, or the watchdog kills the stream.</li>
+</ul>
+</li>
+<li><strong>Orchestrator</strong> — <code>.../text-to-speech.service.ts</code><ul>
+<li><code>TTS_MAX_INPUT_CHARS = 4_000</code> (<code>:35</code>), clamped via <code>truncateAtSentenceBoundary</code> (<code>:90</code>). <strong>A 1000-word story ≈ 5–6.5k chars &gt; 4000 — so long stories ALREADY require paragraph chunking, regardless of the voice approach.</strong> This is the single most important architectural implication: chunking is unavoidable, which makes per-chunk voice/style switching <em>natural</em>, not extra cost.</li>
+<li>Output is PCM16 mono @24kHz → <code>wrapPcm16AsWav</code> (<code>:16-18</code>, <code>:140</code>).</li>
+</ul>
+</li>
+<li><strong>Voice preference</strong> — <code>.../child/child.entity.ts:140-153</code><ul>
+<li><code>TtsVoicePreference = { provider, voiceId, style?: string | null, model?: string | null }</code>. <strong><code>style</code> already carries a steering prompt to Gemini</strong> (<code>:147-149</code>). Chirp has no style channel.</li>
+</ul>
+</li>
+<li><strong>Callable</strong> — <code>.../synthesized-speech/synthesized-speech.service.ts:61-154</code><ul>
+<li>One WAV per <code>{childId}:{messageId}</code>; voice resolved server-side from <code>child.ttsVoice</code> (<code>:118</code>); streaming path returns <code>url: &quot;&quot;</code> and the FE plays the streamed chunks (<code>:133-145</code>).</li>
+</ul>
+</li>
+</ul>
+<p><strong>Takeaway:</strong> approach (b) is a <strong>content change</strong> (enrich <code>text</code>/<code>style</code>) that rides the existing contract untouched. Approach (a) requires either the native 2-speaker markup (doesn&#39;t fit) or a <strong>new per-run chunking loop</strong> in the service — but the FE, being PCM-uniform, still needs <strong>no change</strong> as long as chunks stream in order.</p>
+<hr>
+<h2>2. Gemini TTS multi-speaker — capabilities &amp; the disqualifying limit</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Finding</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Max speakers</strong></td>
+<td><strong>&quot;up to 2&quot;</strong> — hard cap.</td>
+<td><a href="https://ai.google.dev/gemini-api/docs/speech-generation">ai.google.dev/gemini-api/docs/speech-generation</a></td>
+</tr>
+<tr>
+<td>API shape</td>
+<td>Cloud TTS: <code>MultiSpeakerVoiceConfig.speaker_voice_configs[]</code> → <code>MultispeakerPrebuiltVoice{ speaker_alias, speaker_id }</code>; structured <code>MultiSpeakerMarkup.turns[]{ speaker, text }</code> or freeform <code>&quot;Sam: Hi Bob!&quot;</code>.</td>
+<td><a href="https://docs.cloud.google.com/text-to-speech/docs/gemini-tts">docs.cloud.google.com/text-to-speech/docs/gemini-tts</a></td>
+</tr>
+<tr>
+<td>Models</td>
+<td><code>gemini-3.1-flash-tts-preview</code>, <code>gemini-2.5-flash-tts</code>, <code>gemini-2.5-pro-tts</code> support multi-speaker.</td>
+<td>Cloud docs</td>
+</tr>
+<tr>
+<td><strong>Streaming + multi-speaker</strong></td>
+<td><strong>Cloud TTS <code>streamingSynthesize</code> supports multi-speaker.</strong> <code>prompt</code> must be in the <strong>first chunk</strong> (&quot;ignored in consecutive chunks&quot;).</td>
+<td>Cloud docs</td>
+</tr>
+<tr>
+<td>Byte limit</td>
+<td>Combined dialogue <strong>≤ 4,000 bytes</strong> — same as our existing clamp.</td>
+<td>Cloud docs</td>
+</tr>
+<tr>
+<td>Speaker alias rule</td>
+<td>Alphanumeric only, no whitespace.</td>
+<td>Cloud docs</td>
+</tr>
+</tbody></table>
+<p><strong>Verdict on native multi-speaker:</strong> The 2-speaker cap <strong>disqualifies it</strong> for a typical story (narrator +
+3 characters = 4 voices). It could only do narrator + <strong>one</strong> character per request. To give ≥3 characters
+distinct voices you must fall back to <strong>per-speaker-run chunking</strong> (§4b) anyway — at which point the native
+markup buys you nothing over just switching <code>voice.name</code> per chunk. So: <strong>skip <code>multiSpeakerMarkup</code>.</strong></p>
+<hr>
+<h2>3. Style / acting control on ONE voice (Zephyr) — this is the viable lever</h2>
+<p>Gemini-TTS is explicitly built for prompt-steered delivery, and <strong>the <code>prompt</code> field is already plumbed</strong>
+in our provider (<code>gemini.provider.ts:77,134</code>).</p>
+<ul>
+<li><strong>Natural-language steering</strong> of &quot;style, accent, pace, tone, and emotional expression.&quot; Zephyr (one of the
+30 prebuilt voices) is a first-class steerable voice. Source:
+<a href="https://blog.google/technology/developers/gemini-2-5-text-to-speech/">blog.google — Improving Gemini TTS</a>,
+<a href="https://docs.cloud.google.com/text-to-speech/docs/gemini-tts">docs.cloud.google.com/text-to-speech/docs/gemini-tts</a>.</li>
+<li><strong>Inline markup tags (Preview, on 3.1)</strong> — 4 tag families that apply to <em>subsequent</em> speech, so you can
+switch acting <strong>mid-utterance within one request</strong>:<ul>
+<li>Non-speech sounds: <code>[sigh]</code> <code>[laughing]</code> <code>[uhm]</code></li>
+<li>Style modifiers: <code>[sarcasm]</code> <code>[robotic]</code> <code>[shouting]</code> <code>[whispering]</code> <code>[extremely fast]</code></li>
+<li>Vocalized adjectives: <code>[scared]</code> <code>[curious]</code> <code>[bored]</code></li>
+<li>Pacing: <code>[short pause]</code> <code>[medium pause]</code> <code>[long pause]</code></li>
+<li>3.1 Flash TTS advertises <strong>200+ audio tags</strong>. Sources:
+<a href="https://chatforest.com/reviews/google-gemini-3-1-flash-tts-review/">chatforest Gemini 3.1 Flash TTS review</a>,
+Cloud docs above.</li>
+</ul>
+</li>
+<li><strong>Scope:</strong> the top-level <strong><code>prompt</code> is GLOBAL</strong> to the synthesis input; <strong>inline <code>[tags]</code> are local</strong> to the
+speech that follows them. So a single Zephyr stream can voice a grumpy bear line <code>[shouting][annoyed] &quot;Who ate my porridge?!&quot;</code> then a timid mouse <code>[whispering][scared] &quot;not me…&quot;</code> — <strong>one voice acting two characters
+in one streaming request.</strong> This is exactly the &quot;(b) one voice that acts&quot; ask.</li>
+<li><strong>Reliability caveat (be honest):</strong> Google documents <strong>&quot;voice inconsistency with prompt instructions&quot;</strong> — the
+model doesn&#39;t <em>always</em> strictly obey. Source:
+<a href="https://ai.google.dev/gemini-api/docs/speech-generation">ai.google.dev/gemini-api/docs/speech-generation</a>.
+Practical read: great for <em>flavor</em> (a whisper, an excited beat, a slow spooky line), less reliable as a
+<em>guaranteed per-character timbre</em>. If two characters must sound <em>unmistakably</em> different every time, that&#39;s
+the argument for multi-voice (§4b).</li>
+</ul>
+<hr>
+<h2>4. Approaches, mapped to our contract</h2>
+<h3>(b) Narrator = Zephyr + style-prompted acting  — RECOMMENDED FIRST</h3>
+<ul>
+<li><strong>How:</strong> story LLM emits the text with inline audio tags at dialogue boundaries; BE sends it through the
+existing single-voice stream. <code>voice.style</code> (or the per-chunk prompt) sets the narrator&#39;s baseline tone.</li>
+<li><strong>Contract change:</strong> none. <code>text</code> gets richer; <code>prompt</code> optionally per-chunk. FE: <strong>none</strong>.</li>
+<li><strong>Cost / latency:</strong> identical to today (tags are a few input tokens; §5).</li>
+<li><strong>Limit:</strong> one <em>timbre</em> (Zephyr) acting all roles — differentiation is performance, not distinct voices; subject to the consistency caveat.</li>
+</ul>
+<h3>(a) Multi-voice via per-speaker-run chunking  — UPGRADE PATH (only if (b) falls short)</h3>
+<ul>
+<li><strong>How:</strong> LLM tags each segment with a <code>speaker</code>; BE maps speakers → prebuilt voices (Zephyr narrator + a
+small palette, §6); each <strong>contiguous same-voice run</strong> is one streaming request; PCM is concatenated into the
+queue in order. Unlimited distinct voices; sidesteps the 2-speaker cap.</li>
+<li><strong>Contract change:</strong> new chunk loop in <code>text-to-speech.service.ts</code> + a speaker→voice map. FE: <strong>none</strong> (PCM
+stays uniform and in-order).</li>
+<li><strong>Cost:</strong> same total (cost is audio-duration-driven, §5).</li>
+<li><strong>Risk:</strong> <strong>seams</strong> — prosody/loudness discontinuities between runs (each request is independently
+normalized), and <strong>inter-request latency</strong>: a new stream&#39;s first chunk must arrive before the queue drains.
+Mitigate with <strong>lead/prefetch</strong> (synthesize run N+1 while run N plays) — the codebase already leans on deep
+buffering (<code>docs/_session/perf-architecture-deep-dive/</code>). Must respect <code>FIRST_CHUNK_TIMEOUT_MS</code>.</li>
+</ul>
+<h3>native <code>multiSpeakerMarkup</code>  — REJECTED</h3>
+<ul>
+<li>2-speaker cap can&#39;t express narrator + ≥2 characters; no cost/latency advantage over (a). Skip.</li>
+</ul>
+<h3>Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Character distinctness</th>
+<th>Quality risk</th>
+<th>Cost/story</th>
+<th>Latency vs today</th>
+<th>Impl effort</th>
+<th>Compliance risk</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>(b) Zephyr + style acting</strong></td>
+<td>Medium (performance, not timbre)</td>
+<td>Prompt-adherence &quot;inconsistency&quot;</td>
+<td><strong>~$0.10</strong> (same)</td>
+<td><strong>None</strong></td>
+<td><strong>Low</strong> (prompt+tags)</td>
+<td><strong>None</strong> (still Google)</td>
+</tr>
+<tr>
+<td><strong>(a) Multi-voice per-run chunk</strong></td>
+<td><strong>High</strong> (distinct voices)</td>
+<td>Seams / loudness jumps between runs</td>
+<td>~$0.10 (same)</td>
+<td>+1st-chunk gap per run (needs prefetch)</td>
+<td>Medium (BE chunk loop + prefetch)</td>
+<td><strong>None</strong> (still Google)</td>
+</tr>
+<tr>
+<td>native <code>multiSpeakerMarkup</code></td>
+<td>High but <strong>≤2 voices</strong></td>
+<td>—</td>
+<td>~$0.10</td>
+<td>None (1 request)</td>
+<td>Medium</td>
+<td>None</td>
+</tr>
+<tr>
+<td>ElevenLabs (§7)</td>
+<td>Very high</td>
+<td>—</td>
+<td>higher</td>
+<td>new SDK path</td>
+<td><strong>HIGH — COPPA/subprocessor</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>OpenAI gpt-4o-mini-tts (§7)</td>
+<td>High (steerable)</td>
+<td>—</td>
+<td>~2×</td>
+<td>new SDK path</td>
+<td>Medium — <strong>new subprocessor</strong></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. Cost &amp; latency model (typical bedtime story ≈ 1000 words, narrator + 3 characters)</h2>
+<p><strong>Cost is dominated by AUDIO OUTPUT and is essentially identical across all three Gemini approaches</strong> — the
+per-token rate has <strong>no multi-speaker premium</strong>, and total spoken audio duration is the same however you slice it.</p>
+<ul>
+<li>Output audio tokenized at <strong>25 tokens/sec</strong> (<a href="https://cloud.google.com/text-to-speech/pricing">blog / pricing</a>,
+<a href="https://tokencost.app/blog/tts-api-pricing-2026">tokencost.app/blog/tts-api-pricing-2026</a>).</li>
+<li>1000 words ≈ ~6.5 min speech ≈ ~390 s × 25 = <strong>~9,750 output tokens</strong> → at <strong>$10 / 1M</strong> (Gemini 2.5 Flash TTS) ≈ <strong>$0.10/story</strong>.</li>
+<li>Input: ~6k chars ≈ ~1.7k tokens (+ style prompt/tags, tens of tokens) → at <strong>$0.50 / 1M</strong> ≈ <strong>$0.001</strong> — negligible.</li>
+<li><strong>Single-voice vs style-prompted vs multi-voice = same ~$0.10.</strong> Style tags add a rounding-error of input tokens; chunking pays the same total output. <strong>Cost is NOT a differentiator — quality, latency, and effort are.</strong>
+Rate source: <a href="https://tokencost.app/blog/tts-api-pricing-2026">tokencost.app/blog/tts-api-pricing-2026</a>,
+<a href="https://cloud.google.com/text-to-speech/pricing">cloud.google.com/text-to-speech/pricing</a>.</li>
+</ul>
+<p><strong>Latency:</strong> streaming is supported on <strong><code>gemini-3.1-flash-tts-preview</code> (our model)</strong>. (b) is byte-for-byte the
+current path → no change. (a) adds a first-chunk gap <strong>each time the voice switches</strong>; keep the queue fed by
+<strong>pre-synthesizing the next run</strong> during playback and by making runs paragraph-sized (few switches). Both must
+stay inside the existing 4 s first-chunk / 15 s inactivity watchdog (<code>gemini.provider.ts:47-48</code>).</p>
+<hr>
+<h2>6. Voice palette (if/when we do multi-voice)</h2>
+<p><strong>30 prebuilt Gemini TTS voices</strong> (all Preview on 3.1). Kid-story-suitable picks alongside <strong>Zephyr (narrator,
+the founder&#39;s pick)</strong>:</p>
+<ul>
+<li><strong>Warm/female:</strong> Aoede, Callirrhoe, Leda, Sulafat, Achernar, Despina — gentle characters, mothers, kind animals.</li>
+<li><strong>Bright/playful:</strong> Puck, Laomedeia, Pulcherrima — sprightly sidekicks, small creatures.</li>
+<li><strong>Deep/authoritative male:</strong> Charon, Enceladus, Orus, Algieba — giants, gruff bears, wise elders.</li>
+<li><strong>Neutral/clear:</strong> Kore, Iapetus, Schedar — narrator alternates, robots.</li>
+</ul>
+<p>Source (voice list):
+<a href="https://docs.cloud.google.com/text-to-speech/docs/list-voices-and-types">docs.cloud.google.com/text-to-speech/docs/list-voices-and-types</a>,
+<a href="https://chatforest.com/reviews/google-gemini-3-1-flash-tts-review/">chatforest review</a>.
+<strong>Seam caveat:</strong> mixing voices across chunked streaming requests can show loudness/prosody discontinuities
+(each request self-normalizes). Test 2–3 palette voices against Zephyr for level-matching before committing.</p>
+<hr>
+<h2>7. Alternatives (only if Gemini falls short — one paragraph each)</h2>
+<ul>
+<li><strong>Google Cloud TTS Chirp 3 HD / Studio</strong> — already a provider in-tree (<code>chirp.provider.ts</code>, the no-vendor
+fallback). <strong>No style/steering channel</strong> (our own code comment: &quot;Chirp 3 HD has no style channel&quot;,
+<code>child.entity.ts:147-149</code>) and no multi-speaker acting — strictly a fallback timbre, <strong>not</strong> a character-voice
+engine. No compliance change (Google).</li>
+<li><strong>OpenAI <code>gpt-4o-mini-tts</code></strong> — strong natural-language <em>steerability</em> (instructions param, <del>13 voices), often
+praised as more obedient than Gemini for &quot;vibe&quot; control. **</del>$0.60/1M input + $12/1M audio out (~$0.015/min)** ≈
+<strong>~2× our Gemini output rate</strong>; 2000-token input cap forces chunking too.
+Sources: <a href="https://developers.openai.com/api/docs/models/gpt-4o-mini-tts">developers.openai.com/api/docs/models/gpt-4o-mini-tts</a>,
+<a href="https://blog.promptlayer.com/gpt-4o-mini-tts-steerable-low-cost-speech-via-simple-apis/">blog.promptlayer.com/gpt-4o-mini-tts</a>.
+<strong>Compliance flag:</strong> OpenAI is a <strong>NEW subprocessor</strong> — a COPPA data-flow/DPA review is required before any
+kid text is sent. It&#39;s text-in/audio-out (no child-voice capture), so lower risk than ElevenLabs, but still a
+vendor-change decision, not an engineering default. <strong>Flag, don&#39;t decide.</strong></li>
+<li><strong>ElevenLabs</strong> — best-in-class character acting, but <strong>COPPA-hostile posture</strong>: services &quot;not intended for or
+directed at children under 18,&quot; child/child-like voices banned, and voice samples &quot;may be stored and used to
+improve our services&quot; with no guaranteed deletion; commentary flags that self-serve doesn&#39;t enforce
+verifiable-parental-consent for the biometric/voiceprint data COPPA now covers. Source:
+<a href="https://elevenlabs.io/privacy-policy">elevenlabs.io/privacy-policy</a>,
+<a href="https://elevenlabs.io/use-policy">elevenlabs.io/use-policy</a>,
+<a href="https://blog.promise.legal/startup-central/coppa-compliance-in-2025-a-practical-guide-for-tech-edtech-and-kids-apps/">COPPA 2025 guide — promise.legal</a>.
+<strong>Our data-honesty canon:</strong> processing already goes through Google; ElevenLabs is a <strong>new subprocessor with
+documented children&#39;s-data concerns</strong> → <strong>HIGH compliance risk. Recommend NOT adopting for a kids&#39; product.</strong></li>
+</ul>
+<hr>
+<h2>8. Implementation sketch (recommended path (b), upgrade-ready to (a))</h2>
+<ol>
+<li><strong>LLM annotation format (do this now, serves both approaches).</strong> Have the story-generation model emit
+structured segments, e.g.:<pre><code class="language-json">{ &quot;segments&quot;: [
+  { &quot;speaker&quot;: &quot;narrator&quot;, &quot;text&quot;: &quot;The forest was quiet.&quot;, &quot;emotion&quot;: &quot;calm&quot; },
+  { &quot;speaker&quot;: &quot;bear&quot;, &quot;text&quot;: &quot;Who ate my porridge?!&quot;, &quot;emotion&quot;: &quot;angry&quot; },
+  { &quot;speaker&quot;: &quot;mouse&quot;, &quot;text&quot;: &quot;Not me…&quot;, &quot;emotion&quot;: &quot;scared&quot; }
+] }
+</code></pre>
+<code>speaker</code> is the field that later unlocks multi-voice; <code>emotion</code> maps to audio tags now.</li>
+<li><strong>Render for (b) — single Zephyr stream, no contract change.</strong> BE flattens segments into one tagged text run:
+narrator plain; dialogue prefixed with the emotion tag → <code>The forest was quiet. [angry][shouting] &quot;Who ate my porridge?!&quot; [whispering][scared] &quot;Not me…&quot;</code>. Send through the <strong>existing</strong> <code>synthesize()</code> path; <code>style</code>/
+<code>prompt</code> sets the narrator baseline. <strong>FE untouched.</strong></li>
+<li><strong>Chunk long stories.</strong> Because <code>TTS_MAX_INPUT_CHARS = 4000</code> (<code>text-to-speech.service.ts:35</code>), split the
+story at paragraph/segment boundaries into ≤4000-byte streaming requests and <strong>pre-synthesize the next chunk
+during playback</strong> so the queue never starves. This is required for stories <em>regardless</em> of the voice
+approach — build it once.</li>
+<li><strong>Upgrade to (a) later, same annotations.</strong> Add a <code>speaker → voiceId</code> map; render each contiguous same-speaker
+run as its own streaming request (switch <code>IVoiceSelectionParams.name</code>); concatenate PCM in order. Reuse the
+chunk/prefetch machinery from step 3. Level-match palette voices to Zephyr first (§6 seam caveat). Still <strong>no
+FE change</strong> (PCM stays uniform and in-order).</li>
+</ol>
+<hr>
+<h2>9. Open questions</h2>
+<ol>
+<li><strong>Story length policy</strong> — do we cap read-aloud stories, or fully chunk arbitrarily long ones? (Drives the
+prefetch depth and the 4000-byte chunker.)</li>
+<li><strong>Acting consistency threshold</strong> — is Zephyr-acts-all &quot;good enough,&quot; or do parents/kids expect <em>distinct
+voices</em>? This decides whether we ever build (a). Needs the A/B below.</li>
+<li><strong>Preview-model dependency</strong> — inline audio tags + streaming are <strong>Preview</strong> features on
+<code>gemini-3.1-flash-tts-preview</code>. GA <code>gemini-2.5-flash-tts</code> (our fallback) streams but tag support is thinner —
+confirm degraded-but-acceptable acting on the GA fallback path (<code>gemini.provider.ts:24,100-116</code>).</li>
+<li><strong>Palette level-matching</strong> — do Aoede/Charon/Puck sit at the same loudness/prosody as Zephyr across chunk
+boundaries, or do we need per-voice gain normalization?</li>
+<li><strong>Caching</strong> — one WAV per <code>{childId}:{messageId}</code> today. Stories are long + regenerated; decide cache
+granularity (per-story vs per-chunk) to avoid re-paying synthesis on replay.</li>
+</ol>
+<h2>10. Suggested device-testable A/B (same story paragraph, 3 renders)</h2>
+<p>Take one ~120-word paragraph with narrator + bear + mouse dialogue and synthesize it three ways, play on
+device back-to-back, and have the founder + a kid rate &quot;can you tell the characters apart / does it sound
+good&quot;:</p>
+<ul>
+<li><strong>A — plain single voice (today):</strong> Zephyr, default warm prompt, no tags. <em>Baseline.</em></li>
+<li><strong>B — style-prompted acting (recommended):</strong> Zephyr + inline <code>[angry][shouting]</code> / <code>[whispering][scared]</code>
+tags at dialogue. <em>One request, no FE change.</em></li>
+<li><strong>C — multi-voice chunked:</strong> Zephyr narrator + Charon (bear) + Puck (mouse), one streaming request per run,
+concatenated. <em>Listen for seams/loudness jumps and any gap between voice switches.</em></li>
+</ul>
+<p>Decision rule: if <strong>B</strong> is convincingly expressive, ship B and defer C. If characters blur together in B, C
+justifies the extra BE work — and the LLM annotations from step 1 make C a rendering swap, not a redesign.</p>
+<hr>
+<h3>Top source URLs</h3>
+<ul>
+<li>Gemini-TTS Cloud docs (multi-speaker + streaming + tags): <a href="https://docs.cloud.google.com/text-to-speech/docs/gemini-tts">https://docs.cloud.google.com/text-to-speech/docs/gemini-tts</a></li>
+<li>Gemini API speech-generation (the <strong>&quot;up to 2&quot; speaker cap</strong> + consistency caveat): <a href="https://ai.google.dev/gemini-api/docs/speech-generation">https://ai.google.dev/gemini-api/docs/speech-generation</a></li>
+<li>TTS pricing (25 tokens/sec, $0.50 in / $10 out per 1M): <a href="https://cloud.google.com/text-to-speech/pricing">https://cloud.google.com/text-to-speech/pricing</a> · <a href="https://tokencost.app/blog/tts-api-pricing-2026">https://tokencost.app/blog/tts-api-pricing-2026</a></li>
+</ul>
