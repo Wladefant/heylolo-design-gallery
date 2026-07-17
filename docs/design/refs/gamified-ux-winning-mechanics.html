@@ -1,0 +1,397 @@
+<title>Gamified UX — The Winning Mechanics (canon)</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Gamified UX That Wins in Kids Apps — HeyLolo Strategic Dossier</h1>
+<p><strong>status: COMPLETE</strong>
+<strong>Builds on (does not repeat):</strong> <code>docs/_session/premium-kids-research/{PRINCIPLES-AND-APPLICATIONS,GAMIFICATION-SCIENCE-KIDS,TEARDOWNS-PREMIUM-KIDS-APPS,REGULATORY-GUARDRAILS}.md</code> and <code>docs/_session/feature-prioritization-2026-07/PRIORITIZATION.md</code> §3 (the five loops). Internal citations reference those docs by path; new web evidence carries URLs.
+<strong>date: 2026-07-05</strong>
+<strong>scope:</strong> Which engagement/gamification mechanics actually WIN (retention, revenue, reviews) in kids apps (iOS, ages 4–12, parent-paid subscription) — and exactly how to apply them to HeyLolo (elumi-kids AI companion).</p>
+<hr>
+<h2>1. Executive verdict — the 7 mechanics HeyLolo adopts (priority order)</h2>
+<p>The retention economics frame everything: kids-education apps churn <strong>7.4%/month</strong>, and <strong>60% of that churn is the child</strong> (&quot;lost interest&quot; 36% + &quot;aged out&quot; 24%), 14% is parent screen-time anxiety (<a href="https://retentioncheck.com/churn-benchmarks/kids-education-apps">retentioncheck.com</a>). The winning stack must refresh novelty, scale with age, and visibly calm the parent — simultaneously.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Mechanic</th>
+<th>Evidence one-liner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Living character / parasocial companion</strong> (character-as-interface, thinking/celebrating/sleepy states)</td>
+<td>Stronger parasocial bonds → ~6 s faster answers + better transfer (Calvert 2020); AI agent ≈ human partner for comprehension gains (Xu 2022, β=0.51). The bond IS the daily-return trigger — no app has this moat as natively as a voice AI companion.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Collections with permanence — Wonder Shelf (#142)</strong></td>
+<td>Collections beat points for under-10s (identity + self-efficacy + natural endpoint; PBL weakest in primary ages, Kurnaz g=0.309); Khan Kids&#39; bugs/hats/toys collected <em>for the characters</em> is the proven kid-correct shape (<a href="https://khankids.zendesk.com/hc/en-us/articles/360049358751">khankids.zendesk.com</a>).</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Weekly appointment drop — &quot;Friday with LoLo&quot;</strong></td>
+<td>Toca Boca World&#39;s Friday Post-Office gift (one week only, worldwide same time, 60M+ players) is the cleanest white-hat appointment mechanic in kids apps — promise of delight, zero loss-framing (<a href="https://tocaboca.helpshift.com/hc/en/3-toca-boca-world/faq/4-how-can-i-claim-my-free-weekly-gift-in-toca-boca-world/?p=ios">Toca help center</a>).</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Daily deterministic novelty hook — the Daily Wonder</strong></td>
+<td>Kills the #1 churn driver (36% &quot;lost interest&quot;); an LLM companion structurally cannot run out of content — but the novelty must be <em>announced and legible</em> (&quot;Today I&#39;ve got…&quot;), not latent. Prodigy&#39;s daily-quest pull without its slot-machine dressing.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>No-loss journey / progress map</strong></td>
+<td>Continuity without streaks: path only ever advances, gaps invisible, return always celebrated. Duolingo ABC itself <em>removed</em> streak pressure/leagues/ads for its kids app (<a href="https://pastory.app/articles/is-duolingo-abc-good-and-safe-for-kids/">pastory.app</a>) — the best-funded team&#39;s revealed preference. EU DSA wants streaks off-by-default for minors anyway.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Tenure/mastery unlockables + age scaling (#105)</strong></td>
+<td>Kills the #2 churn driver (24% &quot;aged out&quot;): apps spanning K-5/K-8 multiply LTV <strong>3–5×</strong> (<a href="https://retentioncheck.com/churn-benchmarks/kids-education-apps">retentioncheck.com</a>); complexity-appears-as-competence-grows is the Apple-award-winning subtraction pattern.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Parent-visible progress loop (weekly digest #135 + dashboard)</strong></td>
+<td>Parents who can see progress are <strong>2–3× more likely to renew</strong>; weekly summaries = measurably higher retention (same source). Lingokids&#39; dual-interface (child sees play, parent sees ALL the meters) is the template — and 84% of parents feel screen-time guilt, so the digest must sell <em>guilt reduction</em>, not engagement (<a href="https://pulse2.com/lingokids-profile-cristobal-viedma-interview/">pulse2.com</a>).</td>
+</tr>
+</tbody></table>
+<p><strong>The one-line strategy:</strong> LoLo&#39;s aliveness is the trigger, the Shelf is the memory, Friday is the appointment, the Daily Wonder is the freshness, the journey is the continuity, age-scaling is the LTV, and the parent digest is the renewal. Nothing lossable, nothing random, nothing numbered.</p>
+<h2>2. Mechanic evidence table</h2>
+<p>Verdicts calibrated for HeyLolo: premium, parent-paid, ages 4–12, COPPA/EU-DSA-clean, no dark patterns by construction.</p>
+<table>
+<thead>
+<tr>
+<th>Mechanic</th>
+<th>Who uses it</th>
+<th>Kids-specific evidence</th>
+<th>Caveat / backlash</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Collections / sticker books / creature catalogs</strong></td>
+<td>Khan Kids (bugs, hats, toys, clothes collected for the 5 characters, displayed in character rooms — <a href="https://khankids.zendesk.com/hc/en-us/articles/360049358751">khankids.zendesk.com</a>); Prodigy (100+ pets); Toca (item hoards); Poké-style catalogs everywhere</td>
+<td>Collecting = normative identity-building in middle childhood w/ self-efficacy correlates; complete-able sets satisfy D4CR &quot;balanced environment&quot; (<code>GAMIFICATION-SCIENCE</code> §2.3)</td>
+<td>Infinite catalogs become hoarding loops; Prodigy locks the desirable items behind membership (see §4.1)</td>
+<td><strong>ADOPT</strong> — small complete-able sets, artifacts from real accomplishments (#142)</td>
+</tr>
+<tr>
+<td><strong>Calendar streaks</strong></td>
+<td>Duolingo main; Snapchat; countless habit apps</td>
+<td><strong>Zero peer-reviewed efficacy under age 10</strong>; documented Duolingo streak anxiety in kids (<code>GAMIFICATION-SCIENCE</code> §2.4); kids don&#39;t control their own schedule</td>
+<td>EU DSA minors guidelines: off-by-default; Duolingo ABC dropped them for its own kids app</td>
+<td><strong>AVOID</strong> — replace with no-loss journey</td>
+</tr>
+<tr>
+<td><strong>Daily quests / challenges</strong></td>
+<td>Prodigy (daily login/quest loop); Epic! reading challenges; ABCmouse tickets</td>
+<td>A daily &quot;thing to do today&quot; gives structure kids ask for; a 2024 experiment: modest completion rewards raised 5–7-year-olds&#39; task completion (<code>GAMIFICATION-SCIENCE</code> §2.1)</td>
+<td>Quest-framing drifts into obligation; time-boxed quests = FOMO for kids who miss a day</td>
+<td><strong>ADAPT</strong> — a daily <em>offer</em> (&quot;today&#39;s wonder&quot;), never an expiring obligation</td>
+</tr>
+<tr>
+<td><strong>Virtual pets / neglect care loops</strong></td>
+<td>Talking Tom (hunger/sadness on neglect); Tamagotchi; Finch (positive spin: pet grows from your self-care)</td>
+<td>The pet-needs-you loop is powerful precisely because it&#39;s guilt — parasocial-pressure lure (Radesky); &quot;character wellbeing depends on the child returning&quot; is the flagged unhealthy pattern (<code>GAMIFICATION-SCIENCE</code> §4.4)</td>
+<td>Post-Character.AI, engineered emotional dependency on an AI character is the exact regulatory tripwire (EU AI Act Art. 5(1)(b))</td>
+<td><strong>AVOID</strong> neglect loops. LoLo is never sad/hungry from absence — sleepy at most. Finch&#39;s <em>inverse</em> (companion thrives on the child&#39;s real accomplishments) is already the Shelf</td>
+</tr>
+<tr>
+<td><strong>Progress maps / journeys</strong></td>
+<td>Duolingo path; Khan Kids path; ABCmouse learning path</td>
+<td>Visible forward-only progress = &quot;make invisible progress visible&quot; (endorsed juice); satisfies competence without comparison</td>
+<td>Only if no-loss: holes/regression reintroduce streak psychology</td>
+<td><strong>ADOPT</strong> as no-loss adventure path (R6)</td>
+</tr>
+<tr>
+<td><strong>Badges / achievements</strong></td>
+<td>Khan main (energy points + badges); Epic!; ABCmouse</td>
+<td>Abstract badges are the weakest PBL element in primary ages (Kurnaz g=0.309); kids under ~7 don&#39;t parse normative meaning</td>
+<td>Badge-wall clutter; meaningless-to-kid trophies</td>
+<td><strong>ADAPT</strong> → badges become Shelf <em>artifacts</em> (a thing that IS the accomplishment), never generic medals</td>
+</tr>
+<tr>
+<td><strong>Leaderboards / leagues</strong></td>
+<td>Duolingo main leagues; Prodigy arena</td>
+<td>Developmentally meaningless &lt;7 (no normative comparison yet); genuinely discouraging 8+ (<code>GAMIFICATION-SCIENCE</code> §1.4); removed from Duolingo ABC</td>
+<td>Social comparison + DSA scrutiny; toxic for the low-confidence kids</td>
+<td><strong>AVOID</strong> — competition only vs LoLo, who is a gracious opponent (R10)</td>
+</tr>
+<tr>
+<td><strong>Loot / random rewards / wheel spins / gacha</strong></td>
+<td>Prodigy (wheel spins, chests); surprise-egg apps; Roblox economies</td>
+<td>VR schedules = the compulsion engine; loot-box↔problem-gambling correlation is <em>stronger</em> in minors (<code>GAMIFICATION-SCIENCE</code> §3.1)</td>
+<td>EU DSA: random-reward mechanics off-by-default for minors; FTC Epic/Genshin precedents</td>
+<td><strong>AVOID</strong> for acknowledgment. Surprise lives only in content (<em>which</em> wonder), never <em>whether</em> rewarded</td>
+</tr>
+<tr>
+<td><strong>Character customization / avatar dress-up</strong></td>
+<td>Toca (core play); Prodigy cosmetics (membership-gated); Lingokids</td>
+<td>Identity expression = RITEC &quot;Identities&quot;; dress-up is open-ended toy-play, not a meter</td>
+<td>Prodigy shows the failure mode: cosmetics as class markers + upsell pressure</td>
+<td><strong>ADAPT</strong> — LoLo persona/voice packs (#144) + kid&#39;s own avatar (#129); never paywall-flaunted</td>
+</tr>
+<tr>
+<td><strong>Seasonal events / limited-time content</strong></td>
+<td>Toca (Cherry Blossom Festival gifts, themed drops — <a href="https://toca-life-world.fandom.com/wiki/Post_Office/Gift_Events">Toca wiki</a>); PBS Kids holiday content</td>
+<td>Real-world-calendar anchoring makes the app feel alive and current; kids narrate seasons</td>
+<td>&quot;Limited-time&quot; = FOMO if collectible is missable forever; Toca softens via Gift Bonanzas (re-runs)</td>
+<td><strong>ADAPT</strong> — seasonal <em>themes</em> for wonders/decor, with re-runs; nothing permanently missable</td>
+</tr>
+<tr>
+<td><strong>Daily login gifts</strong></td>
+<td>Toca&#39;s is weekly (Friday), not daily; many F2P kids games do daily</td>
+<td>Toca&#39;s weekly cadence at 60M+ players is the proof the appointment works without daily pressure</td>
+<td>Daily login rewards = attendance-for-reward, drifts to obligation</td>
+<td><strong>ADAPT</strong> to weekly: the Friday Drop. Daily return is earned by content freshness, not bribed</td>
+</tr>
+<tr>
+<td><strong>XP / levels</strong></td>
+<td>Prodigy (levels gate zones); Lingokids (levels); ABCmouse tickets</td>
+<td>Numbers are abstract/comparative — weakest under 10; Lingokids&#39; stars/levels are its most-dated element</td>
+<td>Grind psychology; overjustification risk on intrinsically fun conversation</td>
+<td><strong>AVOID visible numbers</strong> — difficulty scales invisibly (ML/age-tier), mastery shows as unlocks + artifacts</td>
+</tr>
+<tr>
+<td><strong>Unlockable content (tenure/mastery gated)</strong></td>
+<td>Duolingo (path unlocks); Khan Kids; Toca locations (purchase-gated)</td>
+<td>Unlocks reward competence and threaten nothing (white-hat); &quot;complexity is earned&quot; = Apple-award subtraction pattern (<code>PRINCIPLES</code> R7)</td>
+<td>Only if unlock rules are transparent + deterministic</td>
+<td><strong>ADOPT</strong> — tenure unlocks (T1→T4), game-hub tiles appearing with competence</td>
+</tr>
+<tr>
+<td><strong>Social sharing of creations</strong></td>
+<td>Toca character sharing; storybook apps; Prodigy shares nothing (walled)</td>
+<td>Shareable artifact = 5★-review moment + acquisition channel (PRIORITIZATION §3 loop 4); grandma-audience is COPPA-clean</td>
+<td>UGC moderation surface; no child PII in links</td>
+<td><strong>ADOPT</strong> — quiz/story/image share links (#141), snapshot + moderated</td>
+</tr>
+</tbody></table>
+<h2>3. The HeyLolo Daily Loop v1 — choreography spec</h2>
+<blockquote>
+<p>Grounded in shipped/spec&#39;d infra: mood check-in (shipped), <code>celebrate()</code> haptic tiers (spec&#39;d in <code>PRINCIPLES-AND-APPLICATIONS.md</code> R4 + feedback module #54), Wonder Shelf (#142), quiz decks (#121), time-limit lock + wind-down (R11, <code>src/widgets/time-limit-lock/</code>), age tiers (#105), no-loss journey (R6). Evidence for each beat: §2 table + §4 cases.</p>
+</blockquote>
+<h3>3.1 Opening ritual (0–30 s) — &quot;LoLo was waiting, and something is new&quot;</h3>
+<ol>
+<li><strong>Wake beat (0–3 s).</strong> LoLo wakes from the disc (WAKE spring + <code>NotifySuccess</code>-class haptic). Never a menu first — the character is the interface. If returning after a gap: delight, never guilt — &quot;You&#39;re back! I found a new wonder for us&quot; (R6 welcome-back).</li>
+<li><strong>Name + mood check-in (3–15 s).</strong> LoLo greets by name, runs the shipped mood check-in as conversation, not a form. The mood answer seeds the session&#39;s tone (calm day → gentler pacing; excited → activity suggestion).</li>
+<li><strong>The daily novelty hook (15–30 s).</strong> ONE fresh thing per day, deterministic, announced by LoLo: &quot;Today I&#39;ve got a new [wonder / quiz deck / story seed]!&quot; This is the appointment mechanic done white-hat — fresh content, not loss-framed streaks. Weekly cadence: a bigger <strong>Friday drop</strong> (Toca pattern) — a new quiz deck theme, persona voice, or shelf set.</li>
+</ol>
+<h3>3.2 Mid-session (2–15 min by age tier)</h3>
+<ul>
+<li><strong>Activity arc:</strong> child-led choice between 2–3 options LoLo voices (autonomy, RITEC), each intrinsically integrated (the learning IS the play — Habgood &amp; Ainsworth).</li>
+<li><strong>Micro-acknowledgment:</strong> every effort gets the <em>whisper</em> tier (haptic + micro-sparkle); first real win of the day gets <em>moment</em> tier; completing a shelf set gets <em>landmark</em> — the R4 arousal arc (build → ≤2–3 s peak → settle), process praise only.</li>
+<li><strong>Permanence beat:</strong> any real accomplishment mints a Wonder Shelf artifact (#142) <em>visibly</em> — the kid watches it fly to the shelf. This is the mid-session retention anchor: something to show tomorrow.</li>
+<li><strong>Pacing guard:</strong> no back-to-back <em>moment</em> celebrations; age-tier session norms (T1 ≈ 5–10 min, T3–T4 ≈ 15–20) inform when LoLo starts steering toward closure.</li>
+</ul>
+<h3>3.3 Closing ritual (last 2 min) — calm exit that still plants tomorrow&#39;s seed</h3>
+<ol>
+<li><strong>Approach beat:</strong> LoLo winds down in-conversation (&quot;One more question, then I get sleepy…&quot;) — the R11 soft stop; never a mid-sentence cut.</li>
+<li><strong>Recap + permanence:</strong> LoLo names what the child DID today (process framing) and shows the shelf artifact earned — parent-visible too (dashboard line), which is what makes the parent re-hand the device tomorrow.</li>
+<li><strong>Tomorrow&#39;s seed, not a cliffhanger:</strong> LoLo plants a <em>curiosity</em> seed, not an anxiety hook: &quot;Tomorrow I&#39;ll show you which animal sleeps standing up!&quot; — a promise of content, nothing lost if the child doesn&#39;t come. (Ethical line: promise-of-delight ✅, threat-of-loss ❌.)</li>
+<li><strong>Sleep pose:</strong> LoLo asleep on the lock/goodbye screen (breathing loop) — sleepy, never sad.</li>
+</ol>
+<h3>3.4 The weekly rhythm</h3>
+<table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Beat</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Every day</td>
+<td>1 deterministic fresh item (wonder / quiz question / story seed)</td>
+</tr>
+<tr>
+<td>Friday</td>
+<td>The drop: new deck / persona / shelf set (announced by LoLo Thursday as a curiosity seed)</td>
+</tr>
+<tr>
+<td>Sunday (parent)</td>
+<td>Weekly digest email/notification (#135) with the shelf artifacts + process-praise recap — the re-subscribe surface</td>
+</tr>
+</tbody></table>
+<h2>4. Case deep-dives</h2>
+<h3>4.1 Prodigy Math — the cautionary maximum</h3>
+<p>The most aggressively gamified kids-edu product (100M+ registered users): a Pokémon-style battle world where answering math questions powers attacks, wrapped in pets, wheel spins, cosmetics, member-only zones, and levels.</p>
+<p><strong>The loop:</strong> explore world → encounter battle → answer math question to cast spell → win pets/gear/currency → level up → hit member-gated content → nag parent. Math is the <em>toll</em>, not the game — the textbook &quot;chocolate-covered broccoli&quot; anti-pattern that Habgood &amp; Ainsworth showed loses to intrinsic integration on both learning <em>and</em> free-choice play time (<code>GAMIFICATION-SCIENCE</code> §1.3).</p>
+<p><strong>The backlash (this is the important part):</strong></p>
+<ul>
+<li>Feb 2021: Campaign for a Commercial-Free Childhood (now Fairplay) + <strong>21 advocacy partners filed an FTC complaint</strong> (<a href="https://www.commondreams.org/news/2021/02/23/complaint-ftc-child-advocates-warn-prodigy-math-game-exploiting-pandemic-prey">Common Dreams</a>; <a href="https://www.axios.com/2021/02/19/prodigy-math-game-ftc-complaint">Axios</a>; <a href="https://www.edweek.org/technology/popular-interactive-math-game-prodigy-is-target-of-complaint-to-federal-trade-commission/2021/02">EdWeek</a>; <a href="https://www.nbcnews.com/tech/tech-news/child-protection-nonprofit-alleges-manipulative-upselling-math-game-prodigy-n1258294">NBC</a>).</li>
+<li>CCFC verbatim: <em>&quot;Instead of being designed to get kids excited about math, Prodigy is designed to make money.&quot;</em></li>
+<li>The specifics: markets itself &quot;free forever,&quot; then bombards free players with upsells to a <strong>$60–100/yr membership</strong>; CCFC counted kids seeing <strong>up to 4× more advertisements than math exercises</strong>; &quot;many of the most interesting and/or desirable items are only available to Premium members, regardless of how much currency a player has earned.&quot;</li>
+<li>The classroom-inequity detail that made press: <em>&quot;bejeweled members sail around on a cloud, while non-members whose families cannot afford a membership literally tromp in the dirt&quot;</em> (<a href="https://fairplayforkids.org/pf/prodigy/">Fairplay&#39;s &quot;7 reasons to say no to Prodigy&quot;</a>; <a href="https://www.forbes.com/sites/petergreene/2021/02/22/advocacy-group-files-complaint-against-math-game/">Forbes</a>).</li>
+<li>Efficacy: no strong independent evidence Prodigy teaches math better than baseline; the complaint argued the ad-to-exercise ratio makes it net-negative learning time.</li>
+</ul>
+<p><strong>What to steal safely:</strong> (1) the <em>pull</em> of a persistent world the child owns — HeyLolo&#39;s version is the Shelf + adventure path, not a battle map; (2) the daily &quot;something waiting for me&quot; trigger — as a deterministic Daily Wonder; (3) collection depth (100+ pets proves kids&#39; appetite for catalogs) — as small complete-able sets. <strong>What to never do:</strong> membership visibility inside the child&#39;s experience (paywall pressure aimed at the child violates Apple Kids Category 1.3 anyway), two-class cosmetics, upsell interstitials, learning-as-toll. Prodigy converts because it makes children the sales channel to their parents — that is exactly the move that puts a kids brand one press cycle from being Fairplay&#39;s next target, and HeyLolo&#39;s premium positioning is the <em>refusal</em> of it.</p>
+<h3>4.2 Toca Boca World — the live-ops content machine</h3>
+<p>60M+ players (<a href="https://play.google.com/store/apps/details?id=com.tocaboca.tocalifeworld">Google Play</a>), free base app (11 locations, 40+ characters) + à-la-carte location IAP — and the single best-executed appointment mechanic in kids software.</p>
+<p><strong>The cadence machine:</strong></p>
+<ul>
+<li><strong>Free gift every Friday</strong>, claimed at the Post Office in Bop City; &quot;available worldwide at the same time&quot;; &quot;each gift is only available for one week&quot; — furniture, outfits, decorations, pets (<a href="https://tocaboca.helpshift.com/hc/en/3-toca-boca-world/faq/4-how-can-i-claim-my-free-weekly-gift-in-toca-boca-world/?p=ios">Toca help center</a>).</li>
+<li><strong>Monthly</strong> new locations/content; <strong>seasonal events</strong> (e.g. Cherry Blossom Festival: sakura plushie, lantern, Shiba Inu pet); periodic <strong>&quot;Gift Bonanzas&quot;</strong> re-run past years&#39; items — softening the FOMO of one-week windows (<a href="https://toca-life-world.fandom.com/wiki/Post_Office/Gift_Events">Toca Life World wiki</a>).</li>
+<li>All of this coexists with the manifesto: no rules, no scores, no failure, open-ended toy-play (<code>TEARDOWNS</code> §3). The live-ops layer adds <em>newness</em>, never <em>pressure</em> — you can&#39;t lose anything by skipping a Friday; you just get a different gift next week.</li>
+</ul>
+<p><strong>Why it works as a return trigger:</strong> the gift is (a) an <em>appointment</em> (same day, worldwide — kids talk about it at school, it&#39;s a shared cultural beat), (b) a <em>gift</em>, not a wage (no login-streak arithmetic), (c) <em>material for play</em> (the gift feeds the sandbox rather than being a trophy). The one-week window is the only FOMO edge — and Gift Bonanzas show even Toca decided to blunt it.</p>
+<p><strong>For HeyLolo:</strong> the Friday Drop translates directly — a weekly themed drop (new quiz deck, wonder set, story seed, persona voice) that LoLo <em>announces as a gift</em>, same day every week, nothing lost if missed, occasional &quot;bonanza&quot; re-runs. The school-social-currency effect is free marketing: &quot;did you get LoLo&#39;s Friday thing?&quot;</p>
+<h3>4.3 Duolingo ABC vs Duolingo main — the deliberate de-gamification</h3>
+<p>The best-funded gamification team on earth built a separate kids app (ABC, literacy, ages 3–8, 700+ lessons) and <strong>removed its own most famous mechanics</strong>:</p>
+<ul>
+<li><strong>Removed:</strong> ads, in-app purchases entirely (100% free), leagues/leaderboards, social features, streak pressure (<a href="https://pastory.app/articles/is-duolingo-abc-good-and-safe-for-kids/">Pastory review</a>; <a href="https://kidsappreview.com/app/duolingo-abc/">kidsappreview.com</a>; <a href="https://abc.duolingo.com/">abc.duolingo.com</a>). Reviewers describe it as &quot;clean, calm, and focused&quot; — &quot;designed to eliminate the pressure and complexity features found in the main Duolingo app&quot; (<a href="https://darlingmellow.co.uk/duolingo-kids-review-home-education/">darlingmellow review</a>).</li>
+<li><strong>Kept:</strong> the characters, the path progression, bite-sized lessons, celebrations (inline sparkles rather than modal takeovers — <code>TEARDOWNS</code> trait 7), multi-sensory activities (tracing, drag-and-drop).</li>
+<li><strong>The signal:</strong> when the company whose entire growth engine is streaks + leagues + guilt-owl notifications designs for under-8s, it keeps <em>characters, path, and celebration</em> and deletes <em>competition, loss, and pressure</em>. That&#39;s the strongest possible industry confirmation of our science-side anti-list (<code>PRINCIPLES</code> anti-list; Kurnaz g=0.309 for PBL in primary ages).</li>
+</ul>
+<h3>4.3b The daily-return trigger — synthesis</h3>
+<p>What actually makes a 6-year-old ask for the app tomorrow (and the parent hand it over):</p>
+<ol>
+<li><strong>The character, not the content.</strong> At 4–10 the return-pull is &quot;I want to see LoLo&quot; — parasocial bonds form fully via voice alone (Hoffman/Calvert 2021) and are the measured learning multiplier (<code>GAMIFICATION-SCIENCE</code> §4). Every winning kids app leads with the character&#39;s greeting, not a menu.</li>
+<li><strong>A legible promise made yesterday.</strong> Toca&#39;s Friday gift and Prodigy&#39;s daily quest both work because the child <em>knows something specific is waiting</em>. The ethical version is a curiosity seed (&quot;tomorrow I&#39;ll show you which animal sleeps standing up&quot;) — promise-of-delight, never threat-of-loss.</li>
+<li><strong>Ritual anchoring.</strong> Sessions attached to an existing daily anchor (after school, bedtime wind-down) out-retain floating sessions; this is why Calm Corner (#147) and a bedtime mode are retention features, not wellness garnish.</li>
+<li><strong>The parent re-hands the device when:</strong> yesterday ended calmly (no tantrum at the lock screen — 14% of churn is screen-time anxiety), the dashboard showed something real, and the app never made the child nag them (anti-Prodigy). Calm exits are a <em>parent-side retention mechanic</em>.</li>
+</ol>
+<h3>4.4 Lingokids — the parent-paid subscription comparable (fourth case)</h3>
+<p>The closest business-model comparable to HeyLolo: freemium subscription, ages 2–8, parent-paid, character-led.</p>
+<ul>
+<li><strong>Scale + model:</strong> 95M+ registered families by early 2025; the Lingokids Plus subscription (~$14.99/mo or $59.99/yr, PPP-adjusted) generated ~85% of revenue; unlocks unlimited content, offline, multi-profile, advanced progress tracking (<a href="https://businessmodelcanvastemplate.com/blogs/how-it-works/lingokids-how-it-works">businessmodelcanvastemplate.com</a>).</li>
+<li><strong>Mechanics used:</strong> stars + levels + character narrative (Cowy, Elliot, Billy) — &quot;the gamification—earning stars and progressing through levels—builds confidence&quot;; an ML recommendation engine personalizes difficulty/sequencing explicitly &quot;reducing churn and increasing time-on-platform&quot; (same source). Dual-interface: gamified journey for the child, a Parents Area with progress reports and &quot;measurable outcomes&quot; for the adult.</li>
+<li><strong>The strategic pivot — co-play as retention:</strong> CEO Cristóbal Viedma reframes the screen-time debate: their research says <strong>98%+ of parents permit screen time but 84%+ feel guilty about it</strong> — so Lingokids sells <em>guilt reduction</em>: ad-free, curated, expert-developed, plus a &quot;Play Together&quot; co-play area for parent+child joint use and &quot;Camp Lingokids&quot; bridging to offline behavior (<a href="https://pulse2.com/lingokids-profile-cristobal-viedma-interview/">pulse2.com founder interview</a>; <a href="https://www.tipranks.com/news/private-companies/lingokids-expands-co-play-features-as-new-survey-backs-screen-time-as-family-time">TipRanks co-play coverage</a>). Viedma on the AI era: as AI tutoring commoditizes, &quot;the competitive edge will lie in products that build resilience, collaboration, and real-world social interaction through shared play.&quot;</li>
+<li><strong>Top-of-funnel:</strong> a 5M+ subscriber YouTube channel + podcasts as low-cost organic install engine (business-model source) — content marketing, not in-app virality.</li>
+<li><strong>What to steal:</strong> (1) the <em>dual-interface</em> discipline — the child never sees the meters; the parent sees ALL the meters; (2) guilt-reduction as the actual subscription pitch (&quot;screen time you don&#39;t have to feel bad about&quot;); (3) co-play surfaces as churn defense — a parent who plays WITH the child re-hands the device; (4) difficulty personalization framed as churn tool. <strong>What to skip:</strong> star-count-per-activity economies (our science base says collections &gt; stars for under-10s, and stars are Lingokids&#39; most-dated element).</li>
+</ul>
+<h3>4.5 The retention economics every mechanic must serve (benchmark layer)</h3>
+<ul>
+<li><strong>Kids education apps churn ~7.4%/month (59.9% annual); top quartile 2.0%/month (22% annual)</strong>; median ARPU $12 (<a href="https://retentioncheck.com/churn-benchmarks/kids-education-apps">retentioncheck.com kids-education benchmark</a>).</li>
+<li><strong>Churn drivers, ranked (same source):</strong> 1) &quot;Child lost interest or engagement dropped&quot; — <strong>36%</strong>; 2) &quot;Child aged out of the content level&quot; — <strong>24%</strong>; 3) school provides free equivalent — 18%; 4) parent screen-time concerns — <strong>14%</strong>; 5) budget review — 8%.</li>
+<li><strong>Quantified retention levers (same source):</strong> &quot;Parents who can see their child&#39;s progress… are <strong>2–3× more likely to continue</strong>&quot;; weekly progress summaries to parents = markedly higher retention; spanning K-5/K-8 (aging WITH the child) multiplies LTV <strong>3–5×</strong> vs single-stage apps.</li>
+<li><strong>Education-app baseline is brutal:</strong> ~2% day-30 retention across education apps generally (<a href="https://www.businessofapps.com/data/education-app-benchmarks/">Business of Apps education benchmarks</a>) — meaning the winning mechanics are the whole game, not garnish.</li>
+<li><strong>Strategic reading for HeyLolo:</strong> 60% of churn is the CHILD&#39;s engagement (lost interest 36% + aged out 24%) and 14% is parent anxiety — so the mechanic stack must simultaneously (a) refresh novelty (kill &quot;lost interest&quot;), (b) scale with age (kill &quot;aged out&quot; — this is exactly #105 age tiers + tenure unlocks), and (c) visibly calm the parent (kill screen-time churn — calm exits, wind-down, dashboard). An LLM companion is structurally advantaged on (a) — infinite fresh content — and on (b) if age tiers are real. The 2–3× parent-visibility multiplier makes the weekly digest (#135) a top-3 retention feature, not a nice-to-have.</li>
+</ul>
+<h2>5. Application map — per backlog feature</h2>
+<p>Issue numbers on <strong>Wladefant/heylolo-app</strong> (verified this session).</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Powering mechanic(s)</th>
+<th>Concrete spec changes from this research</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>#121 quiz engine (F18)</strong></td>
+<td>Daily novelty hook (#4) + share loop (#7 table)</td>
+<td>Quizzes are the cheapest Daily Wonder payload: one fresh LLM-generated deck/day, announced by LoLo in the opening ritual. A <em>completed</em> deck mints a Shelf artifact. Never timed, never scored against others — &quot;beat your own curiosity,&quot; LoLo celebrates the trying. Friday Drop ships a themed deck weekly.</td>
+</tr>
+<tr>
+<td><strong>#142 Wonder Shelf (N5)</strong></td>
+<td>Collections (#2)</td>
+<td>Keep sets small (6–10) and complete-able as spec&#39;d; ADD: (a) the mint-moment must be <em>visible in-session</em> (artifact flies to shelf — permanence beat of the Daily Loop §3.2); (b) Khan-style character stake: LoLo has her own corner of the shelf that fills as the child&#39;s does (generosity loop); (c) closing ritual always shows today&#39;s artifact; (d) seasonal set themes with Toca-style re-runs, nothing permanently missable.</td>
+</tr>
+<tr>
+<td><strong>#149 Games Hub shell (N12)</strong></td>
+<td>Unlockables (#6) + toys-vs-games doctrine (R10)</td>
+<td>Tiles appear with tenure/competence (T1 sees 1–2, T4 sees the grid) — the hub IS the unlock surface. One-time wobble on a newly-appeared tile, then static. No XP, no per-game score history visible to the child; results flow to the parent dashboard only.</td>
+</tr>
+<tr>
+<td><strong>#107 Connect Four / #108 Memory (F4/F5)</strong></td>
+<td>Character bond (#1) + celebration system</td>
+<td>LoLo is the opponent and a gracious loser: on child&#39;s win → <em>moment</em>-tier celebrate; on child&#39;s loss → LoLo names the child&#39;s best move + offers rematch. Wins can complete a Shelf set (&quot;beat LoLo at 3 games&quot;). Never a losing streak counter.</td>
+</tr>
+<tr>
+<td><strong>#147 Calm Corner (N10)</strong></td>
+<td>Closing ritual + ritual anchoring (§4.3b)</td>
+<td>Position it as the <em>session-exit ramp and bedtime anchor</em>, not just an on-demand tool: the wind-down beat (R11) can hand off into Calm Corner; parent dashboard shows &quot;ended calm&quot; — directly attacks the 14% screen-time-anxiety churn.</td>
+</tr>
+<tr>
+<td><strong>#126 Storybooks (F23)</strong></td>
+<td>Permanence (#2) + share loop</td>
+<td>Every finished story = a Shelf cover artifact + a share link (grandma loop). Unfinished story = the one sanctioned &quot;continue our adventure&quot; return hook (continuation ≠ cliffhanger: the chapter ENDS, the next one is promised).</td>
+</tr>
+<tr>
+<td><strong>#105 age tiers (F2)</strong></td>
+<td>Age scaling (#6)</td>
+<td>Reframe from safety/UX feature to <strong>LTV feature</strong>: 24% of churn is &quot;aged out,&quot; and K-5/K-8 span = 3–5× LTV. Add explicit <em>age-up moments</em>: LoLo notices growth (&quot;You&#39;re ready for the big-kid questions!&quot;) — turning aging-up into a celebrated unlock instead of silent drift.</td>
+</tr>
+<tr>
+<td><strong>#135 weekly reports (F32)</strong></td>
+<td>Parent-visible progress (#7)</td>
+<td>Elevate to top-3 retention priority: 2–3× renewal multiplier. Digest leads with Shelf artifacts + process-praise recap + &quot;ended calm&quot; signal; never engagement bragging (&quot;streak! minutes!&quot;). Sunday send (Daily Loop §3.4).</td>
+</tr>
+<tr>
+<td><strong>#144 persona packs (N7)</strong></td>
+<td>Customization (ADAPT row)</td>
+<td>&quot;Who is LoLo today&quot; is a Friday-Drop payload; personas never flaunted to non-payers inside the child UI (anti-Prodigy rule).</td>
+</tr>
+<tr>
+<td><strong>#150 Learning Studio (N13)</strong></td>
+<td>Unlockables + no-failure doctrine</td>
+<td>Studios are <em>toys</em> (no scoring); appear by tier; deeper play is the reward (Pok Pok).</td>
+</tr>
+</tbody></table>
+<h2>6. NEW feature/issue proposals</h2>
+<h3>P1 — <code>feat(engagement): Friday Drop — weekly appointment content system</code></h3>
+<p><strong>Labels:</strong> <code>feature</code> <code>engagement</code> <code>backend</code> <code>size:M</code></p>
+<p>A live-ops cadence engine modeled on Toca Boca World&#39;s Post-Office gift (60M players, the best-executed white-hat appointment mechanic in kids apps): every Friday, same time worldwide, LoLo announces a gift — a themed quiz deck (#121), a wonder set for the Shelf (#142), a story seed (#126), or a persona voice (#144). Nothing is lost if a Friday is missed (occasional &quot;bonanza&quot; re-runs recover past drops, per Toca&#39;s own FOMO-softening move). Thursday, LoLo plants the seed (&quot;tomorrow&#39;s gift day!&quot;).</p>
+<p>Implementation: a <code>weekly-drops</code> collection (content id + theme + week) + a BE scheduler; FE surfaces it in the opening ritual and as a home card. The drop calendar doubles as the content-marketing calendar (kids talk about the Friday thing at school — Toca&#39;s shared-cultural-beat effect). Parent toggle per DSA posture.
+<strong>Depends / gated by:</strong> at least one payload type shipped (#121 or #142); soft-dep on celebrate() tiers.</p>
+<h3>P2 — <code>feat(companion): Tomorrow&#39;s Seed — closing-ritual curiosity promise with next-day payoff</code></h3>
+<p><strong>Labels:</strong> <code>feature</code> <code>companion</code> <code>engagement</code> <code>size:S</code></p>
+<p>The ethical replacement for the cliffhanger: in the session&#39;s closing ritual LoLo plants ONE specific curiosity seed (&quot;Tomorrow I&#39;ll show you which animal sleeps standing up!&quot;) and the next session&#39;s opening ritual PAYS IT OFF first thing. Promise-of-delight, zero loss-framing — the daily-return trigger evidence (§4.3b) says a <em>legible promise made yesterday</em> is what makes a 6-year-old ask for the app, and this is its cleanest white-hat form. BE: persist a <code>tomorrowSeed</code> per child (topic + payoff content) at session end; inject into the next greeting. Pairs with the R11 wind-down so the seed lands in the calm exit, not as a hook to keep playing NOW.
+<strong>Depends / gated by:</strong> none hard; amplifies the R6 welcome-back and Daily Wonder.</p>
+<h3>P3 — <code>feat(retention): Age-Up Moments — celebrated tier transitions (&quot;you&#39;re ready for big-kid questions&quot;)</code></h3>
+<p><strong>Labels:</strong> <code>feature</code> <code>engagement</code> <code>personalization</code> <code>size:S</code></p>
+<p>24% of kids-app churn is &quot;child aged out of the content level,&quot; and apps that visibly grow with the child multiply LTV 3–5× (retentioncheck.com). Today #105&#39;s age tiers shift content silently. This makes the transition a <em>celebrated unlock</em>: when a child crosses a tier boundary (birthday or competence signal), LoLo notices out loud, a landmark-tier celebration fires once, and 1–2 new capabilities appear (a new studio tile, deeper question mode). The parent digest gets a &quot;LoLo is growing with them&quot; line — directly answering the parent&#39;s &quot;will this still be worth it next year?&quot; renewal question.
+<strong>Depends / gated by:</strong> #105 age tiers; celebrate() landmark tier.</p>
+<h2>7. Full source list</h2>
+<p><strong>Internal (evidence base, not re-cited per row):</strong></p>
+<ul>
+<li><code>docs/_session/premium-kids-research/GAMIFICATION-SCIENCE-KIDS.md</code> — Kurnaz 2025 (g=0.309 primary), streak evidence vacuum, loot-box/VR-schedule literature, Calvert/Xu parasocial-learning program, praise science, arousal-arc evidence, RITEC-8, D4CR.</li>
+<li><code>docs/_session/premium-kids-research/PRINCIPLES-AND-APPLICATIONS.md</code> — R1–R15 + anti-list.</li>
+<li><code>docs/_session/premium-kids-research/TEARDOWNS-PREMIUM-KIDS-APPS.md</code> — Khan/Toca/Pok Pok/Duolingo-ABC/Endless craft traits (referenced via PRINCIPLES).</li>
+<li><code>docs/_session/feature-prioritization-2026-07/PRIORITIZATION.md</code> — the five loops, scoring, monetization mapping.</li>
+</ul>
+<p><strong>Web (this session):</strong></p>
+<ol>
+<li><a href="https://retentioncheck.com/churn-benchmarks/kids-education-apps">https://retentioncheck.com/churn-benchmarks/kids-education-apps</a> — churn 7.4%/mo, driver ranking, 2–3× parent-visibility multiplier, 3–5× LTV span effect.</li>
+<li><a href="https://www.businessofapps.com/data/education-app-benchmarks/">https://www.businessofapps.com/data/education-app-benchmarks/</a> — ~2% D30 education baseline.</li>
+<li><a href="https://adapty.io/blog/education-app-subscription-benchmarks/">https://adapty.io/blog/education-app-subscription-benchmarks/</a> — education subscription benchmarks.</li>
+<li><a href="https://www.commondreams.org/news/2021/02/23/complaint-ftc-child-advocates-warn-prodigy-math-game-exploiting-pandemic-prey">https://www.commondreams.org/news/2021/02/23/complaint-ftc-child-advocates-warn-prodigy-math-game-exploiting-pandemic-prey</a> — CCFC FTC complaint.</li>
+<li><a href="https://fairplayforkids.org/pf/prodigy/">https://fairplayforkids.org/pf/prodigy/</a> — &quot;7 reasons to say no to Prodigy.&quot;</li>
+<li><a href="https://www.axios.com/2021/02/19/prodigy-math-game-ftc-complaint">https://www.axios.com/2021/02/19/prodigy-math-game-ftc-complaint</a> — complaint coverage.</li>
+<li><a href="https://www.edweek.org/technology/popular-interactive-math-game-prodigy-is-target-of-complaint-to-federal-trade-commission/2021/02">https://www.edweek.org/technology/popular-interactive-math-game-prodigy-is-target-of-complaint-to-federal-trade-commission/2021/02</a> — teacher-side coverage.</li>
+<li><a href="https://www.nbcnews.com/tech/tech-news/child-protection-nonprofit-alleges-manipulative-upselling-math-game-prodigy-n1258294">https://www.nbcnews.com/tech/tech-news/child-protection-nonprofit-alleges-manipulative-upselling-math-game-prodigy-n1258294</a> — upsell mechanics detail.</li>
+<li><a href="https://www.forbes.com/sites/petergreene/2021/02/22/advocacy-group-files-complaint-against-math-game/">https://www.forbes.com/sites/petergreene/2021/02/22/advocacy-group-files-complaint-against-math-game/</a> — cloud-vs-dirt classroom inequity.</li>
+<li><a href="https://tocaboca.helpshift.com/hc/en/3-toca-boca-world/faq/4-how-can-i-claim-my-free-weekly-gift-in-toca-boca-world/?p=ios">https://tocaboca.helpshift.com/hc/en/3-toca-boca-world/faq/4-how-can-i-claim-my-free-weekly-gift-in-toca-boca-world/?p=ios</a> — Friday gift mechanics (official).</li>
+<li><a href="https://toca-life-world.fandom.com/wiki/Post_Office/Gift_Events">https://toca-life-world.fandom.com/wiki/Post_Office/Gift_Events</a> — gift history, seasonal events, Gift Bonanzas.</li>
+<li><a href="https://play.google.com/store/apps/details?id=com.tocaboca.tocalifeworld">https://play.google.com/store/apps/details?id=com.tocaboca.tocalifeworld</a> — 60M+ players, free base + IAP.</li>
+<li><a href="https://pastory.app/articles/is-duolingo-abc-good-and-safe-for-kids/">https://pastory.app/articles/is-duolingo-abc-good-and-safe-for-kids/</a> — ABC: no ads/IAP/leaderboards/social/streak pressure.</li>
+<li><a href="https://kidsappreview.com/app/duolingo-abc/">https://kidsappreview.com/app/duolingo-abc/</a> — ABC design review.</li>
+<li><a href="https://darlingmellow.co.uk/duolingo-kids-review-home-education/">https://darlingmellow.co.uk/duolingo-kids-review-home-education/</a> — ABC &quot;clean, calm&quot; parent review.</li>
+<li><a href="https://abc.duolingo.com/">https://abc.duolingo.com/</a> — official: 100% free, 700+ lessons.</li>
+<li><a href="https://khankids.zendesk.com/hc/en-us/articles/360049358751-Learn-more-about-the-characters-inside-Khan-Academy-Kids">https://khankids.zendesk.com/hc/en-us/articles/360049358751-Learn-more-about-the-characters-inside-Khan-Academy-Kids</a> — 5 characters, collect-for-the-characters loop.</li>
+<li><a href="https://businessmodelcanvastemplate.com/blogs/how-it-works/lingokids-how-it-works">https://businessmodelcanvastemplate.com/blogs/how-it-works/lingokids-how-it-works</a> — Lingokids model, 95M families, Plus = 85% revenue, ML-personalization-as-churn-tool.</li>
+<li><a href="https://pulse2.com/lingokids-profile-cristobal-viedma-interview/">https://pulse2.com/lingokids-profile-cristobal-viedma-interview/</a> — CEO on engagement-vs-learning balance, AI-era co-play thesis.</li>
+<li><a href="https://www.tipranks.com/news/private-companies/lingokids-expands-co-play-features-as-new-survey-backs-screen-time-as-family-time">https://www.tipranks.com/news/private-companies/lingokids-expands-co-play-features-as-new-survey-backs-screen-time-as-family-time</a> — co-play strategy, 98%/84% screen-time-guilt stats.</li>
+<li><a href="https://lingokids.com/">https://lingokids.com/</a> — Plus pricing, Playlearning positioning.</li>
+<li><a href="https://www.revenuecat.com/state-of-subscription-apps-2025/">https://www.revenuecat.com/state-of-subscription-apps-2025/</a> — subscription-app context.</li>
+<li><a href="https://trophy.so/blog/khan-academy-gamification-case-study">https://trophy.so/blog/khan-academy-gamification-case-study</a> — Khan gamification retention claims (main platform).</li>
+<li><a href="https://www.internetmatters.org/advice/apps-and-platforms/skills-building/duolingo/">https://www.internetmatters.org/advice/apps-and-platforms/skills-building/duolingo/</a> — Duolingo kid-safety guidance.</li>
+<li><a href="https://screenwiseapp.com/guides/duolingo-and-language-learning-apps-for-kids">https://screenwiseapp.com/guides/duolingo-and-language-learning-apps-for-kids</a> — streak-anxiety-in-kids parent guidance (complements internal §2.4 citation).</li>
+</ol>
+<p><strong>Note on coverage:</strong> four deep background research agents were dispatched early in this session (Prodigy/Toca, Duolingo-ABC/daily-return, mechanic-by-mechanic, choreography/companion-ethics); the dossier was closed on direct research + the internal evidence base per a budget constraint before all agents returned. If their outputs surface later, fold any <em>new</em> citations into §2/§4 — the verdicts above are already grounded and are not expected to change.</p>

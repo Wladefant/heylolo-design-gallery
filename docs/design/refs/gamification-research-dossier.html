@@ -1,0 +1,357 @@
+<title>Gamification Research — Dossier</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>HeyLoLo — Deeply-Integrated Gamification System · Research Dossier</h1>
+<p><strong>Compiled:</strong> 2026-07-14. <strong>Scope:</strong> design a research-backed, deeply-integrated gamification system (XP, badges, streaks, leaderboard, &quot;Challenge Friends&quot;) that every 2026-07-wave feature (chat, inline quizzes, generated games, stickers, lookup, stories, comics, coloring) feeds into — for a voice-first AI companion, ages 4–10 (RN/Expo, Firebase, light-only teal).</p>
+<p><strong>Companion research already on disk (READ THESE — they carry the full citation trail and this dossier does not repeat every URL):</strong></p>
+<ul>
+<li><code>docs/_session/premium-kids-research/GAMIFICATION-SCIENCE-KIDS.md</code> — SDT in children, streaks/badges/points/collections under 10, reward-schedule ethics, RITEC, praise research, celebration intensity. ~26 sourced searches.</li>
+<li><code>docs/_session/premium-kids-research/REGULATORY-GUARDRAILS.md</code> — COPPA amended Rule, Apple Kids Category (1.3 / 5.1.4 / 5.1.2(i)), DSA Art. 28(1), EU AI Act Art. 5, FTC enforcement precedents, an 20-row compliance checklist.</li>
+<li><code>docs/_session/premium-kids-research/TEARDOWNS-PREMIUM-KIDS-APPS.md</code> — Khan Kids, Duolingo ABC, Toca Boca, Sago Mini, Pok Pok, Endless Alphabet, Apple Design Awards patterns.</li>
+<li><code>docs/_session/gamification-research/WEB-RESEARCH.md</code> — <strong>supplementary web pass run for THIS dossier</strong> (Duolingo/Khan/Pokémon Smile/PBS/Toca specifics, COPPA leaderboard verdict, streak-softening mechanics). Written by the background agent alongside this file.</li>
+</ul>
+<hr>
+<h2>PART 1 — Research synthesis (psychology + regulation + teardowns)</h2>
+<h3>1.1 Gamification psychology for ages 4–10</h3>
+<p>The single most important finding for this age band, from <code>GAMIFICATION-SCIENCE-KIDS.md</code>:</p>
+<ul>
+<li><strong>The standard Points-Badges-Leaderboards (PBL) stack has its WEAKEST evidence exactly in HeyLoLo&#39;s age band.</strong> Kurnaz (2025) meta-analysis (k=41): primary-school effect <strong>g = 0.309</strong> vs secondary <strong>g = 1.015</strong>; and gamification moved <em>extrinsic</em> motivation (g = 0.713) more than <em>intrinsic</em> (g = 0.638). PBL raises felt autonomy/relatedness but does <strong>not</strong> reliably raise felt competence (ETR&amp;D 2023). <a href="https://onlinelibrary.wiley.com/doi/10.1002/pits.70056">https://onlinelibrary.wiley.com/doi/10.1002/pits.70056</a></li>
+<li><strong>Overjustification is worse for children than adults.</strong> Deci, Koestner &amp; Ryan (1999, 128 studies): &quot;tangible rewards tended to be more detrimental for children than college students, and verbal rewards tend to be less enhancing for children.&quot; Danner &amp; Lonky (1981, ages 4–10): rewards <strong>decreased</strong> intrinsic motivation among the already-motivated children. The founding study — <strong>Lepper, Greene &amp; Nisbett (1973)</strong> — cut preschoolers&#39; <em>voluntary</em> engagement with a loved activity by <strong>~50%</strong> once the promised reward stopped, and the kids with the <strong>highest</strong> intrinsic interest were the most easily undermined. Design implication: rewards for a companion kids already enjoy should be <strong>informational (signal competence) and/or unexpected/surprise</strong> — not promised, contingent payouts. (Full cites in WEB-RESEARCH.md.) Children are the <em>worst</em> population for reward-driven design on both sides. <a href="https://home.ubalt.edu/tmitch/642/articles%20syllabus/Deci%20Koestner%20Ryan%20meta%20IM%20psy%20bull%2099.pdf">https://home.ubalt.edu/tmitch/642/articles%20syllabus/Deci%20Koestner%20Ryan%20meta%20IM%20psy%20bull%2099.pdf</a></li>
+<li><strong>Competence at 4–6 = &quot;I did it / I caused it,&quot; not a score.</strong> Nicholls&#39; developmental gradient: at 5–6 effort and ability are undifferentiated; social comparison / normative feedback only starts to bite around first grade. <strong>Leaderboards are developmentally meaningless for 4–6-year-olds and actively discouraging for the 8–9s who <em>do</em> compare</strong> and can be shamed by normative failure. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2268096/">https://pmc.ncbi.nlm.nih.gov/articles/PMC2268096/</a></li>
+<li><strong>Intrinsic integration beats bolt-on rewards.</strong> Habgood &amp; Ainsworth (2011): children learned more AND chose to play <strong>7× longer</strong> when the learning was woven into the core mechanic vs. a &quot;quiz-then-treat&quot; bolt-on. → make the loop itself the reward. <a href="https://shura.shu.ac.uk/3556/1/Habgood_Ainsworth_final.pdf">https://shura.shu.ac.uk/3556/1/Habgood_Ainsworth_final.pdf</a></li>
+<li><strong>Collections behave differently (and better) than points.</strong> Collecting is a normative middle-childhood identity activity; collectors report higher personal control/self-efficacy. Collections are <strong>concrete, visible, narratively meaningful, and complete-able</strong> — they have a natural endpoint. Points are abstract, infinite, comparative. (D4CR &quot;balanced environment&quot; asks precisely for finite reward loops.)</li>
+<li><strong>Streaks under 10 = an evidence vacuum filled by industry hype.</strong> There is <strong>essentially no peer-reviewed research on daily-streak mechanics in children under 10.</strong> What exists is adolescent loss-aversion critique (&quot;the emotional weight shifts from pleasure of connection to fear of loss&quot;) and parent reports that Duolingo streaks morph into &quot;genuine anxiety and performative learning.&quot; Young kids can&#39;t control their own daily schedule (parents do) and are self-blame-prone. <strong>Verdict from the science dossier: calendar streaks are unjustifiable for 4–9s on the evidence.</strong> <a href="https://screenwiseapp.com/guides/duolingo-streaks-and-anxiety-in-kids">https://screenwiseapp.com/guides/duolingo-streaks-and-anxiety-in-kids</a> | shame-free-streak design: <a href="https://uxmag.com/articles/the-psychology-of-hot-streak-game-design-how-to-keep-players-coming-back-every-day-without-shame">https://uxmag.com/articles/the-psychology-of-hot-streak-game-design-how-to-keep-players-coming-back-every-day-without-shame</a></li>
+<li><strong>Praise = process, honest intensity.</strong> Mueller &amp; Dweck (1998): one line of ability praise reduced persistence and post-failure performance. Brummelman (2014/2017): <em>inflated</em> praise (&quot;AMAZING! INCREDIBLE!&quot;) harms low-confidence kids most — the exact kids most likely to receive it. Celebrate the doing/strategy, never &quot;you&#39;re so smart,&quot; never intensifier-stacking. <a href="https://www.columbia.edu/cu/psychology/courses/3615/Readings/Mueller_Dweck.pdf">https://www.columbia.edu/cu/psychology/courses/3615/Readings/Mueller_Dweck.pdf</a></li>
+<li><strong>Celebration arousal arc: build → peak (≤2–3 s) → settle.</strong> Lillard &amp; Peterson (2011): 9 minutes of fast-paced TV &quot;severely compromised&quot; 4-year-olds&#39; executive function. Takacs (2015): content-congruent multimedia helps, but <em>extra</em> interactive juice overloads (worst for disadvantaged kids). → celebrations that are <em>about the content</em> help; garnish costs learning. Model regulation, don&#39;t spike-and-cut. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4647204/">https://pmc.ncbi.nlm.nih.gov/articles/PMC4647204/</a></li>
+<li><strong>UNICEF RITEC-8</strong> is the positive design standard (autonomy, competence, relationships = the SDT needs, + safety, emotions, creativity, identity). Audit every mechanic against it. <a href="https://digitalthrivingplaybook.org/big-idea/designing-for-childrens-well-being-in-digital-play-the-ritec-8-framework/">https://digitalthrivingplaybook.org/big-idea/designing-for-childrens-well-being-in-digital-play-the-ritec-8-framework/</a></li>
+</ul>
+<h3>1.2 What real kids apps actually ship (teardowns)</h3>
+<p>From <code>TEARDOWNS-PREMIUM-KIDS-APPS.md</code> + WEB-RESEARCH.md:</p>
+<ul>
+<li><strong>Duolingo ABC (ages 3–8):</strong> deliberately <strong>removed</strong> all leagues, all social features, all leaderboards, ads, IAP — &quot;main-Duolingo&#39;s social features and League competition are too much&quot; for this age. <strong>Kept:</strong> single linear path, star-earning that unlocks stories, micro/inline celebrations (Duo mascot mid-exercise, &quot;letters snapping into place,&quot; &quot;a generous dose of sparkles&quot;). Celebrations are inline, never blocking modals. <a href="https://blog.duolingo.com/a-good-read-building-duolingo-abc-for-android/">https://blog.duolingo.com/a-good-read-building-duolingo-abc-for-android/</a></li>
+<li><strong>Khan Academy Kids:</strong> celebration = <strong>generosity, not score</strong> — correct answers earn sparkles that accumulate to bring a truck of presents <em>for the characters</em> (not the child); Kodi the bear celebrates <em>with</em> the child and models thinking during struggle; wrong answers never punish (gentle &quot;bong&quot; + animated walkthrough). Longer-term reward = furnishings for characters&#39; rooms — a collection, given to the character. <a href="https://blog.khanacademy.org/supporting-english-language-acquisition-with-khan-academy-kids/">https://blog.khanacademy.org/supporting-english-language-acquisition-with-khan-academy-kids/</a></li>
+<li><strong>Toca Boca / Sago Mini / Pok Pok:</strong> the <strong>anti-gamification</strong> flagships — &quot;these are not games, they are toys… no feelings of failure&quot;; &quot;no high scores, no Game Over, zero stress.&quot; Apple Design Award 2026 to Sago Mini: <em>&quot;remarkable for what it doesn&#39;t include… no timer, no to-do lists.&quot;</em> Pok Pok: &quot;there&#39;s no flashing &#39;congratulations&#39;… deeper play IS the reward.&quot;</li>
+<li><strong>Pokémon Smile (toothbrushing):</strong> the closest mainstream example of <em>ethical</em> extrinsic reward for young kids — brushing &quot;catches&quot; Pokémon (a <strong>collection</strong> with a natural set to complete) and earns cosmetic hats; no streak-loss punishment, no leaderboard, no social. It&#39;s a collection loop wrapped around a real-world habit. (See WEB-RESEARCH.md for the sourced teardown.)</li>
+<li><strong>Apple Activity Rings</strong> (transferable adult pattern): endurance from radical simplicity — three loops, sparkle-burst on close, scaled celebration for milestone awards.</li>
+</ul>
+<p><strong>The convergent lesson: premium kids gamification is subtraction + collection + character-delivered celebration, NOT competitive PBL.</strong></p>
+<h3>1.3 COPPA + Apple Kids Category — the leaderboard/social verdict</h3>
+<p>Full detail + the 20-row compliance checklist in <code>REGULATORY-GUARDRAILS.md</code>. The load-bearing constraints for a leaderboard / &quot;Challenge Friends&quot;:</p>
+<ul>
+<li><strong>Apple Guideline 1.3 (Kids Category, verbatim):</strong> Kids-Category apps &quot;<strong>may not send personally identifiable information or device information to third parties</strong>&quot; and must keep behind a parental gate any links out, purchasing, or &quot;other distractions.&quot; A public/social leaderboard that shows one child&#39;s name+score to another child is a disclosure surface Apple scrutinises heavily; UGC/social (Guideline 1.2) then also attaches (filtering, reporting, blocking, published contact).</li>
+<li><strong>Apple 5.1.4(b):</strong> the parental gate is <strong>NOT</strong> the same as COPPA parental consent — you need <strong>both</strong>.</li>
+<li><strong>COPPA amended Rule (compliance deadline already passed 2026-04-22):</strong> displaying a child&#39;s personal info to other users, and <strong>collecting friend lists</strong>, are exactly the disclosures that require separate opt-in VPC. A &quot;Have 10 friends&quot; incentive that drives kids to accumulate connections is a friend-list-collection engine. FTC v. Epic ($275M) established that <strong>on-by-default social matching of kids with others is unlawful</strong> and that <strong>defaults are design decisions the FTC treats as unfair</strong>.</li>
+<li><strong>EU DSA Art. 28(1) Guidelines (14 Jul 2025)</strong> name, for minors, features that must be <strong>OFF by default</strong>: &quot;communication &#39;streaks&#39;… likes/reaction counts… intermittent or random rewards.&quot; Public leaderboards are engagement-comparison surfaces this regime pushes away from.</li>
+<li><strong>EU AI Act Art. 5(1)(b)</strong> — the only outright <em>ban</em>: an AI that exploits a child&#39;s age-vulnerability to distort behaviour (effect suffices, no intent needed). A companion that leverages the parasocial bond or peer-comparison for engagement sits closest to this red line.</li>
+</ul>
+<p><strong>COPPA/Apple leaderboard verdict (verified — matches the expected safe answer):</strong> a <strong>global or friends-of-strangers leaderboard is not shippable</strong> for this audience. The <strong>only compliant shapes</strong> are:</p>
+<ol>
+<li><strong>Self-competition</strong> (&quot;you vs. your own best / last week&quot;) — always safe, no other person&#39;s data shown.</li>
+<li><strong>Family-scoped</strong>, inside a single parent-owned account/household, where every member (child + parents + siblings) is already known to each other and the parent controls membership — no cross-household disclosure, no stranger discovery, no friend-request graph. This is the shape the Figma design gestures at (it lists &quot;Mom&quot;, &quot;Dad&quot;, &quot;Grandpa Sam&quot; beside the kids) but it currently <strong>also mixes in non-family kid names</strong>, which is the part to cut.</li>
+<li><strong>Fully anonymized/aggregate</strong> (&quot;you&#39;re in the top 20% of curious kids this week&quot;) — no names, no identifiable others.</li>
+</ol>
+<p>Everything social-graph (friend requests, &quot;Challenge Friends&quot; across households, &quot;Have N friends&quot; badges) must be <strong>gated behind the F30 safety audit + VPC + a parental gate</strong>, and is a Pillar-5 (parent/safety) decision, not a launch gamification feature. The catalog itself sequences F27/F31 (social) <strong>after</strong> F30 (<code>CATALOG.md</code> build-order).</p>
+<p><strong>Consent-method trap (WEB-RESEARCH.md):</strong> the low-friction <strong>&quot;email-plus&quot; VPC method is only valid when the operator does NOT disclose the child&#39;s PI to third parties or make it publicly available</strong> — which legally <em>forbids</em> public leaderboards, third-party analytics, and social APIs. So a public/friends leaderboard doesn&#39;t just need <em>some</em> consent; it forces you off email-plus onto a <strong>higher-friction VPC method</strong> (credit card, gov-ID+face-match, KBA). Another reason the launch answer is self + family-scoped only.</p>
+<h3>1.4 Anti-addiction / healthy-use guardrails (design rules)</h3>
+<p>Newest policy anchors (WEB-RESEARCH.md): <strong>AAP policy &quot;Digital Ecosystems, Children, and Adolescents&quot; (Jan 20, 2026)</strong> explicitly flags <strong>intermittent variable-reward systems</strong>, endless scroll, and notification spam as compulsive-use harms — so the classic variable-ratio &quot;slot-machine&quot; schedule is exactly what to avoid; AAP&#39;s endorsed lane is &quot;high-quality, low-gamification.&quot; <strong>UK ICO Children&#39;s Code Standard 13</strong> prohibits <strong>nudge techniques / dark patterns</strong> (no FOMO countdowns, no loss-aversion pressure, no streak guilt).</p>
+<p>Distilled from all dossiers into hard rules the reward economy must obey:</p>
+<ul>
+<li><strong>No calendar streaks with loss framing</strong> (fire icons, &quot;don&#39;t break your streak&quot;). DSA names streaks for default-off; the science says no efficacy under 10 + self-blame risk.</li>
+<li><strong>No intermittent/random rewards</strong> (mystery chests, gacha, loot-box-like surprise) — the compulsion engine; FTC v. Cognosphere/Genshin ($20M) is the enforcement template. <strong>Fixed, transparent reward rules; variability only in <em>content</em> (which sticker, which sound), never in <em>whether</em> effort is acknowledged.</strong></li>
+<li><strong>No FOMO/countdown/urgency cues</strong> in the kid UI.</li>
+<li><strong>The character never emotionally pressures use</strong> (&quot;I&#39;ll miss you&quot;, &quot;don&#39;t leave me&quot;) — closest to the EU AI Act ban.</li>
+<li><strong>No child-directed engagement push notifications</strong> by default; route &quot;come back&quot; to the <em>parent</em>.</li>
+<li><strong>Treat any token/point system as scaffolding to fade</strong> (ABA arc: continuous → intermittent → natural consequence). If the behaviour collapses when the reward is removed, the design failed.</li>
+<li><strong>Every gamification lever behind a parent-dashboard toggle, conservative by default</strong> — &quot;off by default, parent opts in&quot; is the pattern every regime converges on (DSA, AADC, COPPA, Epic order).</li>
+</ul>
+<h3>1.5 Reward-economy design principles</h3>
+<ul>
+<li><strong>Size XP so no single loop dominates</strong> — budget by <em>effort + learning value</em>, not by which loop is cheapest to spam. A 1-tap coloring fill must not out-earn a completed story. Use a small, legible currency scale and <strong>daily soft-caps per activity class</strong> so a child can&#39;t farm one mechanic.</li>
+<li><strong>Level curve:</strong> gentle, front-loaded (fast early levels so a 4-year-old feels progress in session one), then a mild slope. Avoid steep exponential curves that make later levels feel unreachable (anxiety). Levels should be <strong>cosmetic/identity milestones</strong>, never a gate on content.</li>
+<li><strong>Badge taxonomy = three families:</strong> (a) <strong>skill-milestone</strong> (first story, first quiz-all-correct), (b) <strong>collection-completeness</strong> (collect the 8 &quot;explorer critters&quot;), (c) <strong>effort/consistency</strong> (came back and learned across several days — framed as an <em>ever-advancing map</em>, never a losable streak). Keep active collections capped and completable.</li>
+<li><strong>Streak-safe recovery:</strong> if any continuity feature ships at all, it must be a <strong>no-loss &quot;adventure map&quot; that only ever advances</strong> — gaps are invisible, returning is always celebrated, never mourned. If a Duolingo-style streak is insisted on, it must ship with <strong>streak-freeze / weekend-amulet equivalents auto-granted</strong> and be <strong>parent-toggleable + off by default</strong>.</li>
+</ul>
+<hr>
+<h2>PART 2 — In-repo inventory (development branch, <code>worktree-integration</code>)</h2>
+<p><strong>Grep coverage:</strong> <code>xp|badge|streak|reward|points|achievement|leaderboard|trophy|confetti|celebration|sticker|collectible|gamif|milestone</code> across FE <code>src/</code> and BE <code>functions/src</code>. Result: <strong>there is no XP / points / badge / level / leaderboard system today.</strong> But four load-bearing hooks already exist that a gamification layer should ride, plus a celebration channel that is <em>built but unwired</em>.</p>
+<h3>2.1 The strongest existing hooks (build on these, don&#39;t rebuild)</h3>
+<p><strong>A. Learning streak — already computed, FE + BE.</strong> (The one gamification-shaped mechanic that already exists.)</p>
+<ul>
+<li>BE: <code>elumi-kids-api/functions/src/api/child-home/child-home.service.ts:102-117</code> — <code>computeStreak()</code>: consecutive child-local days ending today with ≥1 message, walking back the day-aggregates, <strong>hard-resets on the first gap</strong>, capped at <code>STREAK_MAX_DAYS = 30</code> (<code>:16</code>). Response field <code>learningStreakDays</code> in <code>child-home.types.ts:24-26</code>.</li>
+<li>BE: <code>elumi-kids-api/functions/src/index.ts:278</code> — &quot;a bounded streak back-walk over the same child-day-aggregates the dashboard [uses]&quot;.</li>
+<li>FE render: <code>src/widgets/child-dashboard/ui/dashboard.tsx:71-72</code> — <code>&quot;${data.learningStreakDays}-day learning streak&quot;</code> shown in the Accomplishments card when <code>&gt;= 2</code>.</li>
+<li>⚠️ <strong>This is a hard-reset calendar streak — exactly the mechanic the science says is unjustifiable under 10.</strong> It is currently <em>descriptive</em> (a soft &quot;N-day learning streak&quot; label, no fire icon, no loss framing, no punishment) which is the safe form. <strong>Recommendation: keep it descriptive/no-loss; do NOT escalate it into a loseable, guilt-framed streak.</strong></li>
+</ul>
+<p><strong>B. <code>child-day-aggregates</code> — the per-day event ledger XP events should ride.</strong> This is the single most important integration point.</p>
+<ul>
+<li>BE: <code>elumi-kids-api/functions/src/api/child-day-aggregate/child-day-aggregate.repository.ts</code>. Doc keyed <code>{childId}_{localDate}</code> (<code>:230</code>). Schema (<code>:172-190</code>): <code>messageCount</code>, <code>userMessageCount</code>, <code>assistantMessageCount</code>, <code>conversations</code> (span map), <code>flaggedConversationIds</code>, <code>mood</code> (morning/noon/night buckets), <code>narrativeDirty</code>. Idempotent, marker-gated fold via <code>applyMessageCreate()</code> (<code>:251-294</code>), reversible on delete, self-healing via <code>reconcileDay()</code> (<code>:612-722</code>).</li>
+<li>Derived-on-read helpers already exist: <code>conversationCount()</code> (<code>:831</code>), <code>totalUsageMinutes()</code> (<code>:835-843</code>).</li>
+<li><strong>Why it matters:</strong> it already ingests one event per message idempotently, per child-local day, with tz-correct bucketing and trigger-redelivery protection. An <strong>XP ledger is the same shape</strong> — either extend this aggregate with per-day XP-by-source counters, or add a sibling <code>child-xp-events</code> / <code>child-xp-daily</code> collection folded by the same trigger. The daily-summary/off-path Gemini generator (<code>findNarrativeDirty</code> / <code>markNarrativeGenerated</code>, <code>:498-557</code>) is the natural place to also roll up a day&#39;s XP + newly-earned badges.</li>
+</ul>
+<p><strong>C. The daily-summary / incremental-aggregates pipeline → parent dashboard.</strong> (Where XP/badge visibility surfaces to parents.)</p>
+<ul>
+<li>BE: <code>elumi-kids-api/functions/src/api/daily-summary/daily-summary-ai.service.ts</code>, <code>api/dashboard/dashboard.service.ts</code> (<code>:128-139</code> builds the <code>points</code>/week-mood series → parent dashboard).</li>
+<li>FE: <code>src/widgets/parent-dashboard/ui/parent-dashboard.tsx</code>, <code>week-mood-chart.tsx</code>, <code>status-card/index.tsx</code>; <code>src/entities/dashboard/</code>.</li>
+<li>Design doc: <code>docs/_session/incremental-summary/DESIGN.md</code>. <strong>XP/badge earnings should be folded into the same nightly narrative + surfaced as a parent-dashboard &quot;reward economy&quot; panel</strong> (parent visibility of the economy is a compliance requirement — REGULATORY §7 row 20).</li>
+</ul>
+<p><strong>D. Reward feedback channel — BUILT, but the celebration trigger is UNWIRED.</strong> This is the celebration engine a gamification layer needs, already tuned to the research.</p>
+<ul>
+<li>FE: <code>src/shared/feedback/index.ts:142-191</code> — <code>feedback.success(magnitude: &quot;S&quot;|&quot;M&quot;|&quot;L&quot;)</code>: a shaped, building <strong>crescendo haptic scaled to the win</strong> + a bright 3-note C-major-pentatonic up-arpeggio + a warm wood-tick foley. Comment at <code>:154-155</code>: <em>&quot;Its eventual home is the collection-shelf moment (premium-kids R8) when that surface exists&quot;</em> — the celebration was <strong>explicitly designed for a future collection/reward surface that doesn&#39;t exist yet.</strong></li>
+<li>FE: <code>src/shared/feedback/haptic-patterns.ts:139-144</code> — <code>playLandmarkPattern()</code> (&quot;First-open / milestone landmark crescendo, spec §2.6&quot;) is <strong>&quot;Built + bridged, but the actual trigger points (has-seen-intro flag, milestone events) are NOT wired — no such event exists in the app yet. Exposed for when they land.&quot;</strong></li>
+<li>FEEL POLICY (<code>index.ts:22-31</code>): haptics are always-on; <strong>sound is rare seasoning reserved for genuine REWARD moments only</strong> — which is exactly the discipline the celebration-intensity research demands. Reward earcons are default-on but gated by a Sound preference (<code>src/shared/feedback/preferences.ts</code>, <code>earcon-files.ts</code>).</li>
+<li><strong>Meaning:</strong> the &quot;build → peak → settle&quot; celebration arc the science calls for is <em>already implemented and waiting for a milestone/collection event to fire it.</em> Gamification just needs to emit <code>success(&quot;L&quot;)</code> / <code>playLandmarkPattern()</code> at the right moments.</li>
+</ul>
+<h3>2.2 What is NOT gamification (grep false-positives, for the record)</h3>
+<ul>
+<li><code>src/shared/ui/Badge/index.tsx</code> — a <strong>UI chip</strong> (onboarding interest picker / plan picker), not an achievement badge. Don&#39;t overload it; a gamification badge needs its own component.</li>
+<li><code>src/entities/dashboard/model/schemas.ts:11</code> <code>points:</code> = week-mood chart data points, not reward points.</li>
+<li><code>use-streaming-tts-player.ts:202,220</code> &quot;streak&quot; = clean-audio-playback streak (audio-underrun logic), unrelated.</li>
+<li><code>child-memory-merge.service.ts:80</code> <code>&quot;milestones&quot;</code> = LLM-extracted life milestones for memory (&quot;Learned to swim&quot;), not achievements — but a <em>possible</em> signal source for auto-badges.</li>
+</ul>
+<h3>2.3 Child profile schema — clean slate</h3>
+<p><code>src/entities/child/model/schemas.ts</code> (<code>childSchema</code>, <code>:52-104</code>): has <code>preset</code>, <code>name</code>, <code>dateOfBirth</code>, <code>avatar</code> (<code>SelectableAvatars</code> enum), <code>interests</code>, <code>supportAreas</code>, <code>companionMode</code>, <code>ttsVoice</code>, <code>imageModel</code>, <code>timeManagement</code>. <strong>No <code>xp</code>, <code>level</code>, <code>badges</code>, <code>coins</code>, <code>ageTier</code> fields.</strong> Adding gamification state = additive schema work (BE convention: add fields only when the feature lands — <code>elumi-kids-api/CLAUDE.md</code> schema-design rules). Note <strong>age tiers (F2) are also not in the schema yet</strong> — XP-per-action should be tier-aware once F2 lands.</p>
+<h3>2.4 The features XP must feed (from <code>docs/_session/feature-catalog/CATALOG.md</code>)</h3>
+<p>The 2026-07 catalog is F1–F34. Gamification-relevant sources of XP events, by pillar:</p>
+<ul>
+<li><strong>Chat / Explorer:</strong> ask a question (companion chat <code>ai-chat-messages</code>), a &quot;LoLo sees it!&quot; Explorer detection (F1), a lookup/answered curiosity.</li>
+<li><strong>Learning games (F6–F19):</strong> the CATALOG explicitly says build <strong>one Games Hub + a shared mini-game scaffold</strong> with a <strong>&quot;star/reward loop&quot;</strong> wired in once (F6–F19 header note, and F3–F19). Shared <strong>quiz engine</strong> (F16+F18), drag-to-category (F12+F13), maze (F17), tracing/dots (F10/F11), jigsaw (F19), clock (F15), etc.</li>
+<li><strong>Creative Studio (F20–F24):</strong> finish a storybook/comic (F23), color a page (F24), a cooking session (F20), grow-a-plant care action (F21).</li>
+<li><strong>Companion/Avatar (F25–F26):</strong> avatar reactions are the celebration <em>renderer</em> (F26 &quot;makes achievements feel celebrated by a friend, not a toast&quot;).</li>
+<li><strong>Stickers / collectibles:</strong> not yet a feature — this dossier proposes it as the collection currency (see Part 4).</li>
+<li><strong>Social (F27/F31) + &quot;Challenge Friends&quot;:</strong> gated behind F30 safety audit; <strong>out of scope for the launch gamification layer</strong> per the COPPA verdict.</li>
+</ul>
+<hr>
+<h2>PART 3 — Figma &quot;Leaderboard &amp; Badges&quot; section</h2>
+<p><strong>File <code>MxRZQxXrgV9hMDtTTVEvKW</code>, section <code>40002430:12107</code> (&quot;Leaderboard &amp; Badges&quot;, 1592×1234).</strong> Three phone frames. Screens cached at:</p>
+<ul>
+<li><code>docs/_session/gamification-research/screens/leaderboard-1-podium.png</code> (frame <code>40002430:12346</code>)</li>
+<li><code>docs/_session/gamification-research/screens/leaderboard-2-list.png</code> (frame <code>40002430:12447</code>)</li>
+<li><code>docs/_session/gamification-research/screens/badges-grid.png</code> (frame <code>40002430:12519</code>)</li>
+</ul>
+<h3>3.1 Leaderboard — screen 1 (podium)</h3>
+<p>Header &quot;Leaderboard&quot; with a <strong>Weekly / All Time</strong> segmented toggle (All Time active). A <strong>3-place podium</strong> rendered with the LoLo <strong>cloud mascot in costume variants</strong> as each competitor&#39;s avatar (no real child photos):</p>
+<ul>
+<li><strong>1st: Paul — 5,924 Coins</strong> (blimp/propeller-hat cloud), on the tall centre plinth &quot;1&quot;.</li>
+<li><strong>2nd: Theo — 3,517 Coins</strong> (gardener cloud holding a puppy), plinth &quot;2&quot;.</li>
+<li><strong>3rd: Mary — 1,501 Coins</strong> (tiara cloud), plinth &quot;3&quot;.
+Below the podium, a scrolling <strong>ranked list 4–N</strong>: #4 Emma 1,405, #5 Lemmy 1,215, #6 <strong>Mom</strong> 1,215, #7 <strong>Grandpa Sam</strong> 1,104, #8 <strong>Dad</strong> 951, #9 Christine 898 (screen-2 continues to #10 Marley 842). Each row = rank number + costumed-cloud avatar + first name + currency.</li>
+</ul>
+<h3>3.2 Leaderboard — screen 2 (list only)</h3>
+<p>Same list, no podium, ranks 4–10, Weekly/All-Time toggle retained.</p>
+<h3>3.3 Badges grid</h3>
+<p>Header &quot;Badges&quot;, <strong>2-column grid of badge cards</strong>. Each card = a costumed-cloud badge illustration + <strong>date earned</strong> + <strong>title</strong> + <strong>criterion</strong>. Earned badges are full-colour; <strong>locked badges are greyed with a 🔒 &quot;Locked&quot; chip</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Badge</th>
+<th>Criterion</th>
+<th>State</th>
+<th>Feeds feature</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Curious Cloud</td>
+<td>Ask 50 questions</td>
+<td>earned 18 May 2026</td>
+<td>chat</td>
+</tr>
+<tr>
+<td>Quiz Champion</td>
+<td>Create 15 quizzes</td>
+<td>earned 08 Jun 2026</td>
+<td>F18 quiz</td>
+</tr>
+<tr>
+<td>Why Machine</td>
+<td>Ask 250 questions</td>
+<td>earned 10 Jun 2026</td>
+<td>chat</td>
+</tr>
+<tr>
+<td>Social Butterfly</td>
+<td><strong>Have 10 friends</strong></td>
+<td>earned 05 May 2026</td>
+<td><strong>F31 social — COPPA-sensitive</strong></td>
+</tr>
+<tr>
+<td>Rising Writer</td>
+<td>Create 25 stories</td>
+<td>🔒 Locked</td>
+<td>F23 storybooks</td>
+</tr>
+<tr>
+<td>Tiny Picasso</td>
+<td>Generate 100 images</td>
+<td>🔒 Locked</td>
+<td>image-gen / F24</td>
+</tr>
+</tbody></table>
+<h3>3.4 What the design tells us — and the two things to change</h3>
+<ul>
+<li>The badge taxonomy is <strong>activity-count milestones mapped 1:1 onto features</strong> (ask N questions, create N quizzes/stories, generate N images) — directly usable and it confirms the &quot;every feature feeds gamification&quot; intent.</li>
+<li>Avatars are the <strong>LoLo cloud mascot in costumes</strong>, not child photos — a real mitigation (no biometric/photo disclosure) and it matches the existing celebration/collection direction.</li>
+<li><strong>Currency is inconsistent in the design itself:</strong> most rows say &quot;<strong>Coins</strong>&quot; but the metadata shows rows <code>40002430:12391/12399/12407</code> labelled &quot;<strong>XP</strong>&quot; (1,104 XP / 951 XP / 898 XP). Pick ONE currency name (recommend <strong>XP</strong> as the single earned currency, no separate spendable &quot;coins&quot; unless a store exists — a spendable currency invites the loot-box/IAP scrutiny of REGULATORY §2–3).</li>
+<li><strong>Two changes the research demands before this ships:</strong><ol>
+<li><strong>The leaderboard must be family-scoped only.</strong> The design already leans family (Mom/Dad/Grandpa Sam) — remove the non-household kid names (Emma, Lemmy, Christine, Marley, Paul, Theo, Mary unless they&#39;re household siblings). A cross-household/friends leaderboard is not COPPA-shippable (Part 1.3).</li>
+<li><strong>Drop or gate &quot;Social Butterfly — Have 10 friends.&quot;</strong> Incentivising friend-list accumulation is a COPPA friend-collection driver and depends on F31, which is gated behind the F30 safety audit. Replace with a non-social badge at launch.</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2>PART 4 — Recommended system for elumi-kids</h2>
+<p><strong>Design thesis:</strong> the research is unambiguous that competitive PBL is the <em>weakest and riskiest</em> choice for 4–10s, yet the Figma design (and the &quot;super/leaderboard/Challenge-Friends&quot; ask) points at PBL. Resolve this by shipping a <strong>collection-first, self-referential, family-scoped</strong> system that <em>looks</em> rich but avoids every harm/compliance red line — and by making <strong>XP a private progress signal, not a public ranking</strong>. This also matches what the codebase is already built for (the unwired <code>success(&quot;L&quot;)</code> / <code>playLandmarkPattern()</code> &quot;collection-shelf moment&quot;).</p>
+<h3>4.1 XP event taxonomy — one currency, effort-weighted, daily-capped</h3>
+<p><strong>Currency:</strong> a single earned currency, <strong>Curiosity Points (XP)</strong>. No second spendable &quot;coins&quot; currency at launch (avoids store/IAP/loot-box scrutiny). XP is <strong>private to the child + visible to the parent</strong>; it drives the child&#39;s own level + collection, and (optionally) a <strong>family-only</strong> board.</p>
+<p><strong>Grant table</strong> (illustrative weights — tune once F2 age tiers land so a T1 4-year-old and a T4 tween earn comparably per unit of effort). Weight by <em>effort + learning value</em>, with per-class daily soft-caps so no loop can be farmed:</p>
+<table>
+<thead>
+<tr>
+<th>Source feature</th>
+<th>Event</th>
+<th>XP</th>
+<th>Daily soft-cap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chat (<code>ai-chat-messages</code>)</td>
+<td>Ask a genuine question (dedup trivial spam)</td>
+<td>5</td>
+<td>~40 (8 questions)</td>
+</tr>
+<tr>
+<td>Chat</td>
+<td>&quot;Today&#39;s 3 curious questions&quot; goal complete (existing <code>TodaysGoalCard</code>)</td>
+<td>+15 bonus</td>
+<td>once/day</td>
+</tr>
+<tr>
+<td>Explorer (F1)</td>
+<td>&quot;LoLo sees it!&quot; object identified</td>
+<td>5</td>
+<td>~30</td>
+</tr>
+<tr>
+<td>Learning game (F6–F19)</td>
+<td>Complete a round/level</td>
+<td>10</td>
+<td>~60 across all games</td>
+</tr>
+<tr>
+<td>Learning game</td>
+<td>All-correct / personal-best round</td>
+<td>+10 bonus</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Quiz (F16/F18)</td>
+<td>Finish a quiz</td>
+<td>10; +2/correct</td>
+<td>~40</td>
+</tr>
+<tr>
+<td>Story/comic (F23)</td>
+<td>Finish a co-created book</td>
+<td>30</td>
+<td>~60</td>
+</tr>
+<tr>
+<td>Coloring (F24)</td>
+<td>Finish (meaningfully) a page</td>
+<td>10</td>
+<td>~30</td>
+</tr>
+<tr>
+<td>Cooking/plant (F20/F21)</td>
+<td>Complete a recipe / daily plant-care</td>
+<td>10</td>
+<td>10 (care once/day)</td>
+</tr>
+<tr>
+<td>Vocabulary (F9)</td>
+<td>SRS review batch done</td>
+<td>10</td>
+<td>~30</td>
+</tr>
+<tr>
+<td>Consistency</td>
+<td>Returned + learned on a new day (no-loss)</td>
+<td>+10</td>
+<td>once/day</td>
+</tr>
+</tbody></table>
+<p>Guardrails baked in: <strong>fixed/transparent grants (no random XP), per-class caps prevent single-loop dominance, and the <em>total</em> daily earnable is bounded</strong> so a healthy ~15-min session tops out — the reward economy cannot itself pull for overuse (REGULATORY §7 rows 19–20; interacts cleanly with the existing <code>timeManagement</code> limits).</p>
+<h3>4.2 Levels</h3>
+<ul>
+<li><strong>&quot;Explorer Levels&quot; 1…N</strong>, cosmetic/identity only — <strong>never gate content or features</strong> behind a level (would fail Apple 1.3 &quot;distraction&quot; + the autonomy principle).</li>
+<li><strong>Curve: front-loaded</strong> — L1→L2 in one short session; then a gentle near-linear slope (e.g. <code>xpForLevel(n) = 50 + 40·(n−1)</code>), so progress is always felt and no level looks unreachable. Level-up fires <code>feedback.playLandmarkPattern()</code> + an avatar (F26) celebration, then <strong>settles</strong> (arousal arc).</li>
+<li>Each level unlocks a <strong>cosmetic</strong> (an avatar hat/sticker for the LoLo cloud, matching the Figma costumed-cloud language) — cosmetic-only rewards are the ethical form (Pokémon Smile model).</li>
+</ul>
+<h3>4.3 Badge families (three, plus the launch badge list)</h3>
+<ol>
+<li><strong>Skill-milestone</strong> (one-off firsts): First Question, First Story, First All-Correct Quiz, First Coloring, First Explorer Find. Warm, effort-framed titles.</li>
+<li><strong>Collection-completeness</strong> (the primary engine — collections beat points for this age): themed <strong>sticker/critter sets</strong> with a <strong>finite, completable</strong> set (e.g. &quot;8 Curiosity Critters,&quot; &quot;6 Space Explorers&quot;). Earned across <em>heterogeneous</em> features so the whole app feeds one shelf — this is the &quot;deeply integrated&quot; spine. Completing a set closes an arc and fires the big celebration; it does <strong>not</strong> open an infinite bigger meter.</li>
+<li><strong>Consistency (no-loss)</strong>: framed as an <strong>ever-advancing adventure map</strong>, never a losable streak. &quot;You&#39;ve explored on 5 different days!&quot; — gaps invisible, returning always celebrated.</li>
+</ol>
+<p>Reuse the Figma badge cards + locked-state UI. <strong>Cut &quot;Have 10 friends&quot; at launch</strong> (COPPA). Keep the rest (Curious Cloud, Quiz Champion, Why Machine, Rising Writer, Tiny Picasso) — they&#39;re clean activity-milestones.</p>
+<h3>4.4 Streak design (the riskiest decision — see §4.9)</h3>
+<ul>
+<li><strong>Do NOT escalate the existing hard-reset <code>learningStreakDays</code> into a fire-icon loseable streak.</strong> Keep it as the current descriptive &quot;N-day learning streak&quot; label, OR replace with the no-loss adventure map.</li>
+<li>If a visible streak is a hard product requirement: ship it <strong>off by default, parent-toggleable</strong>, with <strong>auto-granted streak-freezes / weekend-amulets</strong>, <strong>no fire/guilt iconography</strong>, and &quot;resume, never mourned&quot; framing (DSA default-off; the shame-free-streak UX literature).</li>
+</ul>
+<h3>4.5 Leaderboard scope — recommendation (COPPA verdict)</h3>
+<p><strong>Ship, in priority order:</strong></p>
+<ol>
+<li><strong>Self-board (default, always on):</strong> &quot;You vs. your own best week / last week&quot; + level progress. No other person&#39;s data — always compliant, and it&#39;s what actually motivates the 4–6 competence need (&quot;I did more than before&quot;).</li>
+<li><strong>Family board (opt-in, parent-provisioned):</strong> a single-household board across the parent-owned account (child + parents + siblings), exactly the Mom/Dad/Grandpa shape in the Figma — <strong>membership controlled by the parent, no cross-household discovery, no friend graph, behind a parental gate.</strong> This is the <em>only</em> compliant multi-person leaderboard.</li>
+<li><strong>Anonymous aggregate (optional):</strong> &quot;top 20% of curious kids this week&quot; — no names.</li>
+</ol>
+<p><strong>Do NOT ship:</strong> global leaderboards, friends-of-strangers boards, or a cross-household <strong>&quot;Challenge Friends&quot;</strong> at launch — not COPPA-shippable, and it depends on F31 (gated behind F30). Reframe &quot;Challenge Friends&quot; as <strong>&quot;Challenge your family&quot;</strong> or <strong>&quot;Beat your own best,&quot;</strong> and defer any true cross-household social to a post-F30 Pillar-5 project with VPC.</p>
+<h3>4.6 BE data model sketch (Firestore, aligned to existing conventions)</h3>
+<p>Ride the existing aggregate pipeline; add minimal collections (BE rule: add fields when the feature lands):</p>
+<ul>
+<li><strong><code>child-xp-events</code></strong> (append-only ledger, idempotent): <code>{ childId, localDate, source: enum, eventId (dedup, mirrors the aggregate marker pattern), xp, createdAt }</code>. Written by the same message/game-completion triggers that already fold <code>child-day-aggregates</code>; <code>eventId</code> gates redelivery exactly like <code>applyMessageCreate()</code>.</li>
+<li><strong>Extend <code>child-day-aggregates</code></strong> (or a sibling <code>child-xp-daily</code>) with <code>xpBySource: Record&lt;source, number&gt;</code> + <code>xpTotal</code> — folded in the same idempotent transaction, so the daily rollup + parent dashboard get XP for free via the existing off-path narrative generator (<code>findNarrativeDirty</code>/<code>markNarrativeGenerated</code>).</li>
+<li><strong><code>child.gamification</code></strong> on the child profile (or a <code>child-progress/{childId}</code> doc): <code>{ level, xpTotal, xpToNext, badges: [{id, earnedAt}], stickers: [{setId, itemId, earnedAt}], consistencyDays }</code>. Recomputable from the ledger (self-heal, like <code>reconcileDay</code>).</li>
+<li><strong>Family board</strong>: query the parent&#39;s children + parent as members; compute weekly/all-time XP sums server-side; return names+avatars only for <strong>same-account</strong> members (never cross-account).</li>
+<li><strong>Badge/level evaluation</strong>: a server-side evaluator runs on each XP fold (or nightly) comparing cumulative counters to thresholds; emits <code>newlyEarned</code> badges/levels in the callable response so the FE can fire the celebration. Keep thresholds in a config constant, not scattered.</li>
+<li><strong>Compliance:</strong> XP/badge data is child PI-adjacent → covered by the written retention policy; family board discloses only within the household (no third-party disclosure). No engagement push to the child.</li>
+</ul>
+<h3>4.7 FE surfaces (where XP toasts + celebrations appear)</h3>
+<ul>
+<li><strong>Inline micro-celebration on every grant</strong> (Duolingo-ABC pattern, never a blocking modal): a small XP chip float + the existing haptic (<code>feedback.success</code> sized S/M/L). Wire the currently-unwired <code>success()</code>/<code>playLandmarkPattern()</code> here.</li>
+<li><strong>Home dashboard</strong> (<code>child-dashboard</code>): keep the existing <strong>Today&#39;s Goal</strong> + <strong>Accomplishments</strong> cards; add a <strong>level ring + XP-to-next</strong> (Apple-Rings-style, calm) and a <strong>sticker shelf</strong> entry point (the &quot;collection-shelf moment&quot; the code was built for).</li>
+<li><strong>Big celebration on level-up / set-completion</strong>: avatar (F26) high-five/cheer scene + <code>playLandmarkPattern()</code> → <strong>settle</strong> (arousal arc; no rapid flashing; ≤2–3 s peak).</li>
+<li><strong>Badges + Leaderboard screens</strong>: port the Figma frames — Badges grid as-is (minus friends badge), Leaderboard defaulting to Self/Family tabs, one consistent currency label (<strong>XP</strong>).</li>
+<li>All juice <strong>content-relevant, not extra</strong> (Takacs), and every sound gated by the existing Sound preference; haptic-first.</li>
+</ul>
+<h3>4.8 Parent-dashboard visibility (required, not optional)</h3>
+<p>Parent visibility of the reward economy is a compliance expectation (REGULATORY §7 row 20). Surface in the existing parent dashboard (fold into the nightly <code>daily-summary</code>/<code>dashboard.service</code>):</p>
+<ul>
+<li>This week&#39;s XP + level, badges earned, current collection progress, consistency days.</li>
+<li>A <strong>&quot;reward settings&quot; panel</strong> with <strong>per-lever toggles, conservative defaults</strong>: sound on/off (already exists), family leaderboard on/off (off by default), any streak feature on/off (off by default), celebration intensity.</li>
+<li>Framed positively (&quot;what Mia explored,&quot; not surveillance), consistent with F32&#39;s report direction.</li>
+</ul>
+<h3>4.9 The single riskiest design decision</h3>
+<p><strong>Whether to ship a visible, competitive multi-person leaderboard / streak at all.</strong> The Figma design and the &quot;super / Challenge-Friends&quot; ask pull toward exactly the competitive PBL mechanics that (a) have the <strong>weakest efficacy evidence in this age band</strong> (Kurnaz g=0.309), (b) risk <strong>discouraging the 8–9s</strong> who compare and the low-confidence kids inflated praise harms, and (c) are the <strong>highest-COPPA/DSA-scrutiny surface</strong> in the entire app (cross-household disclosure, friend-list collection, loss-framed streaks). The safe, still-&quot;super&quot;-feeling resolution — <strong>collection-first + self/family-scoped + no-loss consistency + cosmetic levels + character-delivered celebration</strong> — is also the one the codebase is already built to support and the one every premium reference app (Duolingo ABC, Khan Kids, Sago, Pok Pok, Pokémon Smile) actually ships. Recommendation: <strong>build that; make &quot;leaderboard&quot; mean self+family only; make &quot;Challenge Friends&quot; mean &quot;challenge your family / beat your best&quot;; defer any true cross-household social to a post-F30, VPC-gated project.</strong></p>
+<hr>
+<h2>Appendix — sources</h2>
+<p>Full citation trails (every URL) live in the four companion docs listed at the top:
+<code>premium-kids-research/GAMIFICATION-SCIENCE-KIDS.md</code>, <code>premium-kids-research/REGULATORY-GUARDRAILS.md</code>, <code>premium-kids-research/TEARDOWNS-PREMIUM-KIDS-APPS.md</code>, and <code>gamification-research/WEB-RESEARCH.md</code>. In-repo evidence is cited inline by <code>path:line</code> in Part 2. Figma section <code>MxRZQxXrgV9hMDtTTVEvKW / 40002430:12107</code>; screens cached under <code>gamification-research/screens/</code>.</p>
