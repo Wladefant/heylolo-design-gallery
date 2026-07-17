@@ -1,0 +1,607 @@
+<title>Paywall Content Spec (2-tier)</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Paywall Content Spec — HeyLolo (corrected)</h1>
+<blockquote>
+<p><strong>Why this exists.</strong> The live paywall ships template filler (&quot;HeyLoLo Mastery Family · $19.99/month · 7 Day Free Trial&quot;, &quot;Advanced prompting: build stories, apps, and creative worlds&quot;, &quot;Priority support: 24/7 assistance&quot;, &quot;300 Image Credits / month&quot;, the &quot;fetures&quot; typo). It describes a service we do not run, on a tier system we killed (#191), at a price and trial length that contradict the settled canon. This doc replaces it with copy that maps 1:1 onto the <strong>real, enforceable</strong> entitlement system and <strong>real service COGS</strong>.</p>
+<p><strong>Scope guardrails (do NOT reopen):</strong> pricing is settled — Family <strong>$9.99/mo · $59.99/yr</strong>, Plus <strong>$14.99/mo · $99.99/yr</strong>, 14-day no-card trial (canon Jul 5, MERGED-LAUNCH-CALENDAR &quot;Settled pricing&quot;, teardown §B). This spec only fills in <em>what each tier honestly promises</em> and <em>the words on the screen</em>.</p>
+<p><strong>Author:</strong> research pass 2026-07-17. <strong>Owner of the build:</strong> #191 (FE <code>plan-content.ts</code> + BE <code>feature-access.types.ts</code>/<code>.rules.ts</code>).</p>
+</blockquote>
+<hr>
+<h2>0. The hard constraint that shapes everything: what the quota engine can actually enforce</h2>
+<p>The paywall may only promise what the backend can meter. The <strong>only</strong> enforceable knobs are in <code>elumi-kids-api/functions/src/api/feature-access/feature-access.rules.ts</code> — one <code>UsageLimitRule = { limit: number | null; rollingWindowDays?: number }</code> per feature:</p>
+<table>
+<thead>
+<tr>
+<th>Enum (<code>SubscriptionFeatures</code>)</th>
+<th>What it counts</th>
+<th>Unit</th>
+<th>Window</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>AddChild</code></td>
+<td>child profiles created</td>
+<td>count</td>
+<td>rolling <code>rollingWindowDays</code> (default 30) / billing period</td>
+</tr>
+<tr>
+<td><code>ChildAiChat</code></td>
+<td>kid chat messages</td>
+<td>count</td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>ChildAiChatImages</code></td>
+<td><strong>image generations</strong></td>
+<td>count</td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>ParentAiChat</code></td>
+<td>parent-dashboard chat messages</td>
+<td>count</td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>RecognizedSpeech</code></td>
+<td><strong>STT calls</strong> (speech recognized)</td>
+<td><strong>count of calls</strong></td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>SynthesizedSpeech</code></td>
+<td><strong>TTS calls</strong> (speech synthesized)</td>
+<td><strong>count of calls</strong></td>
+<td>same</td>
+</tr>
+</tbody></table>
+<p><strong>Two facts that kill the current copy and constrain the new copy:</strong></p>
+<ol>
+<li><strong>There is no &quot;minutes&quot; meter and no &quot;credits&quot; ledger.</strong> Voice is metered as <em>number of STT/TTS calls</em>, not minutes. So &quot;15–20 min/day&quot; (canon) and &quot;300 Image Credits&quot; (live screen) are both <strong>framings, not knobs</strong>. We enforce them by mapping to call-count caps (see §C). True minute-capping would need a <strong>new duration knob</strong> — flagged as an open item.</li>
+<li><strong><code>rollingWindowDays</code> is the only time control.</strong> Set it to <code>1</code> for a <strong>daily</strong> cap, omit it on paid tiers to bind the cap to the <strong>billing month</strong> (that is exactly how the current Adventurer/Mastery rules already behave). A daily cap and a monthly cap on the <em>same</em> feature would need a second rule — not supported today (open item).</li>
+</ol>
+<p>Everything below is expressed in these units so it is shippable, not aspirational.</p>
+<hr>
+<h2>A. Tier sheet — the real entitlement per tier</h2>
+<p>Two paid tiers + trial + a text-only lapse state. Every row is a real knob or a real shipped feature; nothing here is invented.</p>
+<table>
+<thead>
+<tr>
+<th>Entitlement</th>
+<th><strong>Trial</strong> (14d, no card)</th>
+<th><strong>Family — $9.99/mo · $59.99/yr</strong></th>
+<th><strong>Plus — $14.99/mo · $99.99/yr</strong></th>
+<th>Free lapse (post-trial)</th>
+<th>Knob / source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Voice chat with LoLo</strong></td>
+<td>✅ capped ~15–20 min/day (&quot;healthy screen time&quot;)</td>
+<td>✅ core voice, daily-capped (~15–20 min/day)</td>
+<td>✅ core voice, daily-capped (~25 min/day)</td>
+<td>❌ text only</td>
+<td><code>RecognizedSpeech</code>+<code>SynthesizedSpeech</code>, <code>rollingWindowDays:1</code></td>
+</tr>
+<tr>
+<td><strong>Image creation</strong> (kid draws with LoLo)</td>
+<td>5 / day</td>
+<td><strong>30 / month</strong></td>
+<td><strong>60 / month</strong></td>
+<td>❌</td>
+<td><code>ChildAiChatImages</code></td>
+</tr>
+<tr>
+<td><strong>Text chat with LoLo</strong></td>
+<td>unlimited</td>
+<td>unlimited</td>
+<td>unlimited</td>
+<td>tiny daily cap (e.g. 10/day)</td>
+<td><code>ChildAiChat</code> (null = unlimited)</td>
+</tr>
+<tr>
+<td><strong>Parent dashboard + chat</strong> (ask about your child, weekly summaries, alerts)</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>read-only dashboard</td>
+<td><code>ParentAiChat</code></td>
+</tr>
+<tr>
+<td><strong>Child profiles</strong></td>
+<td>1</td>
+<td><strong>up to 4</strong></td>
+<td><strong>up to 6</strong></td>
+<td>1</td>
+<td><code>AddChild</code></td>
+</tr>
+<tr>
+<td><strong>Safety / Restrict Topics</strong> (built-in blocklist)</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>app-level (always on)</td>
+</tr>
+<tr>
+<td><strong>Custom Restrict-Topics lists</strong> (parent adds their own)</td>
+<td>✅ (preview)</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+<td>#138 canon → Plus</td>
+</tr>
+<tr>
+<td><strong>Persona + voice packs</strong> (extra LoLo characters/voices)</td>
+<td>✅ (preview)</td>
+<td>❌ (default LoLo voice)</td>
+<td>✅</td>
+<td>❌</td>
+<td>#144 canon → Plus (<code>ttsVoice</code>)</td>
+</tr>
+<tr>
+<td><strong>Web-search grounding</strong> (LoLo can look things up)</td>
+<td>✅ (preview)</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+<td>prioritization → Plus</td>
+</tr>
+</tbody></table>
+<p>Notes:</p>
+<ul>
+<li><strong>Trial gives the full Plus-level experience</strong> so the parent sees the real product before deciding — but with a <em>daily</em> voice cap (the &quot;healthy screen time&quot; story) and a small daily image cap so a 14-day trial can&#39;t run up meaningful COGS. This matches the existing <code>appleProductIdToPlan</code> mapping where the trial resolves to the top plan&#39;s feature set.</li>
+<li><strong>The one Family-vs-Plus judgement call — voice.</strong> The product is voice-first, so Family <strong>includes</strong> everyday voice chat (default LoLo voice, daily-capped); <strong>Plus adds the persona/voice <em>packs</em></strong> (extra characters + premium voices, #144), custom Restrict-Topics (#138), web-search, and more kids. This is the recommended reading of the canon line <em>&quot;Plus includes voice &amp; persona packs.&quot;</em> If the founder instead wants voice to be <strong>Plus-only</strong>, that is a one-line rule change — see Open Questions.</li>
+<li><strong>&quot;Priority support: 24/7&quot;</strong> is deleted. We are one founder + a designer; we cannot honestly staff 24/7. Replaced with <em>&quot;Email support from the makers&quot;</em> (true) — see §B.</li>
+<li><strong>&quot;No hidden costs: teaching, hosting, and platform included&quot;</strong> and <strong>&quot;Advanced prompting: build stories, apps, and creative worlds&quot;</strong> are deleted — they describe no shippable feature. Replaced with concrete, shipped features (parent alerts, safety, image creation, personas).</li>
+</ul>
+<hr>
+<h2>B. Exact screen copy (paste-ready · EN + DE)</h2>
+<p>Maps onto the real screen structure in <code>src/widgets/subscription/</code>:
+<code>subscription.tsx</code> (host) → <code>subscription-plan-picker.tsx</code> (annual/monthly <code>BadgePicker</code>) → <code>plan-card/index.tsx</code> (per-plan card, art + <code>title</code> + price + <code>features[]</code>) → <code>trial-plan.tsx</code> (trial CTA block). The <code>planInfo</code> map in <code>model/plan-content.ts</code> is the string source; <code>features[]</code> is <code>{ emphasis, text? }</code>.</p>
+<h3>B1. Annual/monthly toggle (the <code>BadgePicker</code> in <code>subscription-plan-picker.tsx</code>)</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Toggle option A (default, pre-selected)</td>
+<td><strong>Yearly</strong> · <em>Best Value</em></td>
+<td><strong>Jährlich</strong> · <em>Bester Preis</em></td>
+</tr>
+<tr>
+<td>Toggle option B (anchor)</td>
+<td>Monthly</td>
+<td>Monatlich</td>
+</tr>
+</tbody></table>
+<h3>B2. Plan card — <strong>Family</strong> (annual hero selected)</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td><strong>HeyLolo Family</strong></td>
+<td><strong>HeyLolo Family</strong></td>
+</tr>
+<tr>
+<td>Price line (annual)</td>
+<td><strong>$59.99 / year</strong> — just <strong>$4.99/month</strong>, billed yearly</td>
+<td><strong>59,99 $ / Jahr</strong> — nur <strong>4,99 $/Monat</strong>, jährlich abgerechnet</td>
+</tr>
+<tr>
+<td>Price line (monthly anchor)</td>
+<td><strong>$9.99 / month</strong></td>
+<td><strong>9,99 $ / Monat</strong></td>
+</tr>
+<tr>
+<td>Badge</td>
+<td>Best Value</td>
+<td>Bester Preis</td>
+</tr>
+<tr>
+<td>Sub-line</td>
+<td>One price · up to 4 kids</td>
+<td>Ein Preis · bis zu 4 Kinder</td>
+</tr>
+</tbody></table>
+<p><strong>Family bullets (<code>features[]</code>, 6 max — every one a real feature):</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>EN <code>emphasis</code> / <code>text</code></th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Talk &amp; type with LoLo</strong> — voice chat every day, kept to a healthy 15–20 min</td>
+<td><strong>Sprechen &amp; schreiben mit LoLo</strong> — täglich Sprachchat, gesunde 15–20 Min</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Parent dashboard</strong> — weekly summaries and alerts on what your child explores</td>
+<td><strong>Eltern-Dashboard</strong> — Wochenrückblick und Hinweise, was dein Kind entdeckt</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Always safe</strong> — built-in topic filtering, no ads, no purchases your child can tap</td>
+<td><strong>Immer sicher</strong> — eingebaute Themenfilter, keine Werbung, keine Käufe fürs Kind</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Create pictures</strong> — LoLo draws with your child, 30 a month</td>
+<td><strong>Bilder gestalten</strong> — LoLo malt mit deinem Kind, 30 pro Monat</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Up to 4 kids</strong> — one price for the whole family</td>
+<td><strong>Bis zu 4 Kinder</strong> — ein Preis für die ganze Familie</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Made in EU</strong> — your child&#39;s data stays private</td>
+<td><strong>Made in EU</strong> — die Daten deines Kindes bleiben privat</td>
+</tr>
+</tbody></table>
+<h3>B3. Plan card — <strong>Plus</strong></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>title</code></td>
+<td><strong>HeyLolo Plus</strong></td>
+<td><strong>HeyLolo Plus</strong></td>
+</tr>
+<tr>
+<td>Price line (annual)</td>
+<td><strong>$99.99 / year</strong> — <strong>$8.33/month</strong>, billed yearly</td>
+<td><strong>99,99 $ / Jahr</strong> — <strong>8,33 $/Monat</strong>, jährlich abgerechnet</td>
+</tr>
+<tr>
+<td>Price line (monthly anchor)</td>
+<td><strong>$14.99 / month</strong></td>
+<td><strong>14,99 $ / Monat</strong></td>
+</tr>
+<tr>
+<td>Sub-line</td>
+<td>Everything in Family, plus more voices &amp; control</td>
+<td>Alles aus Family, plus mehr Stimmen &amp; Kontrolle</td>
+</tr>
+</tbody></table>
+<p><strong>Plus bullets:</strong></p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>EN</th>
+<th>DE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Everything in Family</strong></td>
+<td><strong>Alles aus Family</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Voice &amp; character packs</strong> — pick LoLo&#39;s voice and personalities</td>
+<td><strong>Stimmen- &amp; Charakterpakete</strong> — wähle LoLos Stimme und Charaktere</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Your own safe-topic rules</strong> — add or block topics for your child</td>
+<td><strong>Eigene Themenregeln</strong> — Themen für dein Kind hinzufügen oder sperren</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>LoLo can look things up</strong> — grounded, up-to-date answers</td>
+<td><strong>LoLo kann nachschlagen</strong> — fundierte, aktuelle Antworten</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>More pictures</strong> — 60 a month</td>
+<td><strong>Mehr Bilder</strong> — 60 pro Monat</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Up to 6 kids</strong></td>
+<td><strong>Bis zu 6 Kinder</strong></td>
+</tr>
+</tbody></table>
+<h3>B4. Trial framing block (<code>trial-plan.tsx</code> — this is the current <code>plan-content.ts:39</code> bug site)</h3>
+<p>Replaces the current <em>&quot;Full access to all basic AI fetures for 30 days.&quot;</em></p>
+<p><strong>EN</strong></p>
+<blockquote>
+<p><strong>14 days free. No card. No catch.</strong>
+LoLo is all yours for two weeks — every story, every wonder, every voice chat.
+<em>(primary CTA)</em> <strong>Start my 14 free days</strong>
+<em>(secondary, quiet)</em> Not now — keep exploring
+<em>fine print:</em> On day 14 we&#39;ll email you first. Keep it for <strong>$59.99/year</strong> (≈$5/mo) or do nothing and it simply ends. Cancel in two taps, anytime.</p>
+</blockquote>
+<p><strong>DE</strong></p>
+<blockquote>
+<p><strong>14 Tage kostenlos. Keine Karte. Kein Haken.</strong>
+Zwei Wochen lang gehört LoLo ganz euch — jede Geschichte, jedes Staunen, jeder Sprachchat.
+<em>(primär)</em> <strong>Meine 14 freien Tage starten</strong>
+<em>(sekundär, leise)</em> Jetzt nicht — weiter entdecken
+<em>Kleingedrucktes:</em> An Tag 14 melden wir uns zuerst per E-Mail. Behalte es für <strong>59,99 $/Jahr</strong> (≈5 $/Monat) oder tu nichts, dann endet es einfach. Jederzeit mit zwei Tipps kündbar.</p>
+</blockquote>
+<h3>B5. Trust row (under the cards)</h3>
+<ul>
+<li><strong>EN:</strong> Made in EU · your child&#39;s data stays private · no ads, ever · no in-app purchases the kid can tap</li>
+<li><strong>DE:</strong> Made in EU · die Daten deines Kindes bleiben privat · niemals Werbung · keine In-App-Käufe fürs Kind</li>
+</ul>
+<h3>B6. Legal footer (Apple Guideline 3.1.2 auto-renew disclosure — required)</h3>
+<p><strong>EN</strong></p>
+<blockquote>
+<p>Your subscription renews automatically at $59.99/year (Family) or $99.99/year (Plus) unless cancelled at least 24 hours before the current period ends. Manage or cancel anytime in your App Store account settings. Payment is charged to your Apple ID at confirmation of purchase. <a href="https://heylolo.ai/terms">Terms of Use</a> · <a href="https://heylolo.ai/privacy">Privacy Policy</a></p>
+</blockquote>
+<p><strong>DE</strong></p>
+<blockquote>
+<p>Dein Abo verlängert sich automatisch zu 59,99 $/Jahr (Family) bzw. 99,99 $/Jahr (Plus), sofern es nicht mindestens 24 Stunden vor Ablauf des laufenden Zeitraums gekündigt wird. Verwalten oder kündigen jederzeit in den Einstellungen deines App-Store-Kontos. Die Zahlung erfolgt bei Kaufbestätigung über deine Apple-ID. <a href="https://heylolo.ai/terms">Nutzungsbedingungen</a> · <a href="https://heylolo.ai/privacy">Datenschutz</a></p>
+</blockquote>
+<hr>
+<h2>C. Quota recommendation + the arithmetic</h2>
+<p><strong>COGS inputs (sourced):</strong></p>
+<ul>
+<li><strong>Image:</strong> <code>gemini-3.1-flash-lite-image</code> (&quot;Nano Banana 2 Lite&quot;), the settled go-forward default, = <strong>$0.034 / image</strong> at 1K (FAST-IMAGE-MODEL-DOSSIER §5, live-smoke-verified in image-model-setting/BE-IMPLEMENTATION at ~3.5 s). Today&#39;s Imagen 4 Fast is $0.02 but is <strong>shut down 2026-08-17</strong>, so we cost against $0.034. (Each generated image also fires one cheap <code>describeGeneratedImage</code> vision pass ≈ &lt;$0.001 — folded into rounding.)</li>
+<li><strong>STT (voice in):</strong> Chirp streaming ≈ <strong>$0.064 / min of recognized audio</strong> ($0.016/15 s). <a href="https://cloud.google.com/speech-to-text/pricing">Google STT pricing</a></li>
+<li><strong>TTS (voice out):</strong> Gemini Flash TTS bills by output token at <strong>25 tokens/sec</strong> of audio; <strong>$6/1M tok</strong> (Gemini 3.5 Flash TTS) to <strong>$20/1M tok</strong> (Gemini 3.1 Flash TTS, the currently-liked Zephyr voice). A 20 s reply = 500 tok = <strong>$0.003–$0.010</strong>. <a href="https://cloud.google.com/text-to-speech/pricing">Google TTS pricing</a></li>
+</ul>
+<p><strong>Real usage anchor (<code>prod-chat-audit/IMAGE-GEN-AUDIT.md</code>):</strong> 27 generated images total across ~1 month and 5 heavy kids; the single heaviest kid = <strong>19 images/month</strong>. So <strong>P90 image usage ≈ ≤20/month.</strong> Image gen is currently not even rate-limited in prod and has never blocked anyone.</p>
+<h3>C1. Image caps — recommended (monthly, bound to billing period)</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Recommended cap</th>
+<th>Max COGS/mo (<code>cap × $0.034</code>)</th>
+<th>% of price</th>
+<th>Covers P90 (≤20/mo)?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Trial</td>
+<td><strong>5 / day</strong> (<code>rollingWindowDays:1</code>)</td>
+<td>≤ $0.34/day; ≤ <strong>$2.38 over 14 days</strong></td>
+<td>n/a (free)</td>
+<td>yes, generously</td>
+</tr>
+<tr>
+<td><strong>Family $9.99</strong></td>
+<td><strong>30 / month</strong></td>
+<td>30 × $0.034 = <strong>$1.02</strong></td>
+<td><strong>10.2%</strong></td>
+<td>yes (1.5× headroom)</td>
+</tr>
+<tr>
+<td><strong>Plus $14.99</strong></td>
+<td><strong>60 / month</strong></td>
+<td>60 × $0.034 = <strong>$2.04</strong></td>
+<td><strong>13.6%</strong></td>
+<td>yes (3× headroom)</td>
+</tr>
+</tbody></table>
+<p>Why not a <strong>daily</strong> image cap on paid tiers: a daily cap of 10 = 300/month theoretical max = <strong>the exact 300 the founder rejected</strong>, and 300 × $0.034 = <strong>$10.20/mo &gt; the entire $9.99 Family price</strong>. The monthly cap is what makes the margin safe <em>and</em> is honest (&quot;30 a month&quot;). Dropping the word <strong>&quot;credits&quot;</strong> entirely — it reads as a paid-currency the app doesn&#39;t have.</p>
+<h3>C2. Voice caps — recommended (daily, doubles as the wellness cap)</h3>
+<p>Voice is metered as <strong>call count</strong>, not minutes, and is the <strong>dominant variable cost</strong>. Map the canon &quot;15–20 min/day&quot; to a daily call cap:</p>
+<ul>
+<li>One voice <strong>turn</strong> ≈ 1 STT call + 1 TTS reply. A 15–20 min turn-taking session ≈ <strong>~40 turns/day</strong>.</li>
+<li>Per-turn COGS ≈ STT (kid actually speaks a fraction of the session; <del>10–15 s ⇒ <del>$0.01–0.016) + TTS (</del>$0.003–0.010) + chat LLM tokens (</del>$0.002) ≈ <strong>~$0.02–0.03/turn</strong>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Recommended daily cap</th>
+<th>Framing</th>
+<th>Worst-case COGS if maxed <strong>every day</strong></th>
+<th>Realistic (P90 usage)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Trial</td>
+<td>~40 STT + 40 TTS / day</td>
+<td>&quot;about 15–20 min of voice a day&quot;</td>
+<td>≤ $1.20/day × 14 = ~$17 (trial only)</td>
+<td>far less</td>
+</tr>
+<tr>
+<td><strong>Family $9.99</strong></td>
+<td>~40 STT + 40 TTS / day (<code>rollingWindowDays:1</code>)</td>
+<td>&quot;healthy 15–20 min/day&quot;</td>
+<td>~$0.80–1.20/day → up to ~$25–36/mo</td>
+<td>P90 well under $5/mo</td>
+</tr>
+<tr>
+<td><strong>Plus $14.99</strong></td>
+<td>~60 STT + 60 TTS / day</td>
+<td>&quot;~25 min/day&quot;</td>
+<td>~$1.20–1.80/day</td>
+<td>P90 under $8/mo</td>
+</tr>
+</tbody></table>
+<p><strong>Honest margin finding the founder must see:</strong> at Google&#39;s list voice prices, a <em>pathological</em> kid who maxes the voice cap <strong>every single day</strong> can approach or exceed the monthly gross on Family. That is why the <strong>daily voice cap is non-negotiable margin protection, not just a wellness feature</strong> — and why we should NOT set voice to unlimited (<code>limit: null</code>) on a $9.99 tier. Two levers pull worst-case back down: (1) switch TTS to <strong>Gemini 3.5 Flash TTS ($6/1M)</strong> — ~70% cheaper than the 3.1 Zephyr path we like; (2) meter <strong>actual speaking seconds</strong> rather than session time (a future duration knob). Real logged usage is a small fraction of worst-case, so at expected P90 all tiers clear the &lt;30% COGS bar comfortably — but the cap is what guarantees it.</p>
+<h3>C3. Margin summary (at P90 usage, images + voice only)</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Price</th>
+<th>Image COGS (cap)</th>
+<th>Voice COGS (P90)</th>
+<th>Combined variable COGS</th>
+<th>Gross margin (variable)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Family</td>
+<td>$9.99</td>
+<td>$1.02 (30 img)</td>
+<td>~$3–5</td>
+<td>~$4–6</td>
+<td><strong>~40–60%</strong></td>
+</tr>
+<tr>
+<td>Plus</td>
+<td>$14.99</td>
+<td>$2.04 (60 img)</td>
+<td>~$5–8</td>
+<td>~$7–10</td>
+<td><strong>~35–55%</strong></td>
+</tr>
+</tbody></table>
+<p>Assumptions stated: image at $0.034 (post-Imagen), voice at Google list price with the daily cap in place, P90 (not worst-case) voice usage, chat-LLM token cost small and folded in, infra/storage/Firebase not included (fixed-ish). Image line alone is &lt;14% of price on both tiers — the founder&#39;s &quot;300 is too much&quot; is fixed with <strong>~10× headroom to spare</strong>.</p>
+<hr>
+<h2>D. Delta list vs the live &quot;Mastery&quot; paywall (the #191 dev checklist)</h2>
+<p>Every wrong thing on the current screen → what replaces it. This is the acceptance checklist for #191.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Live screen (WRONG)</th>
+<th>Root problem</th>
+<th>Replace with</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>3 tiers</strong>: Explorer / Adventurer / Mastery</td>
+<td>Killed tier system (#191). <code>enums.ts</code>, <code>pricing.ts</code>, <code>plan-content.ts</code>, BE <code>feature-access.types.ts</code>/<code>.rules.ts</code> still carry it</td>
+<td><strong>2 tiers</strong>: Family, Plus (+ trial + text-only lapse). Collapse the enums both repos</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>&quot;$19.99/month&quot;</strong></td>
+<td>Not a canon price</td>
+<td><strong>Family $9.99/mo · $59.99/yr</strong>; <strong>Plus $14.99/mo · $99.99/yr</strong>; annual is the pre-selected hero with &quot;$4.99/mo billed yearly&quot; + &quot;Best Value&quot;</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>&quot;7 Day Free Trial&quot;</strong></td>
+<td>Wrong length</td>
+<td><strong>14-day, no-card</strong> trial (§B4)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>&quot;Full access to all basic AI fetures for 30 days.&quot;</strong> (<code>plan-content.ts:39</code>)</td>
+<td>Wrong length (30→14) + typo (&quot;fetures&quot;)</td>
+<td>Delete; use the §B4 trial block</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>&quot;Advanced prompting: Build stories, apps, and creative worlds&quot;</strong></td>
+<td>Describes no shipped feature (&quot;apps&quot;)</td>
+<td><strong>&quot;Voice &amp; character packs&quot;</strong> + <strong>&quot;Create pictures — 60 a month&quot;</strong> (real Plus features)</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>&quot;Priority support: 24/7 assistance&quot;</strong></td>
+<td>We cannot staff 24/7 — dishonest</td>
+<td><strong>&quot;Email support from the makers&quot;</strong> (or drop the bullet)</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>&quot;No hidden costs: Teaching, hosting, and platform included&quot;</strong></td>
+<td>Filler, describes nothing</td>
+<td><strong>&quot;Made in EU · your child&#39;s data stays private&quot;</strong> (real differentiator)</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>&quot;300 Image Credits / month&quot;</strong></td>
+<td>~15× real P90 usage; COGS &gt; full plan price; &quot;credits&quot; implies a currency we don&#39;t have</td>
+<td><strong>&quot;Create pictures — 30 a month&quot; (Family) / &quot;60 a month&quot; (Plus)</strong>; drop &quot;credits&quot;</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>&quot;Parents Dashboard Chat&quot; / &quot;Full Control &amp; Analytics&quot;</strong></td>
+<td>Vague</td>
+<td><strong>&quot;Parent dashboard — weekly summaries and alerts&quot;</strong> (specific, shipped)</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>&quot;Everything in Premium&quot;</strong> (Mastery bullet 1)</td>
+<td>References a tier (&quot;Premium&quot;) that doesn&#39;t exist</td>
+<td><strong>&quot;Everything in Family&quot;</strong> on the Plus card</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Trial resolves via <code>appleProductIdToPlan: free_trial_7_days</code></td>
+<td>7-day SKU; wrong daily caps</td>
+<td>New <code>free_trial_14_days</code> mapping; trial gets Plus-level features with <strong>daily</strong> image + voice caps (<code>rollingWindowDays:1</code>)</td>
+</tr>
+<tr>
+<td>12</td>
+<td>BE image limits <code>EXPLORER 10 / ADVENTURER 25 / MASTERY 300</code>; child limits <code>2/3/6</code></td>
+<td>Old tiers + the rejected 300</td>
+<td><code>FAMILY_IMAGES = 30</code>, <code>PLUS_IMAGES = 60</code>; <code>FAMILY_CHILD = 4</code>, <code>PLUS_CHILD = 6</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td>Voice limits <code>RecognizedSpeech/SynthesizedSpeech = 10 (Adv) / 20 (Mastery)</code> <strong>per month</strong></td>
+<td>20 TTS calls/month is unusable for a voice-first app</td>
+<td>Recast as <strong>daily</strong> caps (<code>rollingWindowDays:1</code>), ~40/day Family, ~60/day Plus (§C2)</td>
+</tr>
+<tr>
+<td>14</td>
+<td>No auto-renew disclosure visible</td>
+<td>Apple 3.1.2 risk</td>
+<td>Add the §B6 legal footer</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>E. Open questions — founder only</h2>
+<ol>
+<li><strong>Family voice scope.</strong> Recommended: Family <strong>includes</strong> everyday voice chat (default LoLo voice, daily-capped) and Plus adds the persona/voice <strong>packs</strong>. Confirm — or make voice <strong>Plus-only</strong> (one-rule change). The whole voice/persona split hinges on this.</li>
+<li><strong>Voice metering unit.</strong> We can only cap <em>number of STT/TTS calls</em> today, not minutes. Accept the call-count mapping for launch, or fund a <strong>speaking-seconds duration knob</strong> so &quot;15–20 min/day&quot; is literally enforced? (Affects the honesty of the &quot;healthy screen time&quot; claim.)</li>
+<li><strong>TTS model for margin.</strong> Keep the liked <strong>Gemini 3.1 Flash TTS / Zephyr</strong> ($20/1M) or move to <strong>Gemini 3.5 Flash TTS</strong> ($6/1M, ~70% cheaper) to widen voice margin? Trade-off is voice quality vs COGS.</li>
+<li><strong>Support promise wording.</strong> &quot;Email support from the makers&quot; — acceptable, or drop the support bullet entirely?</li>
+<li><strong>Post-trial lapse caps.</strong> The &quot;tiny text-only free fallback&quot; — confirm the exact numbers (proposed: text 10 msgs/day, 0 images, 0 voice, 1 child, read-only dashboard).</li>
+</ol>
+<hr>
+<h2>Sources</h2>
+<ul>
+<li>Enforceable knobs: <code>elumi-kids-api/functions/src/api/feature-access/feature-access.rules.ts</code> + <code>.types.ts</code> (on <code>development</code>-based worktree)</li>
+<li>FE screen structure + copy source: <code>src/widgets/subscription/**</code> (esp. <code>model/plan-content.ts</code>, <code>model/pricing.ts</code>, <code>ui/plan-card/</code>, <code>ui/trial-plan.tsx</code>); entity <code>src/entities/parent-subscription/model/{enums,schemas}.ts</code></li>
+<li>Pricing canon: <code>docs/release/07-pricing-iap/README.md</code>; <code>docs/_session/feature-prioritization-2026-07/MERGED-LAUNCH-CALENDAR.md</code> &quot;Settled pricing&quot;; <code>docs/research/onboarding-paywall-teardowns.md</code> §B</li>
+<li>Image COGS + model: <code>docs/_session/image-gen-fast-model-research/FAST-IMAGE-MODEL-DOSSIER.md</code>; <code>docs/_session/image-model-setting/BE-IMPLEMENTATION.md</code></li>
+<li>Real image usage: <code>docs/_session/prod-chat-audit/IMAGE-GEN-AUDIT.md</code></li>
+<li>Voice COGS: <a href="https://cloud.google.com/speech-to-text/pricing">Google STT pricing</a>, <a href="https://cloud.google.com/text-to-speech/pricing">Google TTS pricing</a></li>
+<li>Issue: <a href="https://github.com/Wladefant/heylolo-app/issues/191">Wladefant/heylolo-app#191</a></content>
+</invoke></li>
+</ul>

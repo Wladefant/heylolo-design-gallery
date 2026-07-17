@@ -1,0 +1,59 @@
+<title>Brandy — Next Designs Queue</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Brandy — the full &quot;what to design next&quot; queue (post-W2)</h1>
+<p>date: 2026-07-14 · sources: DESIGN-READY-INVENTORY.md · BRANDY-BRIEF-W2.md · PRIORITIZATION.md · MERGED-LAUNCH-CALENDAR.md · docs/release/</p>
+<p>The design estate is already large — 23 Figma baselines, the 2026 redesign batch (safety center, explorer, family chat, games hub, learning studio, home×2, parent dashboard, parent modes, voice×2 — all on <a href="https://heylolodesign.wladefant.de">https://heylolodesign.wladefant.de</a>), Story Mode&#39;s 24 frames, quizzes&#39; 11 frames. <strong>This list is only what is NOT designed yet</strong>, ranked by when the build train needs it.</p>
+<h2>P0 — freeze week (this IS Brandy&#39;s W2 brief; listed for completeness, don&#39;t re-plan)</h2>
+<p>Restrict Topics lite (#138) · kid report/flag + parent alert card (#133/#196) · preview-video final cut · <strong>iPad screenshot variants (#200 — code landed on <code>feat/ipad-pass</code>, so real captures unblock after the sim check)</strong> · wind-down/cap screens · Story-of-the-Day widget (#202) · <code>/privacy</code> + trust-badge strip.</p>
+<h2>P1 — small but launch-relevant, design missing entirely</h2>
+<ol>
+<li><strong>Delete Account flow polish (<a href="https://github.com/Wladefant/heylolo-app/issues/215">#215</a>)</strong> — just implemented dev-first (destructive Settings row reusing the logout icon + a type-DELETE confirmation screen). Needs a proper pass: dedicated destructive icon, the confirmation screen&#39;s tone (grave but not scary), and the &quot;what gets deleted&quot; list layout. Small — half a day.</li>
+<li><strong>5.1.2(i) consent card final visual (#196)</strong> — strings are final (docs/research/onboarding-consent-strings.md, Variant B); needs the actual card design as LoLo&#39;s own calm moment. THE top rejection risk; must be buildable days after freeze at the latest.</li>
+</ol>
+<h2>P2 — the v1.1 viral loop (build starts ~Aug; design due end of July)</h2>
+<ol start="3">
+<li><strong>Share-link preview + landing (N4 + founder ask)</strong> — the WhatsApp/iMessage share must look &quot;super good&quot;: the kid&#39;s artwork/quiz-result AS the OG preview image + app link; plus the no-install playable landing page it opens. This is the single highest-leverage undesigned surface (it&#39;s the growth engine).</li>
+<li><strong>Shareable quiz result card</strong> — the artifact parents forward; pairs with #121&#39;s built quiz engine (quizzes-baseline covers the in-chat flow, NOT the share artifact).</li>
+<li><strong>Wonder Shelf reframe (N5)</strong> — badges-baseline exists but the product direction is a completeable <em>collection shelf</em>, not a badge scoreboard (anti-list). Redesign pass: shelf metaphor, permanence, &quot;2 of 12&quot; progress, no XP.</li>
+<li><strong>Friday Drop moment</strong> — the weekly quiz-deck arrival: how a new deck announces itself (in-app moment + optional parent digest slot). Content is authored (13 decks); the arrival UX is undesigned.</li>
+</ol>
+<h2>P3 — v1.2 (w/c Sep 22): play + regulation</h2>
+<ol start="7">
+<li><strong>Live game screens beyond the one baseline</strong> — chess board, Connect Four, Memory grid in the house style (<code>game-mode-baseline.html</code> covers only one generic layout; games-hub tiles are done).</li>
+<li><strong>Calm Corner (N10)</strong> — scripts exist (docs/research/calm-corner-scripts.md); zero visual design.</li>
+<li><strong>Mascot motion states</strong> — mascot-motion-state-machine-spec.md defines states/transitions; needs the visual/Rive design pass (idle, listening, thinking, celebrating, calm).</li>
+<li><strong>Celebration choreography visuals</strong> — spec exists (celebration-choreography-spec.md, S/M/L tiers on the real feedback API); needs the visual moments designed so dev can implement #212.</li>
+</ol>
+<h2>P4 — v1.3 (w/c Oct 20): the story moat + beyond</h2>
+<ol start="11">
+<li><strong>Storybook AUTHORING gaps</strong> — 24 reader frames exist; check for gaps around save/library/share-to-print states while building the consistency spike.</li>
+<li><strong>Story-pack shop/library (N11)</strong> — how monthly packs are browsed/owned (Plus-included framing per the persona QC decision — no child-visible price chips, lock badge without price).</li>
+<li><strong>Read-With-Me (N9, v1.4)</strong> — starter library authored; zero screens.</li>
+<li><strong>Media History + Viewer</strong> — 5 Figma frames exist, no baseline/no issue; formalize or drop.</li>
+</ol>
+<h2>Design-ahead (build deliberately HELD — design is cheap, do when P-queue is empty)</h2>
+<ol start="15">
+<li><strong>GPS / location (F28, #131)</strong> — build held post-safety-hardening (background-location + App-Review risk), but the founder likes the reference-app direction; a design-ahead pass de-risks the eventual build and feeds the parent-value premium stack. Anchor on the reference apps&#39; map-first parent view + kid-side dignity (no &quot;tracking&quot; framing to the child).</li>
+<li><strong>Persona-pack picker extension (N7)</strong> — voice-picker-baseline exists; the pack-browsing extension is undesigned (Plus-included, lock-no-price).</li>
+</ol>
+<h2>Explicit do-NOT-design list</h2>
+<p>Leaderboard variants (anti-list/DSA — the existing leaderboard-baseline stays unbuilt) · child-visible price/pay-pressure anywhere · streak/XP mechanics · engagement push notifications to the child.</p>

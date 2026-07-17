@@ -1,0 +1,362 @@
+<title>Brandy — Deep Brief: Next 6 Features</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Brandy — Deep Design Brief: the Next 6 (P1 + P2)</h1>
+<p>Hi Brandy! This is the &quot;design from comprehension, not from a screen list&quot; brief for the six features queued right after the freeze-week board. Wlad&#39;s instruction was explicit: <strong>for each feature I explain what it IS, what the functionality is, and how it&#39;s being built FIRST — and only then hand you the design ask.</strong> You should be able to read each feature top-to-bottom and understand the machine before you draw a single frame. Every feature has its GitHub issue link (you have access — open them; they carry the acceptance tests and the plan).</p>
+<p>Read the two P0/consent strings docs before you touch features 1–2, and the viral/legal dossiers before 3–4. Everything you need is linked inline.</p>
+<hr>
+<h2>How these six sequence (read this first)</h2>
+<p><strong>These come AFTER the W2 freeze-week board, never instead of it.</strong> Your freeze-week P0 list — Restrict Topics lite (#138), the report/flag + parent-alert card (#133), preview-video final cut, iPad screenshots (#200), wind-down/cap screens, Story-of-the-Day widget (#202), the <code>/privacy</code> + trust-badge strip — is the thing that gets us submitted on Aug 10. Finish that first. The six below are the <em>next</em> wave.</p>
+<ul>
+<li><strong>P1 = days (features 1 &amp; 2).</strong> Delete Account polish and the Google-Gemini consent card are small but launch-relevant, and both touch the <strong>binary build that freezes Jul 20</strong>. They must be buildable within days of the freeze — the consent card especially is our single #1 App-Review rejection risk, so it cannot slip.</li>
+<li><strong>P2 = due end of July, for the v1.1 build train (features 3–6).</strong> The share-loop, the shareable quiz card, the Wonder Shelf reframe, and the Friday Drop moment are the v1.1 viral-and-retention wave. Build starts ~Aug; design is due <strong>end of July</strong> so dev has it in hand when the v1.1 train leaves. v1.1 ships ~Sep 15, one week after the Sept 8 launch.</li>
+</ul>
+<p>Priority order within the six is the numbering: 1 → 2 are urgent-small, 3 is the highest-leverage undesigned surface in the whole product (it&#39;s the growth engine), 4 rides on 3, 5 and 6 are the retention pair.</p>
+<h3>Verified issue map (I checked every number on GitHub before writing — do not trust the old hints blindly)</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Issue(s)</th>
+<th>Verified title</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. Delete Account</td>
+<td><a href="https://github.com/Wladefant/heylolo-app/issues/215">#215</a></td>
+<td>5.1.1(v): full parent-account deletion missing in-app (P0 pre-freeze)</td>
+</tr>
+<tr>
+<td>2. Consent card</td>
+<td><a href="https://github.com/Wladefant/heylolo-app/issues/196">#196</a></td>
+<td>R1 · 5.1.2(i) consent screen — standalone, names &quot;Google Gemini&quot;, blocks first send</td>
+</tr>
+<tr>
+<td>3. Share links + landing</td>
+<td><a href="https://github.com/Wladefant/heylolo-app/issues/141">#141</a> (N4)</td>
+<td>N4 · Shareable quiz &amp; image links — friend-to-friend viral acquisition</td>
+</tr>
+<tr>
+<td>4. Shareable quiz-result card</td>
+<td><a href="https://github.com/Wladefant/heylolo-app/issues/121">#121</a> + <a href="https://github.com/Wladefant/heylolo-app/issues/141">#141</a></td>
+<td>F18 · Q&amp;A game (quiz engine) + N4 share</td>
+</tr>
+<tr>
+<td>5. Wonder Shelf reframe</td>
+<td><a href="https://github.com/Wladefant/heylolo-app/issues/142">#142</a> (N5)</td>
+<td>N5 · Wonder Shelf — completeable collections of real accomplishments (badges, reframed)</td>
+</tr>
+<tr>
+<td>6. Friday Drop moment</td>
+<td><a href="https://github.com/Wladefant/heylolo-app/issues/152">#152</a> (D1) + <a href="https://github.com/Wladefant/heylolo-app/issues/154">#154</a> (D3) + <a href="https://github.com/Wladefant/heylolo-app/issues/121">#121</a></td>
+<td>D1 · Drop scheduler + &quot;Fresh this Friday&quot; surface; D3 · Seasonal quiz-deck run; F18 quiz engine</td>
+</tr>
+</tbody></table>
+<p>Two things I found that <strong>correct or sharpen the hints</strong> you were given — details in the relevant sections, but up front:</p>
+<ul>
+<li>The Friday-Drop hint said &quot;13 authored decks&quot;; issue #154 says &quot;16 themed decks.&quot; <strong>Both are right in different framings</strong> — the 16-week calendar has 14 distinct weekly Friday themes, one of which (&quot;Animal Kingdom&quot;) already shipped in the authoring spec, so the companion doc authors the <em>remaining 13</em>. Full reconciliation in feature 6.</li>
+<li>The house-language rule (&quot;safe AI tutor,&quot; never &quot;companion/friend&quot;) is a <strong>hard legal constraint on anything public or child-visible</strong> (App-Review guideline 2.3.8 + the rejection audit&#39;s #2 risk), even though our internal docs casually say &quot;companion.&quot; Anything a reviewer or a stranger can see must read as a parent-facing <em>tutor/assistant</em>.</li>
+</ul>
+<hr>
+<h1>1. Delete Account flow polish — <a href="https://github.com/Wladefant/heylolo-app/issues/215">#215</a></h1>
+<h3>What it is</h3>
+<p>Apple&#39;s App Store guideline <strong>5.1.1(v)</strong> says: any app that lets you <em>create</em> an account must let you <em>delete</em> that account <strong>from inside the app</strong> — not via a web link, not via &quot;email us.&quot; We already let a parent delete a single <em>child profile</em>, but that is not the same thing. Reviewers specifically hunt for whole-account deletion, and a web-only deletion path fails. So this is a <strong>binary gate</strong> for the Jul 20 freeze — it must be in the build we submit, and it must be honest and complete.</p>
+<p>Functionally, &quot;delete my account&quot; is the nuclear option. It&#39;s the parent saying &quot;erase everything you hold about my family.&quot; When they confirm, the backend cascades: for <strong>every child</strong> under that parent it deletes all conversations, all messages, the daily digest, the memory profile, day-aggregates, mood reports, any generated images in Storage, the child document, <strong>and the child&#39;s own Firebase Auth login</strong>. Then it deletes the parent&#39;s own documents (profile, identities, subscription/entitlement record, device/notification tokens). And <strong>only at the very end</strong> does it delete the <strong>parent&#39;s Auth user</strong> — the login itself. That ordering is deliberate: if anything fails partway through, the parent&#39;s login still exists, so they can sign back in and press delete again and it retries cleanly. Delete the login first and a half-finished failure would orphan data the parent can no longer reach. &quot;Retryable by construction&quot; is the whole reason the parent Auth user goes last.</p>
+<p>This was just implemented <strong>dev-first</strong> on branch <code>feat/account-deletion-fe</code> — meaning the plumbing works but it wears no design. Today it is: a red &quot;Delete Account&quot; row at the bottom of Settings that <strong>reuses the Log Out icon</strong> (placeholder — it&#39;s literally <code>LogoutIcon</code> tinted coral), and a plain confirmation screen with a title, a paragraph, and a text box where the parent must type the word <code>DELETE</code> before the button enables. It works; it just doesn&#39;t yet <em>feel</em> like the grave, honest moment it is. That&#39;s your job here.</p>
+<h3>How it&#39;s planned technically (what exists vs what you&#39;re shaping)</h3>
+<ul>
+<li><strong>Already built and wired</strong> (I read the branch): a destructive Settings row → a dedicated confirmation page (<code>delete-account-page.tsx</code>) → a type-<code>DELETE</code>-to-confirm gate → a call to the backend <code>v1_deleteParentAccount</code> cascade → local sign-out → return to the welcome/auth screen. In-flight the button shows a spinner and is disabled; on failure it shows a retryable alert (&quot;Couldn&#39;t delete account — check your connection and try again&quot;).</li>
+<li><strong>The confirmation gate is type-<code>DELETE</code>, not a PIN.</strong> The original issue floated re-entering the security PIN, but the Security screen only <em>sets</em> a PIN, it never <em>verifies</em> one (there&#39;s no server verify endpoint), so the team went with the Apple-standard typed-word confirmation instead. Design around <strong>typing the word <code>DELETE</code></strong>, not a PIN pad.</li>
+<li><strong>The destructive tint already exists</strong> as a token: the row and button use <code>Palette.CoralRed</code>. There&#39;s a proper destructive Button variant. So you&#39;re not inventing a color system — you&#39;re art-directing within the existing warm-teal, light-only palette, with coral as the &quot;this is serious&quot; accent.</li>
+<li><strong>What&#39;s placeholder and needs you:</strong> (a) the icon — a reused logout glyph, wrong metaphor; (b) the confirmation screen&#39;s whole <em>tone and composition</em> — right now it&#39;s a bare title + paragraph + input; (c) the &quot;what will be deleted&quot; list — currently one run-on sentence (&quot;every child profile, all of their conversations, memories, and settings&quot;), which should become a scannable, honest list so the parent sees exactly what evaporates; (d) the in-flight and failure states as designed moments, not a default spinner and a system alert.</li>
+</ul>
+<h3>Your design task (screens + states)</h3>
+<ol>
+<li><strong>A destructive icon</strong> for the Settings row — a proper &quot;delete account&quot; glyph (not a door/logout, not a scary trash-fire). It should read as serious and final without being alarming. Fits the existing Settings row layout (icon left, title + subtitle, chevron/press).</li>
+<li><strong>The confirmation screen</strong> — the emotional center. A parent doing something serious and irreversible. Tone: <strong>grave, honest, respectful — never scary, never a horror-movie red wall.</strong> Think &quot;a serious document you&#39;re signing,&quot; not &quot;a self-destruct button.&quot; Warm even here.</li>
+<li><strong>The &quot;what will be deleted&quot; list</strong> — a clear, honest, scannable enumeration of what goes: every child and their conversations/memories/images, your account, your subscription. Honesty is the design; the parent should feel we&#39;re being transparent, not hiding the blast radius. Consider how it reads for a parent with 1 child vs 3 children.</li>
+<li><strong>The type-DELETE confirm control</strong> — the input + the &quot;type DELETE to confirm&quot; prompt, and the primary destructive button (disabled until the word matches, enabled state, loading state).</li>
+<li><strong>In-flight state</strong> — while the cascade runs (it can take a few seconds across many children): a calm, non-frightening &quot;deleting your account…&quot; state. Not a panic spinner.</li>
+<li><strong>Failure state</strong> — a gentle, retryable message (&quot;something went wrong, you can try again&quot; — the account is still deletable on retry by design). Not a system alert box.</li>
+<li><strong>The exit</strong> — after success the app signs out and returns to the welcome screen. Consider whether there&#39;s a brief, dignified &quot;your account has been deleted&quot; acknowledgment before that, or a clean hand-off. (No confirmation email is part of this flow — it&#39;s in-app only.)</li>
+</ol>
+<h3>Hard constraints</h3>
+<ul>
+<li><strong>Light-only.</strong> Warm tide-pool palette; coral (<code>Palette.CoralRed</code>) is the destructive accent. No dark mode.</li>
+<li><strong>Grave but not scary.</strong> This is a premium, trustworthy brand doing a hard thing honestly. No blood-red full-bleed, no skull iconography, no dark-pattern friction that tries to talk the parent out of it beyond the single honest type-to-confirm gate.</li>
+<li><strong>Honesty is the brand.</strong> The &quot;what gets deleted&quot; list should over-disclose, not under-disclose. A parent should trust us <em>more</em> after reading it.</li>
+<li><strong>In-app only.</strong> The whole flow completes inside the app; never link out to a web &quot;manage account&quot; page (that itself would fail 5.1.1(v) and risk the Stripe-leak rejection #3).</li>
+</ul>
+<h3>References to open</h3>
+<ul>
+<li>The live implementation (read it to match what&#39;s built): branch <code>feat/account-deletion-fe</code>, files <code>src/pages/parent/ui/settings/delete-account-page.tsx</code>, <code>src/pages/parent/ui/settings-tab-page.tsx</code>, <code>src/shared/ui/SettingsRow/index.tsx</code> (the new <code>tone: &quot;destructive&quot;</code> variant).</li>
+<li>Why Apple mandates it + recovery cost: <code>docs/release/01-app-review/REJECTION-RISK-AUDIT.md</code> §#7.</li>
+<li>Existing Settings visual language: gallery <code>https://heylolodesign.wladefant.de/settings-baseline.html</code>.</li>
+</ul>
+<hr>
+<h1>2. Google-Gemini consent card — <a href="https://github.com/Wladefant/heylolo-app/issues/196">#196</a> (Apple 5.1.2(i))</h1>
+<h3>What it is</h3>
+<p>This is <strong>the single most important screen you will design this quarter.</strong> It is our <strong>#1 App-Review rejection risk</strong> — the one thing most likely to get the whole app bounced on Aug 10.</p>
+<p>Apple guideline <strong>5.1.2(i)</strong> (added 2025, live and actively enforced since Nov 13 2025) requires: before an app shares a user&#39;s personal data with a <strong>third-party AI</strong>, it must get <strong>explicit, standalone consent</strong> that <strong>names the provider in plain text</strong>. Every message a child sends to LoLo travels to <strong>Google Gemini</strong> (via Google&#39;s Vertex AI) to generate the reply. So we must show a card that, in plain words, says &quot;your child&#39;s messages go to Google Gemini to create LoLo&#39;s answers,&quot; and the parent must actively agree, <strong>before the child&#39;s very first message is ever sent.</strong></p>
+<p>The rules that make this a <em>specific</em> screen, not a generic toggle:</p>
+<ul>
+<li>It must be <strong>standalone</strong> — it <strong>cannot be bundled</strong> with the microphone-permission prompt or the notification-permission prompt. Its own moment, its own decision.</li>
+<li>It must <strong>name &quot;Google Gemini&quot; in plain text</strong> — not &quot;our AI partner,&quot; not &quot;a third-party service.&quot; The literal words.</li>
+<li>It fires <strong>once</strong>, on a fresh install, <strong>after</strong> the COPPA parental-consent gate and <strong>before</strong> the first turn of the conversation.</li>
+<li>It&#39;s a <strong>parent-context</strong> decision (the parent is setting up; the child hasn&#39;t taken over the phone yet).</li>
+</ul>
+<p>Why it&#39;s the top risk: it&#39;s the <em>newest</em> rule, the one reviewers of AI-for-kids apps are specifically hunting, and the least battle-tested in our build. A card that fires late, is bundled with another prompt, or names the provider vaguely = automatic rejection, and rejection here is a <strong>binary fix</strong> (new build, full re-review) — the expensive kind. The founder&#39;s framing from the compliance dossier: this is &quot;the ONE thing to fix before Aug 10.&quot;</p>
+<p>The strings are <strong>final and approved</strong> — you are not writing copy, you&#39;re designing the moment around locked copy. The approved version is <strong>Variant B (warm-but-explicit)</strong>. Its exact text:</p>
+<ul>
+<li><strong>Heading (EN):</strong> &quot;LoLo needs Google&#39;s help to talk&quot; · <strong>(DE):</strong> &quot;LoLo braucht Googles Hilfe zum Sprechen&quot;</li>
+<li><strong>Body (EN):</strong> &quot;Every time {name} talks to LoLo, the message travels to <strong>Google Gemini</strong> — the AI that writes LoLo&#39;s replies — to be turned into an answer. Your child&#39;s data is stored in the EU; Google currently processes the message itself partly in the US (we&#39;re working to bring all of it to the EU). Google never uses it to train their models.&quot;</li>
+<li><strong>Consent button (single action, EN):</strong> &quot;Yes, let LoLo talk with {name}&quot; · <strong>(DE):</strong> &quot;Ja, lass LoLo mit {name} sprechen&quot;</li>
+<li><strong>Decline link (EN):</strong> &quot;Not right now&quot; · <strong>(DE):</strong> &quot;Jetzt nicht&quot;</li>
+</ul>
+<p>Why Variant B and not the drier Variant A: Variant A is legally sufficient but reads like a permissions dialog a parent thumbs past — exactly the &quot;rubber-stamp consent&quot; pattern the Nov-2025 rule is hunting. Variant B keeps <em>every legal fact identical</em> (Gemini named, EU-storage/partial-US line, no-training promise, single action) but says it in <strong>LoLo&#39;s own warm voice</strong>, so a reviewer actually <em>reads</em> it. Your design must reinforce that — this is <strong>LoLo&#39;s calm, honest moment</strong>, not a cold legal modal.</p>
+<p>There&#39;s also a <strong>decline path</strong>: declining does NOT delete the profile or exit onboarding. It returns to the handoff card with chat <strong>locked</strong>, and a banner explains the parent can turn on AI chat in Settings (&quot;AI processing&quot; row) whenever they&#39;re ready. There&#39;s no text-only fallback — Gemini generates every reply, so no consent = no chat.</p>
+<h3>How it&#39;s planned technically</h3>
+<ul>
+<li><strong>Copy is locked</strong> (EN + DE, Variant B) — you design around it, you don&#39;t edit it. <code>{name}</code> is the child&#39;s first name, injected at runtime, so your layout must handle a short name and a long name gracefully.</li>
+<li><strong>Placement in the flow is fixed:</strong> onboarding (name/age → avatar → interest → handoff primer) → <strong>COPPA parental-consent card</strong> (a <em>separate, earlier</em> gate — that one does NOT name Gemini) → <strong>THIS 5.1.2(i) card</strong> → the disc&#39;s first turn. Your card is the last gate before LoLo speaks.</li>
+<li><strong>One decision, one primary action</strong> — a single explicit consent button plus a quiet decline link. No checkboxes to tick, no multi-step. (The COPPA card, separately, has the &quot;I am the parent&quot; checkbox; this one is a single tap.)</li>
+<li><strong>Bilingual</strong> — EN and DE both ship at launch; design both, and make sure the German (longer strings) doesn&#39;t overflow on a small screen.</li>
+<li><strong>The decline/locked state</strong> exists and needs a light touch: a banner on the handoff card and a re-surfacing Settings row labeled &quot;AI processing.&quot;</li>
+</ul>
+<h3>Your design task (screens + states)</h3>
+<ol>
+<li><strong>The 5.1.2(i) consent card itself</strong> — LoLo&#39;s own calm moment. It should feel like LoLo gently explaining how she works, warm and honest, NOT a cold system permission sheet. One clear decision. The Gemini name should sit clearly in the body (it&#39;s the legally load-bearing phrase — make sure it&#39;s legible, not buried).</li>
+<li><strong>Both languages</strong> — EN and DE layouts; verify the longer German body still breathes on the smallest supported iPhone.</li>
+<li><strong>Small-screen safe</strong> — this must render fully (heading + full body + button + decline) without scrolling-past or truncation on a 6.1&quot; phone. The full body text is legally required to be visible; it cannot be behind a &quot;read more.&quot;</li>
+<li><strong>The single consent action + the quiet decline link</strong> — clear primary (&quot;Yes, let LoLo talk with {name}&quot;) and an unpushy secondary (&quot;Not right now&quot;).</li>
+<li><strong>The decline → locked state</strong> — the handoff card with chat locked + the explanatory banner (&quot;Turn on AI chat in Settings whenever you&#39;re ready&quot;), and the Settings &quot;AI processing&quot; re-entry row.</li>
+<li><strong>Reviewer-legibility:</strong> remember a <em>human App reviewer</em> will see this on a fresh install and must instantly recognize it as compliant. Clarity and honesty beat cleverness here.</li>
+</ol>
+<h3>Hard constraints</h3>
+<ul>
+<li><strong>Do not edit the copy.</strong> It&#39;s legally reviewed and final (Variant B). Design around it verbatim.</li>
+<li><strong>Standalone — never bundle</strong> the visual with a mic or notification prompt. It is its own full screen.</li>
+<li><strong>&quot;Google Gemini&quot; must be plain-text visible</strong> in the body, not abbreviated, not replaced with an icon.</li>
+<li><strong>Full body visible without scroll</strong> on small screens — no truncation, no &quot;read more&quot; collapse of legally-required text.</li>
+<li><strong>Light-only, warm brand, LoLo&#39;s voice.</strong> This is a trust moment, not a warning.</li>
+<li><strong>House language:</strong> this card is one of the few places we <em>do</em> say the mechanism plainly; keep LoLo framed as the tutor whose replies Google helps generate — not &quot;your child&#39;s AI friend.&quot;</li>
+</ul>
+<h3>References to open</h3>
+<ul>
+<li><strong>The final strings (design against these):</strong> <code>docs/research/onboarding-consent-strings.md</code> §3 (Variant B is the approved one; §3 also has the decline-path banner + Settings row strings). §1–§2 give you the onboarding + COPPA-card context that precedes this card.</li>
+<li><strong>Why it&#39;s the #1 risk + exact mitigation:</strong> <code>docs/release/01-app-review/REJECTION-RISK-AUDIT.md</code> §#1.</li>
+<li>Onboarding visual context: gallery <code>https://heylolodesign.wladefant.de/voice-welcome-baseline.html</code> and the home/handoff baselines.</li>
+</ul>
+<hr>
+<h1>3. Share links + WhatsApp-preview + landing — <a href="https://github.com/Wladefant/heylolo-app/issues/141">#141</a> (N4)</h1>
+<h3>What it is</h3>
+<p>This is <strong>the growth engine</strong> — the highest-leverage undesigned surface in the whole product. We have a $2k ad budget; we do not buy growth, we <em>earn</em> it through sharing. The founder&#39;s ask: when a kid makes something with LoLo (a quiz, a generated image, later a storybook), the <strong>artwork itself</strong> becomes the share — and it must look <strong>&quot;super good.&quot;</strong></p>
+<p>The funnel, functionally, is a chain of five moments:</p>
+<ol>
+<li><strong>Kid creates an artifact</strong> — a 5-question quiz, a generated image, later a story cover.</li>
+<li><strong>Parent gets a share link.</strong> The <em>parent</em> is the sharer, not the child (kids 4–10 have no phone; the real share graph is parent → family WhatsApp group, and kid → grandparent via the parent). So the share action is a <strong>parent surface</strong>, gated behind the parent PIN/consent.</li>
+<li><strong>The recipient opens it in WhatsApp / iMessage — and the artifact ITSELF is the preview.</strong> When the parent forwards the link into the family group chat, the message unfurls a rich preview card (the Open Graph &quot;OG&quot; image) where the <strong>kid&#39;s artwork is the picture</strong>, framed and wordmarked, with a title like &quot;Mia&#39;s Dinosaur Quiz 🦕 — can you beat her score?&quot; This is the &quot;aunt test&quot;: the preview must instantly read &quot;your niece made this,&quot; warm and personal — not &quot;an app is advertising to you.&quot; The founder specifically wants this to look premium.</li>
+<li><strong>Tapping the link opens a no-install, PLAYABLE web landing.</strong> The recipient — grandma, who will <em>not</em> install an app to see one quiz — lands on a fast, mobile web page where she can actually <em>play the quiz / see the image / read the story</em>, right there, no account, no download. Value BEFORE any install wall (the #1 thing that kills share loops is forcing an install before the recipient sees anything).</li>
+<li><strong>A soft install CTA, then reciprocation.</strong> After the delight, a gentle &quot;Get HeyLolo to make your own&quot; — and, crucially, &quot;now make one back for [Kid].&quot; The loop only closes when the recipient becomes a creator.</li>
+</ol>
+<p>Honest scope: this is a <strong>CAC amplifier, not a viral hockey stick</strong> — realistically a ~1.1–1.2× multiplier on installs we get elsewhere, plus the same artifact doubles as our App-Store screenshot and our 5-star-review moment. That&#39;s still the cheapest acquisition lever we have. Your design <em>is</em> the leverage — a beautiful, forwardable preview card is worth more than any ad spend.</p>
+<h3>The legal spine you must design WITHIN (non-negotiable)</h3>
+<p>Sharing a child&#39;s creation publicly is, under COPPA&#39;s 2025 rule, a <strong>&quot;disclosure&quot;</strong> — and disclosure of a child&#39;s personal data needs its own <strong>separate parental consent</strong>. The child tapping &quot;share&quot; is <em>not</em> consent. So the whole loop is legal only if the shared object carries <strong>no child personal information</strong>:</p>
+<ul>
+<li><strong>Alias only — never the child&#39;s real name</strong> on anything public. &quot;Mia&quot; on a shared card is a <strong>parent-approved display alias</strong>, not the child&#39;s account name. No full name, ever.</li>
+<li><strong>No child photo, no voice clip, no faceprint</strong> on the link. The shareable object is the <em>de-identified creative output</em> (the quiz, the generated scene, the story cover) — &quot;look what HeyLolo made,&quot; never &quot;look what my [named, pictured] kid made.&quot;</li>
+<li><strong>Expiring, revocable tokens.</strong> Links time out (≈30-day TTL) and the parent can kill a link anytime. Nothing lives at a permanent public URL.</li>
+<li><strong>Separate parental &quot;share this publicly&quot; consent</strong> — distinct from app-use consent — gates the <em>creation</em> of the public snapshot. The child&#39;s tap only <em>queues</em> it; the parent releases it.</li>
+<li><strong>No recipient tracking, no open UGC surface</strong> — no comments, no public gallery, no discovery/indexing. A link works only if you were personally sent it. The web landing collects nothing from the recipient.</li>
+</ul>
+<p>This is why the design must brag <em>about the kid</em> (the emotional payload the parent forwards) while carrying <em>zero</em> actual child data. That reconciliation — pride without PII — is the central design tension of this whole feature. You resolve it with the <strong>alias + de-identified artwork</strong> approach.</p>
+<h3>The one hard technical rule that shapes your OG card</h3>
+<p>WhatsApp&#39;s preview crawler does <strong>not</strong> run JavaScript and is strict about the image:</p>
+<ul>
+<li><strong>OG image = 1200×630 px (1.91:1), static JPG/PNG/WebP, HTTPS, under ~400KB.</strong> An oversized image = WhatsApp silently shows <strong>no</strong> picture (the #1 failure mode). Design the card to look great <em>and</em> compress under 400KB at 1200×630.</li>
+<li><strong>Every artifact lives at its own unique URL</strong> — WhatsApp caches the preview per-URL for days, first crawl wins. (This is an engineering rule, not yours, but it means each shared card is one-shot: it must be right the first time.)</li>
+</ul>
+<h3>Your design task (screens + states)</h3>
+<ol>
+<li><strong>The in-app share moment</strong> — a soft, dismissible &quot;Show this to someone? 💌&quot; chip that appears when an artifact completes (not a modal, never blocks the next chat turn), and the <strong>parent gate</strong> it opens (parent PIN/consent) before the OS share sheet. Also the &quot;queued for the parent&quot; state when a child taps and no parent is present (it lands in the parent&#39;s daily digest: &quot;Mia made a dino quiz — send it to Grandma?&quot;).</li>
+<li><strong>The OG preview card — THIS IS A TEMPLATE, the money surface.</strong> A <strong>1200×630</strong> composition: <strong>[kid&#39;s artwork/quiz cover/generated image] + a branded frame + the HeyLolo wordmark</strong>, with room for the alias title (&quot;Mia&#39;s Dinosaur Quiz 🦕&quot;). It must:<ul>
+<li>work as a reusable template across artifact types (quiz cover, generated image, story cover);</li>
+<li>look &quot;super good&quot; — premium, warm, the thing a proud parent <em>wants</em> to forward;</li>
+<li>hold up compressed under 400KB;</li>
+<li>carry the alias + artifact only, never a real name/photo.
+Design the frame system so any artifact drops in and it still reads as one designed card.</li>
+</ul>
+</li>
+<li><strong>The no-install web landing (mobile-first)</strong> — the page grandma opens. Server-rendered, fast, no login. It must be <strong>playable/readable</strong> (the quiz plays in-browser; the image/story is viewable), then end in a soft <strong>&quot;Get HeyLolo&quot;</strong> CTA + the reciprocation nudge (&quot;make one back for [Kid]&quot;). Design the quiz-play flow on web, the image/story view, and the CTA/reciprocation footer.</li>
+<li><strong>The pre-filled share message</strong> — the parent-ready text that autofills the WhatsApp/iMessage compose (&quot;Look what Mia made with LoLo 🦕 [link]&quot;) — you&#39;re art-directing the moment, but note the copy so it reads warm and human.</li>
+<li><strong>The expired-link state</strong> — what a recipient sees when they open a link after its token expired or the parent revoked it. Gentle, not an error-page slap (&quot;This one&#39;s no longer available — but you can make your own!&quot;). A soft install CTA here too.</li>
+<li><strong>Empty/edge:</strong> a landing for an artifact type not yet supported, and the &quot;installed user&quot; path (the link opens the app straight to the artifact) needs no web page but note it exists.</li>
+</ol>
+<h3>Hard constraints</h3>
+<ul>
+<li><strong>Alias only, never the child&#39;s real name; no child photo/voice</strong> on any public surface. This is a legal wall, not a preference.</li>
+<li><strong>The OG card is 1200×630, static, &lt;400KB.</strong> Design to that spec from the first pixel.</li>
+<li><strong>Parent is the sharer, parent-gated.</strong> The child never publishes alone.</li>
+<li><strong>No recipient tracking, no comments, no public gallery/discovery.</strong> The landing collects nothing.</li>
+<li><strong>Light-only, warm brand.</strong> The card and landing carry the HeyLolo look off-app for the first time — this is our brand meeting strangers, so it must be impeccable.</li>
+<li><strong>House language on the landing + CTA:</strong> &quot;safe AI tutor for children,&quot; never &quot;AI friend/companion.&quot; A stranger&#39;s first impression of HeyLolo is a <em>parent-trust</em> impression.</li>
+<li><strong>No child-visible pay pressure</strong> anywhere in the loop; the install CTA is aimed at the recipient <em>adult</em>, not the child.</li>
+</ul>
+<h3>References to open</h3>
+<ul>
+<li><strong>Full share-loop spec (the 8-beat funnel, OG technical spec, the aunt test):</strong> <code>docs/research/viral-loops-family-apps.md</code> (§3 OG/WhatsApp spec, §8 the buildable loop v2, §6 quizzes as viral objects, §11 the new-issue breakdown NEW-A/NEW-C/NEW-D that dev will build).</li>
+<li><strong>The legal spine (design within this):</strong> <code>docs/_session/referral-viral-share-legal-research/REFERRAL-LEGAL-DOSSIER.md</code> §2 (COPPA disclosure), §3 (GDPR-K/ICO &quot;prefer avatars over real names&quot;), §5 (the legal-safe share pattern).</li>
+<li><strong>Why sharing wins + the grandma/5-star framing:</strong> <code>docs/research/features-that-win.md</code> §8 (Shareable creative artifacts) and the sharing rows in its verdict table.</li>
+<li>Brand tokens + gallery: <code>https://heylolodesign.wladefant.de/</code>.</li>
+</ul>
+<hr>
+<h1>4. Shareable quiz-result card — <a href="https://github.com/Wladefant/heylolo-app/issues/121">#121</a> + <a href="https://github.com/Wladefant/heylolo-app/issues/141">#141</a></h1>
+<h3>What it is</h3>
+<p>The quiz engine is <strong>already built</strong> as a conversation mode: a quiz runs inside the chat as <code>mode:&quot;quiz&quot;</code> — LoLo asks 5 questions at the child&#39;s age tier, reads them aloud, the child answers by voice or tap, LoLo celebrates and explains. The in-chat flow is designed (the <code>quizzes-baseline</code> covers it). <strong>What&#39;s missing is the artifact the parent forwards</strong> — the shareable &quot;result card&quot; that says <em>&quot;Mia got 5/6 on Ocean Animals!&quot;</em> and rides the exact same share loop as feature 3.</p>
+<p>So this is a <strong>specific instance of feature 3&#39;s OG template</strong>: a quiz <em>result</em> card. It matters because a quiz result is the most naturally-shareable object in the product — it&#39;s a brag with a number and a &quot;your turn&quot; hook baked in (&quot;can you beat her score?&quot;). BuzzFeed and Kahoot proved the mechanic: people don&#39;t share &quot;take this quiz,&quot; they share <strong>&quot;I got X — what did you get?&quot;</strong> The recruiting CTA is inside the result.</p>
+<p>Functionally: a child finishes a quiz deck → LoLo celebrates once → the same soft &quot;show this to someone?&quot; chip appears → parent-gated → the share sheet pre-fills a card whose OG image is a <strong>premium quiz-result card</strong>: the deck&#39;s art, the score, the kid&#39;s avatar/alias, LoLo. The recipient opens the web landing and can <strong>play the same deck themselves</strong> (Kahoot&#39;s no-account-join insight), then gets &quot;make one back.&quot; The result card is also the &quot;challenge your family&quot; angle — the score invites competition, warmly.</p>
+<h3>How it&#39;s planned technically</h3>
+<ul>
+<li><strong>Quiz engine exists</strong> (<code>mode:&quot;quiz&quot;</code>, #121) — 5 questions per session, four age-tier variants per deck (a 4-year-old and a 12-year-old get the same theme at the right level). Decks are pre-authored content, served to all, ~$0 cost.</li>
+<li><strong>The result card is the new artifact</strong> — it composes into feature 3&#39;s <code>/s/&lt;shareId&gt;</code> snapshot pipeline and the 1200×630 OG template. Same legal spine: <strong>alias/avatar, not the real name</strong> unless the parent explicitly opts in; expiring token; parent-gated.</li>
+<li><strong>The deck carries its own art</strong> — each deck has a theme (animals, space, ocean…) that maps to Wonder Shelf collections, so the result card can pull the deck&#39;s cover art for a consistent look.</li>
+<li><strong>Score is the hook</strong> — &quot;5/6 on Ocean Animals&quot; — but note the anti-list: the <em>shared</em> card can show a score (it&#39;s a warm brag to family, positive-framed), but this must never become a leaderboard or a child-facing scoreboard. The score is a one-time celebratory artifact, not a running tally.</li>
+</ul>
+<h3>Your design task (screens + states)</h3>
+<ol>
+<li><strong>The quiz-result card template</strong> — a 1200×630 OG card composing: <strong>the deck&#39;s theme art + the score (&quot;5 of 6!&quot;) + the kid&#39;s avatar/alias + LoLo</strong>. Premium, celebratory, positive (engineer it so even a low score feels good to share — &quot;Mia explored Ocean Animals!&quot; never &quot;Mia failed&quot;). It must slot into feature 3&#39;s frame system as one card type among several.</li>
+<li><strong>The &quot;challenge your family&quot; re-share angle</strong> — the visual + copy hook that turns the result into an invitation (&quot;Can you beat her score?&quot;). Design how that reads on the card and on the web landing&#39;s &quot;your turn&quot; moment.</li>
+<li><strong>How it composes into the #3 OG template</strong> — deliver this as a <em>variant of the feature-3 card system</em>, not a one-off, so quiz-result / generated-image / story-cover cards feel like one designed family.</li>
+<li><strong>The web-landing quiz-play</strong> (shared with feature 3, but quiz-specific) — the recipient plays the same 5-question deck in-browser, sees their own score, then &quot;make one back.&quot; (Coordinate with feature 3&#39;s landing so it&#39;s one flow, not two.)</li>
+<li><strong>The avatar/alias opt states</strong> — the card with a parent-approved alias + avatar (default), and the neutral version if the parent hasn&#39;t opted the alias in (LoLo + deck art carry it, no name).</li>
+<li><strong>Score edge cases</strong> — how the card looks at 6/6 (celebrate), at 2/6 (still positive, no shame), and a deck with no numeric score if any.</li>
+</ol>
+<h3>Hard constraints</h3>
+<ul>
+<li><strong>Same legal spine as #3:</strong> alias/avatar, not the child&#39;s real name unless the parent opts in; no photo/voice; expiring, parent-gated, revocable.</li>
+<li><strong>Positive-only framing.</strong> No score is ever shameful; the card celebrates participation. This protects the child and keeps the share socially safe (the thing that makes people actually forward it).</li>
+<li><strong>Not a leaderboard, not a scoreboard.</strong> A shared one-time brag, never a running competitive tally — that would trip the DSA anti-list and Apple Kids scrutiny.</li>
+<li><strong>Composes into the #3 template</strong> — don&#39;t design it in isolation.</li>
+<li><strong>Light-only, warm brand, house language</strong> — &quot;made with LoLo, your child&#39;s safe AI tutor,&quot; never &quot;friend.&quot;</li>
+</ul>
+<h3>References to open</h3>
+<ul>
+<li><strong>Quiz content + tiers (so the card matches the real decks):</strong> <code>docs/research/quiz-deck-authoring-spec.md</code> (§1 deck format, §2 the four age tiers, §5 three ship-ready example decks with real questions).</li>
+<li><strong>Share loop it rides on:</strong> <code>docs/research/viral-loops-family-apps.md</code> §6 (quizzes as viral objects — &quot;I got X, what did you get?&quot;), and everything in feature 3 above.</li>
+<li>In-chat quiz UI (already designed, for consistency): gallery <code>https://heylolodesign.wladefant.de/quizzes-baseline.html</code>.</li>
+</ul>
+<hr>
+<h1>5. Wonder Shelf reframe — <a href="https://github.com/Wladefant/heylolo-app/issues/142">#142</a> (N5)</h1>
+<h3>What it is</h3>
+<p>The founder wants &quot;badges to unlock and collect.&quot; The gamification research says: for under-10s, <strong>collections beat points and badges</strong> — because a collection is completeable, story-tied, and <em>permanent</em>, which is what actually satisfies a young child (identity + &quot;I did it&quot; + a natural endpoint). So we ship the founder&#39;s <em>intent</em> (collect + unlock) in the <em>correct shape</em>: <strong>the Wonder Shelf.</strong></p>
+<p>The Wonder Shelf is a <strong>shelf/museum the kid curates</strong>, not a scoreboard. Every real accomplishment — a conversation milestone, a completed quiz, a finished story, a generated image, an Explorer discovery, a mood check-in — leaves a small <strong>collectible artifact</strong> on a permanent shelf: a fossil, a shell, a candle, a ribbon, a little glowing token. Artifacts group into <strong>collections</strong> of 6–10 (e.g. &quot;Ocean Deep&quot;: sea shell, pearl, coral, jellyfish, treasure coin, diver&#39;s mask, whale song, and a golden capstone). Collections <em>complete</em> (&quot;4 of 6 ocean creatures found&quot;), and completing one closes an arc — LoLo celebrates <strong>once</strong>. There are <strong>12 launch collections, ~102 artifacts</strong> total (4 always-on starter sets, 4 interest sets tied to the child&#39;s onboarding interest, 4 seasonal sets tied to the Friday-drop calendar).</p>
+<p>The <strong>critical reframe:</strong> the existing <code>badges-baseline.html</code> is the <strong>wrong shape</strong> — it&#39;s a badge <em>scoreboard</em>. The Wonder Shelf is the opposite: a warm, curated shelf/museum where <strong>nothing is ever lost or decays.</strong> No streaks. No XP. No numbers shown to the child. No leaderboard. And this is not aesthetic preference — it&#39;s a hard product/legal stance you must design <em>inside</em>, so please internalize the reasoning below so you don&#39;t accidentally reintroduce engagement pressure.</p>
+<h3>Why NO streaks / XP / leaderboard (the reasoning, so you don&#39;t design them back in)</h3>
+<ul>
+<li><strong>The EU Digital Services Act (DSA) minors guidelines</strong> name streaks and random-reward mechanics as things that must be <strong>off by default for minors.</strong> Building them in is a regulatory liability, not just a taste call.</li>
+<li><strong>The science:</strong> for under-10s, points/XP/leaderboards are developmentally weak-to-harmful — kids can&#39;t do normative comparison yet, streaks create documented anxiety (kids don&#39;t control their own schedule, so a lost streak is a punishment for something outside their control), and random rewards correlate with problem-gambling patterns <em>more</em> strongly in minors.</li>
+<li><strong>The cautionary tale is Prodigy</strong> — a math app that wrapped learning in a reward economy with pay-to-progress cosmetics; it drew an <strong>FTC complaint</strong> and the press image of &quot;membership kids sail on a cloud while non-members trudge in the dirt.&quot; That is the exact dark-pattern failure the Wonder Shelf is designed to be the opposite of. Even Duolingo <em>removed</em> streaks/leagues/leaderboards for its own kids app (Duolingo ABC) — the best-funded team&#39;s revealed preference.</li>
+<li><strong>So the anti-list is hard:</strong> no numbers/XP shown to the child, no streak calendar, no leaderboard, no mystery boxes/wheel spins, no child-visible padlocks that flaunt a purchase. Progress is shown <strong>visually</strong> — filled vs empty slot silhouettes on the shelf — never &quot;12/50.&quot; Loss-free by construction: artifacts are permanent, sets never expire, a missed seasonal set re-runs next year (nothing permanently missable).</li>
+</ul>
+<p>The positive design DNA to lean into instead: <strong>permanence</strong> (the shelf only ever grows), <strong>completeable collections</strong> (6–10, with a golden capstone that auto-mints when the set fills), <strong>the mint-moment</strong> (when an artifact is earned it visibly <em>flies to the shelf</em> — the permanence beat), <strong>LoLo&#39;s own stake</strong> (LoLo can have her own corner of the shelf that fills alongside the child&#39;s — the Khan Kids &quot;collect for the character&quot; shape), and <strong>celebrate once</strong> (single artifact = a tiny whisper tick; set completion = one landmark celebration, never back-to-back confetti).</p>
+<h3>How it&#39;s planned technically</h3>
+<ul>
+<li><strong>Artifacts are a projection over data that already exists</strong> — messages, generated images, finished stories, quiz completions, Explorer captures, mood docs. The shelf doesn&#39;t invent new tracking; it <em>maps</em> real events to artifact slots via deterministic, idempotent earn rules (a fixed event → a fixed artifact, no randomness).</li>
+<li><strong>12 launch collections ship bundled in-app</strong> as PNGs; post-launch seasonal/interest sets arrive via the Friday-drop system from Firebase Storage (so the shelf can grow without an app update). ~102 artifact images, generated via the existing Imagen 4 Fast pipeline with a <strong>style-lock prompt</strong> (same object-swap trick the story pipeline uses for consistency) — and <strong>you curate them</strong> (generate 2–3× overage per slot, pick the best for style/palette/kid-safety/single-object clarity at small shelf size).</li>
+<li><strong>Everything sits behind the existing gamification parent toggle</strong> (conservative default; off = surface hidden, engine still records silently). Earned-while-away lands only in the <strong>parent digest</strong>, never as a push to the child.</li>
+<li><strong>Natural home:</strong> the chats-history area / a shelf surface. Progress counters exist backend-side only, never rendered to the child.</li>
+</ul>
+<h3>Your design task (screens + states)</h3>
+<ol>
+<li><strong>Shelf home</strong> — the museum/shelf metaphor. All collections at a glance, showing filled vs empty slots <em>visually</em> (silhouettes), progress legible without numbers. This is the surface that replaces the scoreboard <code>badges-baseline</code> — establish the shelf/curation feeling.</li>
+<li><strong>Collection detail</strong> — one collection (e.g. &quot;Ocean Deep&quot;): its 6–10 slots, filled artifacts vs empty silhouettes, the golden-capstone slot, and the &quot;closed arc&quot; state when complete. Show how &quot;4 of 6&quot; reads visually, no digits.</li>
+<li><strong>Artifact detail</strong> — tap one artifact: what it is, and <strong>how it was earned</strong> (&quot;You found this when you asked LoLo about whales&quot;). The earning story is the emotional payoff — permanence + memory.</li>
+<li><strong>The &quot;new artifact lands&quot; moment</strong> — the mint animation: an artifact <em>flies to the shelf</em> in-session (the permanence beat). Two tiers: a small <strong>whisper tick</strong> for a single artifact; the <strong>one landmark celebration</strong> when a set completes (LoLo celebrates once). Design both, and the pacing guard feeling (never two big celebrations in a row).</li>
+<li><strong>Empty / first-run state</strong> — the shelf before anything&#39;s earned. It must be inviting, not a wall of locked padlocks (no padlocks that flaunt purchase). Consider the Day-0 guarantee: within the first ~3 minutes the child earns their first two artifacts (Hello Spark, Mood Pebble) — design so the empty shelf clearly <em>wants</em> to be filled and the first mint feels magical.</li>
+<li><strong>LoLo&#39;s corner (optional but wanted)</strong> — LoLo&#39;s own shelf area that fills as the child&#39;s does (the generosity/character-stake loop).</li>
+<li><strong>Seasonal-set integration</strong> — how a seasonal collection (Autumn, Halloween, St. Martin&#39;s Lantern, Advent) appears and re-runs annually without anything feeling &quot;missed.&quot;</li>
+<li><strong>Art-direction pass on the ~102 artifacts</strong> — you own the curation/QC of the Imagen-generated tokens (style/palette consistency, kid-safety, single-object clarity at ~96px). This is a real chunk of the work (~a designer-day).</li>
+</ol>
+<h3>Hard constraints</h3>
+<ul>
+<li><strong>NO streaks, NO XP, NO numbers shown to the child, NO leaderboard, NO mystery boxes/wheel, NO child-visible padlocks-with-price.</strong> This is the DSA/dark-pattern anti-list — design pressure is a legal and brand liability, not a taste debate.</li>
+<li><strong>Loss-free + permanent.</strong> Artifacts never disappear; sets never expire; missed seasonal sets re-run. Nothing decays.</li>
+<li><strong>Celebrate once.</strong> Single artifact = whisper; set complete = one landmark. No confetti spam.</li>
+<li><strong>The <code>badges-baseline</code> is the wrong shape</strong> — do not iterate on the scoreboard; design the shelf/museum fresh.</li>
+<li><strong>Deterministic earn</strong> — every artifact has a fixed event trigger; no randomness, ever (DSA).</li>
+<li><strong>No child-facing paywall pressure</strong> — the 12 launch sets are all earnable by any child on any plan; if a set is ever Plus-only, a non-Plus child simply <em>never sees it exists</em> (no teasing padlock). Sell breadth of sets to the <em>parent</em> on the paywall, never to the child on the shelf.</li>
+<li><strong>Light-only, warm tide-pool palette.</strong> The artifact style-lock is warm teal/coral/sand/cream, soft rounded chunky shapes, matte storybook illustration.</li>
+</ul>
+<h3>References to open</h3>
+<ul>
+<li><strong>The full launch catalog (12 collections, ~102 artifacts, every earn rule, the anti-dark-pattern checklist, the art style-lock prompt):</strong> <code>docs/research/wonder-shelf-launch-catalog.md</code>.</li>
+<li><strong>The mechanic + the anti-list reasoning (why collections, why no streaks, the Prodigy cautionary tale):</strong> <code>docs/research/gamified-ux-winning-mechanics.md</code> (row 2 collections-with-permanence, the mechanic-by-mechanic verdict table with AVOID/ADAPT/ADOPT, §4.1 Prodigy, and the #142 application row).</li>
+<li><strong>The WRONG shape (so you see what NOT to do):</strong> gallery <code>https://heylolodesign.wladefant.de/badges-baseline.html</code> — this scoreboard is what you&#39;re replacing. Also <code>leaderboard-baseline.html</code> — on the explicit do-NOT-build list.</li>
+</ul>
+<hr>
+<h1>6. Friday Drop arrival moment — <a href="https://github.com/Wladefant/heylolo-app/issues/152">#152</a> (D1) + <a href="https://github.com/Wladefant/heylolo-app/issues/154">#154</a> (D3) + <a href="https://github.com/Wladefant/heylolo-app/issues/121">#121</a></h1>
+<h3>What it is</h3>
+<p>Every <strong>Friday</strong>, a free quiz deck appears for everyone. It&#39;s the retention ritual — the &quot;appointment mechanic&quot; that gives a child a reason to come back, the way a Toca Boca kid runs to the in-game Post Office every Friday for the free gift, or a Moshi kid gets a new sleep story weekly. Because a quiz deck is pure LLM text, it costs <strong>~$0</strong> to &quot;press&quot; and serve to the whole user base — this is the AI-native superpower (Tonies pays €15 per physical figurine; we press a &quot;figurine&quot; for nothing).</p>
+<p><strong>The ritual is the point</strong> — predictable anticipation. Kids know something fresh lands Friday, they talk about it, it becomes a shared beat. The content is already authored: <strong>13 themed decks</strong> covering the Sep–Dec run (issue #154 frames it as &quot;16&quot; — see the reconciliation below; both are correct), starting <strong>Sep 18</strong> (back-to-school), running through autumn, Halloween, St. Martin&#39;s/Laternenfest (a big DACH beat), Nikolaus, and Christmas.</p>
+<p>The <strong>hard discipline</strong> that makes this legal and on-brand: it is a <strong>deterministic, loss-free</strong> drop. &quot;A new deck appeared this Friday&quot; — scheduled, everyone gets it, never a mystery box, never a streak you can lose, and <strong>NO push notification to the child.</strong> Discovery happens <strong>in-app</strong> (a badge/shimmer glows on the quiz surface) plus <strong>one line in the parent digest</strong>. Old decks are never deleted — they move to a browsable &quot;last week&#39;s decks&quot; library/shelf. This is the DSA-safe translation of the live-ops appointment mechanic: all the return-habit upside, none of the regulated dark-pattern (no streak-loss, no random reward, no child-push).</p>
+<p>Your job is the <strong>arrival UX</strong> — how a new deck <em>announces itself</em> without becoming a nag or a takeover. It should feel like a small gift quietly appearing, discovered with delight, not an interruption demanding attention.</p>
+<h3>The 13-vs-16 reconciliation (I dug into this so you&#39;re not confused)</h3>
+<ul>
+<li>Issue #154 says <strong>&quot;16 themed decks.&quot;</strong> The content-drop-economy doc lays out a <strong>16-week</strong> Sep–Dec calendar. But of those 16 weeks: week 1 is launch week (no drop), and week 13 folds into the Advent Calendar (no standalone quiz). That leaves <strong>14 distinct weekly Friday quiz themes.</strong> One of those (&quot;Animal Kingdom&quot;) already shipped as an example in the authoring spec. So the companion doc authors the <strong>remaining 13</strong> decks. <strong>Net: ~13–14 weekly Friday decks for Sep–Dec, all authored and ready.</strong> Don&#39;t let the &quot;16&quot; vs &quot;13&quot; throw you — it&#39;s the same run counted two ways (calendar-weeks vs decks-still-to-author).</li>
+</ul>
+<h3>How it&#39;s planned technically</h3>
+<ul>
+<li><strong>Backend flips a deck live</strong> on its scheduled Friday — a server-scheduled catalog of dated content (<code>drops</code> collection: id, type, theme, <code>publishAt</code>, <code>featuredUntil</code>, tier, asset refs). When <code>publishAt</code> passes, the deck goes live and the previous one moves to the library. <strong>Zero per-week ops</strong> — the whole Sep–Dec run is batch-authored and scheduled once.</li>
+<li><strong>The surface ships in the binary; the content is server-schedulable</strong> — so the <em>arrival UX you design</em> must ship in a v1.1 build, but decks themselves flip live without an app update.</li>
+<li><strong>It integrates with the Wonder Shelf (#142)</strong> — opening a Friday drop mints a &quot;Friday Gift Box&quot; artifact + a seasonal-collection slot, and the &quot;last week&#39;s decks&quot; library is a shelf-adjacent browse surface. Coordinate the visual language with feature 5.</li>
+<li><strong>The quiz engine (#121)</strong> runs the deck itself (already built, <code>mode:&quot;quiz&quot;</code>); the Friday Drop is the <em>scheduling + arrival + discovery</em> layer on top.</li>
+<li><strong>Parent-digest slot</strong> — the &quot;come back&quot; nudge goes to the <em>parent</em> (opt-in digest), never a push to the child: e.g. &quot;This Friday&#39;s deck: Lanterns &amp; Light 🏮 — Mia loved autumn week.&quot;</li>
+</ul>
+<h3>Your design task (screens + states)</h3>
+<ol>
+<li><strong>The in-app arrival</strong> — a <strong>badge/shimmer on the quiz surface</strong> signaling &quot;something fresh landed,&quot; discovered in-app. <strong>NOT a modal takeover</strong> — no full-screen interrupt, no &quot;tap to claim!&quot; nag. A gentle glow/sparkle that invites, doesn&#39;t demand. Design the &quot;new&quot; state and how it settles once the child has opened it.</li>
+<li><strong>The deck-reveal moment</strong> — opening the new deck: a small, warm &quot;here&#39;s this Friday&#39;s deck&quot; reveal (the gift-box/unwrap feeling, tied to the Wonder Shelf &quot;Friday Gift Box&quot; artifact mint). Celebratory but light — one whisper/moment tier, never confetti overload.</li>
+<li><strong>The &quot;last week&#39;s decks&quot; shelf/library</strong> — where past drops live (never deleted). How a child browses previous decks; how it reads as &quot;always available, this one&#39;s just the newest.&quot; Integrate visually with the Wonder Shelf (#5) so it feels like one world.</li>
+<li><strong>The parent-digest slot</strong> — the one-line &quot;fresh this Friday&quot; mention in the parent&#39;s digest/dashboard (the only place a &quot;come back&quot; nudge is allowed to live). A small, warm card/line — &quot;This Friday: [deck theme].&quot;</li>
+<li><strong>Seasonal theming</strong> — the drops are themed (back-to-school, autumn, Halloween, Laternenfest, Nikolaus, Christmas). Show how the arrival surface picks up the season&#39;s mood without needing a bespoke design each week (a themeable frame, like feature 3&#39;s card system).</li>
+<li><strong>Empty/between state</strong> — the quiz surface when there&#39;s no <em>new</em> drop (mid-week), so &quot;new&quot; genuinely means new. And the launch-week state before the first drop (Sep 18).</li>
+</ol>
+<h3>Hard constraints</h3>
+<ul>
+<li><strong>NO push notification to the child.</strong> Discovery is in-app + parent digest only. (COPPA separate-consent + DSA + brand.)</li>
+<li><strong>NOT a modal takeover.</strong> The arrival is a badge/shimmer the child <em>discovers</em>, never a full-screen interrupt that blocks play.</li>
+<li><strong>Deterministic + loss-free.</strong> &quot;A new deck appeared&quot; — never a mystery box, never a streak, never FOMO-punishment. Old decks stay in the library, never deleted. Soft &quot;featured this week&quot; is the only freshness edge, and even that never punishes.</li>
+<li><strong>No numbers/XP/streak</strong> on the child surface (same anti-list as feature 5).</li>
+<li><strong>Integrates with the Wonder Shelf</strong> — shared visual language, the Friday Gift Box artifact.</li>
+<li><strong>Light-only, warm brand.</strong> House language in any parent-facing copy: &quot;safe AI tutor,&quot; never &quot;companion/friend.&quot;</li>
+<li><strong>No child-visible pay pressure</strong> — the Friday quiz decks are <strong>free for everyone</strong>, deliberately (gating them would kill the ritual). Never a padlock on a Friday deck.</li>
+</ul>
+<h3>References to open</h3>
+<ul>
+<li><strong>The drop economy (Toca Friday model, the DSA-safe appointment mechanic, the 16-week calendar):</strong> <code>docs/research/content-drop-economy.md</code> (§3 Toca/Moshi, §4 live-ops science + DSA-safe framing, §7 the Sep–Dec calendar, §9 the D1/D3 issue drafts).</li>
+<li><strong>The authored decks (the actual 13 themes + real questions, so your arrival art matches real content):</strong> <code>docs/research/quiz-decks-sep-dec.md</code> (all 13 decks, EN+DE) and <code>docs/research/quiz-deck-authoring-spec.md</code> §5.</li>
+<li><strong>Wonder Shelf integration (Friday Gift Box artifact, seasonal sets):</strong> <code>docs/research/wonder-shelf-launch-catalog.md</code> §1 (seasonal sets 9–12) + feature 5 above.</li>
+<li>In-chat quiz UI: gallery <code>https://heylolodesign.wladefant.de/quizzes-baseline.html</code>.</li>
+</ul>
+<hr>
+<h2>One closing note on where everything goes</h2>
+<p>Same as your Jul 6–7 brief: finished screens + every named state land in the shared handoff (Figma page or <code>docs/_session/feature-prioritization-2026-07/handoff/</code>) so Wlad can build without asking. For features 3 and 4 especially, deliver the OG card as a <strong>reusable template system</strong>, not one-off comps — dev builds one card renderer and drops artifacts into it. For feature 5, the ~102 artifact curation is real design work; budget it.</p>
+<p>Ping me if any legal constraint feels like it&#39;s fighting the design — that tension (pride without PII, ritual without pressure) is exactly where the good design lives, and it&#39;s worth talking through rather than guessing.</p>
