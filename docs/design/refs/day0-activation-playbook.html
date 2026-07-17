@@ -1,0 +1,227 @@
+<title>Day-0 Activation Playbook</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>HeyLolo Day-0 Activation Playbook</h1>
+<blockquote>
+<p>Launch Sept 8 · 14-day no-card trial · <strong>55% of 3-day-trial cancels happen Day 0</strong> · the first session decides everything.
+Research wave 2026-07-05 · lean brief (6 web sources + internal dossiers). Deep strategy lives in <code>SYNTHESIS-WINNING-PLAYBOOK.md</code>; this is the Day-0-specific execution layer.</p>
+</blockquote>
+<h2>0. Why Day 0 is the whole game (evidence)</h2>
+<ul>
+<li><strong>Conversions cluster on Day 0.</strong> ~50.6% of all paid conversions happen Day 0 (RevenueCat <em>State of Subscription Apps</em>). Nearly all trial <em>starts</em> also happen Day 0 (78–90% across categories).</li>
+<li><strong>Cancels cluster on Day 0 too.</strong> 3-day trials: 55.4% of cancels are Day 0. Our <strong>14-day trial: 35.7% of cancels are still Day 0</strong> — the largest single bucket. The session that could convert is the same session that kills the trial.</li>
+<li><strong>Education is the hardest category.</strong> Education has the <em>lowest</em> Day-0 paid conversion (28.5% vs 71.9% Productivity) and low download-to-trial (6.5% median). Kids/edu buyers convert slowly and need proof — so Day 0&#39;s job is not &quot;get the card,&quot; it&#39;s <strong>earn the parent&#39;s belief that this is worth keeping</strong>, then let the 14-day runway do the closing (17+ day trials convert <strong>70% better</strong> than short ones — our long trial is an asset, not a liability).</li>
+<li><strong>The aha must land in session one.</strong> &quot;The battle for the subscriber is won or lost in the first session.&quot; Over half of short-trial cancels happen within <em>hours</em>. If the magic moment doesn&#39;t happen in the first few minutes, it almost never happens.</li>
+<li><strong>The voice cold-start tax.</strong> ~20% of users of conversational agents leave <em>without ever sending a first message</em> (the &quot;first-message barrier&quot;). For a shy 6-year-old handed a talking disc, an open-ended &quot;Hi, what do you want to talk about?&quot; is a freeze trigger. Buddy.ai&#39;s whole moat is that kids talk to it &quot;like a friend&quot; — earned by a purpose-built child ASR + a proactive, scripted ice-breaker, never an open mic into silence.</li>
+</ul>
+<p><strong>The Day-0 thesis for HeyLolo:</strong> the aha moment is not a feature tour — it is <em>the kid&#39;s own voice coming back answered by LoLo, and a wonder appearing on the shelf</em>, witnessed by the parent, within the first ~3 minutes. Everything before that is friction to be cut; everything after is the seed for tomorrow.</p>
+<hr>
+<h2>1. The HeyLolo First Five Minutes — second-by-second spec</h2>
+<p>Three actors, one device, one continuous flow. The hard cut is <strong>parent setup ≤ 2 min → handoff → kid&#39;s first LoLo moment ≤ 3 min → parent sees the seed that evening.</strong></p>
+<h3>Phase A — Parent onboarding, target <strong>&lt; 2:00</strong> (currently ~8 steps / &quot;10/10&quot;)</h3>
+<p>The current child-profile flow is <code>preset → general → avatar → interests → customInterests → supportAreas → chatStyle → pinCode</code> (labelled up to 10/10). That is a 2–4 minute form <em>before the kid ever hears LoLo</em>. Cut it to the <strong>irreducible four</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>t</th>
+<th>Step</th>
+<th>Keep / cut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0:00–0:20</td>
+<td><strong>Name + age</strong> (<code>general</code>)</td>
+<td>KEEP — age is the only input that changes LoLo&#39;s behavior on turn one.</td>
+</tr>
+<tr>
+<td>0:20–0:45</td>
+<td><strong>Avatar</strong> (<code>avatar</code>)</td>
+<td>KEEP — 3-tap, it&#39;s the child&#39;s first ownership beat, and it&#39;s <em>fun</em> to do together.</td>
+</tr>
+<tr>
+<td>0:45–1:20</td>
+<td><strong>Pick ONE thing you love</strong> (<code>interests</code>)</td>
+<td>KEEP but <strong>reduce to a single required tap</strong> (defaults to 1, &quot;add more later&quot;). This one tap is the ammunition for LoLo&#39;s ice-breaker.</td>
+</tr>
+<tr>
+<td>1:20–2:00</td>
+<td><strong>Handoff primer card</strong> (new)</td>
+<td>KEEP — replaces the paywall/PIN wall as the last screen. &quot;LoLo is awake and knows [Name] loves [dinosaurs]. Hand [Name] the phone — LoLo will say hi.&quot;</td>
+</tr>
+</tbody></table>
+<p><strong>CUT from the Day-0 critical path (defer to a dashboard &quot;Finish setting up&quot; nudge, post-first-session):</strong></p>
+<ul>
+<li><code>customInterests</code>, <code>supportAreas</code>, <code>chatStyle</code> → all have safe defaults (chatStyle already defaults to <code>Friend</code>; supportAreas already starts empty by design). None gate a good first conversation.</li>
+<li><code>pinCode</code>, <code>quiet-hours-step</code>, <code>emergency-contact-step</code>, <code>phone-number-input</code> → parental-control config, <em>not</em> first-session value. Move behind a &quot;Secure your account&quot; card on the dashboard shown <em>after</em> the kid&#39;s first session (parent is now motivated).</li>
+</ul>
+<p>Rationale: every deferred step is a place a parent bounces before value. The 14-day trial buys us the runway to collect this later; Day 0 must reach the disc.</p>
+<h3>Phase B — The handoff moment (~1:20–2:00)</h3>
+<p>The single most under-designed moment in kids apps: parent-sets-up → kid-uses is usually a silent cliff. Make it a <strong>scripted baton pass</strong>:</p>
+<ul>
+<li>The primer card names the child and the interest, and shows LoLo already <em>awake and waiting</em> (WAKE spring from the Daily Loop §3.1) — not a menu, not a &quot;Start&quot; button that dumps into an empty chat.</li>
+<li>One line of parent instruction: <strong>&quot;Hand [Name] the phone.&quot;</strong> No login wall, no &quot;are you the parent?&quot; gate between the card and the disc — that gate is what breaks the handoff.</li>
+<li>Optional (age ≤ 6): a 4-second LoLo voice line plays <em>on the card</em> so the parent hears the character before handing over — sets the expectation and de-risks the mic.</li>
+</ul>
+<h3>Phase C — Kid&#39;s first LoLo moment, target first answer by <strong>~2:30</strong>, first wonder by <strong>~3:00</strong></h3>
+<p>The ice-breaker must <strong>guarantee a kid answer</strong> — never open-ended. We already have the mechanism: <code>seedConversationOpener</code> (<code>src/entities/ai-chat-conversation/api/seed-conversation-opener.ts</code>) persists ONE assistant message with no round-trip. For Day 0, seed a <strong>First-Session Opener</strong> distinct from the generic QOTD:</p>
+<ol>
+<li><strong>Wake + greet by name (0–5 s).</strong> LoLo wakes from the disc, says the child&#39;s name. Character-first, the interface <em>is</em> LoLo.</li>
+<li><strong>The closed ice-breaker (5–15 s).</strong> Not &quot;what do you want to talk about?&quot; — a <strong>binary or pick-one</strong> question built from the interest tapped in setup, engineered so <em>any</em> answer is a win:<ul>
+<li><em>&quot;I heard you love dinosaurs! Quick — would you rather meet a <strong>T-Rex</strong> or a <strong>Triceratops</strong>?&quot;</em></li>
+<li>The two named options are the escape hatch from the first-message freeze (ICEBREAKER &quot;small, diverse starter list&quot; pattern). A shy kid can whisper one word; a chatty kid can riff. Either way LoLo got a signal.</li>
+</ul>
+</li>
+<li><strong>Warm reaction + the first wonder (15–90 s).</strong> LoLo reacts <em>specifically</em> to the answer, then delivers ONE genuinely surprising, age-tuned fact/mini-story about their pick — the &quot;magic moment&quot; the whole trial hinges on. Keep it short (T1 ≈ one delightful beat).</li>
+<li><strong>Permanence beat — the wonder flies to the shelf (~2:30–3:00).</strong> The fact mints a <strong>Wonder Shelf artifact (#142)</strong> <em>visibly</em> — the child watches it fly to the shelf. <strong>This is the Day-0 aha made tangible:</strong> they now own something, and it&#39;s a reason to come back tomorrow. Target: <strong>first shelf artifact earned within 3 minutes of handoff.</strong></li>
+<li><strong>Micro-close (optional, if the kid drifts).</strong> LoLo plants a tomorrow-seed (&quot;Next time I&#39;ll show you the dino that was smaller than a chicken!&quot;) — promise-of-delight, never loss-framing.</li>
+</ol>
+<p><strong>Voice cold-start safeguards (Day-0-specific):</strong></p>
+<ul>
+<li><strong>Never leave an open mic into silence.</strong> If no utterance in ~6 s, LoLo re-offers the <em>same binary</em> out loud (&quot;You can just say <strong>T-Rex</strong> or <strong>Triceratops</strong>!&quot;) — one gentle re-prompt, then offers a tap fallback (the two options as tappable chips). A kid must never hit a dead mic on turn one.</li>
+<li><strong>Whisper-tolerant.</strong> Kid ASR is our known weak point (child WER 38–87%); on Day 0, bias the first turn toward the two expected keywords so a mumble still resolves to a valid branch rather than a &quot;sorry, I didn&#39;t catch that&quot; (the #1 confidence-killer for a shy first-timer).</li>
+</ul>
+<h3>Phase D — Parent sees the seed, <em>same evening</em></h3>
+<p>The parent&#39;s Day-0 conversion signal is <strong>not</strong> a dashboard of metrics — it&#39;s a <em>story</em>. Wire the first session into <strong>Story of the Day (#166)</strong>:</p>
+<ul>
+<li>By evening the parent gets a push / dashboard card: <em>&quot;[Name] met LoLo today and earned their first wonder: <strong>why some dinosaurs had feathers</strong>. Ended calm. 🦕&quot;</em></li>
+<li>Leads with the shelf artifact + a process-praise line + an &quot;ended calm&quot; signal (never &quot;12 minutes of screen time&quot;). This is the emotional receipt that makes a parent think <em>&quot;okay, this is different — I&#39;ll keep it.&quot;</em> — the actual Day-0 retention lever for an Education app that can&#39;t win on Day-0 card capture.</li>
+</ul>
+<hr>
+<h2>2. The 5 activation metrics to instrument (with targets)</h2>
+<p>Define <strong>&quot;activated Day-0 account&quot;</strong> = a child profile whose first session reached the first shelf artifact AND whose parent viewed the Story-of-the-Day seed. Track each sub-step so we can see <em>where</em> the 35.7% Day-0 cancels leak.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Metric</th>
+<th>Definition</th>
+<th>Day-0 target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>M1</td>
+<td><strong>Time-to-handoff</strong></td>
+<td>profile-create-start → handoff primer card shown</td>
+<td><strong>&lt; 2:00</strong> median (p75 &lt; 3:00)</td>
+</tr>
+<tr>
+<td>M2</td>
+<td><strong>Handoff-to-first-utterance rate</strong></td>
+<td>kids who speak ≥1 word to LoLo / handoffs</td>
+<td><strong>≥ 80%</strong> (beats the ~20% first-message-barrier drop)</td>
+</tr>
+<tr>
+<td>M3</td>
+<td><strong>Time-to-first-wonder</strong></td>
+<td>handoff → first Wonder Shelf artifact minted</td>
+<td><strong>&lt; 3:00</strong> median</td>
+</tr>
+<tr>
+<td>M4</td>
+<td><strong>First-session completion</strong></td>
+<td>sessions reaching ≥1 artifact + calm close (not rage-quit / dead-mic exit)</td>
+<td><strong>≥ 65%</strong> of started sessions</td>
+</tr>
+<tr>
+<td>M5</td>
+<td><strong>Parent seed-view rate (Day 0/evening)</strong></td>
+<td>parents who open the Story-of-the-Day card same day</td>
+<td><strong>≥ 50%</strong>; and Day-0 <strong>cancel rate &lt; 30%</strong> (beat the 35.7% category baseline)</td>
+</tr>
+</tbody></table>
+<p>North-star to watch alongside: <strong>Day-0-activated → Day-14 trial-to-paid</strong>. The bet is that reaching M3 (first wonder) is the aha that predicts conversion; instrument the correlation from launch so we can prove/kill it.</p>
+<hr>
+<h2>3. Change list (mapped to existing screens)</h2>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Where</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Trim onboarding to 4 steps</strong> — reduce <code>OnboardingSteps</code> to <code>general → avatar → interests → handoffPrimer</code>; move <code>customInterests / supportAreas / chatStyle / pinCode</code> out of the Day-0 path.</td>
+<td><code>src/features/onboarding/model.ts</code> (steps array), <code>src/features/onboarding/ui/onboarding-form.tsx</code> (<code>OnboardingSteps</code>, <code>STEP_PROGRESS</code>, <code>renderStep</code>)</td>
+<td>Edit</td>
+</tr>
+<tr>
+<td><strong>Interests step → single required tap</strong> (min 1, &quot;add more later&quot;).</td>
+<td><code>src/features/onboarding/ui/interests-step/index.tsx</code></td>
+<td>Edit</td>
+</tr>
+<tr>
+<td><strong>New &quot;Finish setting up&quot; dashboard nudge</strong> hosting the deferred PIN / quiet-hours / emergency-contact / phone steps, shown <em>after</em> first session.</td>
+<td><code>src/widgets/child-dashboard/ui/dashboard.tsx</code> (+ reuse <code>pin-code-step</code>, <code>quiet-hours-step</code>, <code>emergency-contact-step</code>, <code>phone-number-input</code>)</td>
+<td>Edit + new card</td>
+</tr>
+<tr>
+<td><strong>New Handoff Primer card</strong> as the last onboarding screen (&quot;Hand [Name] the phone — LoLo is awake&quot;), optional 4-s LoLo voice line.</td>
+<td>new <code>src/features/onboarding/ui/handoff-step/</code></td>
+<td>New</td>
+</tr>
+<tr>
+<td><strong>First-Session Opener</strong> — a Day-0 variant of the seeded opener: closed binary ice-breaker built from the child&#39;s interest + age; distinct from generic QOTD.</td>
+<td><code>src/entities/ai-chat-conversation/api/seed-conversation-opener.ts</code> (extend) + opener selection in <code>src/widgets/conversation/ui/conversation.tsx</code> / <code>src/widgets/child-home/ui/home.tsx</code></td>
+<td>Edit</td>
+</tr>
+<tr>
+<td><strong>Dead-mic safeguard on turn 1</strong> — 6-s no-utterance → re-offer the same binary aloud + tap-chip fallback; bias ASR to the two option keywords.</td>
+<td><code>src/widgets/conversation/</code> (mic-gate / opener logic)</td>
+<td>Edit</td>
+</tr>
+<tr>
+<td><strong>First-wonder → visible shelf mint within first session</strong> (ensure the Day-0 first fact triggers the #142 fly-to-shelf beat, not a silent add).</td>
+<td>Wonder Shelf widget + <code>conversation</code> completion hook</td>
+<td>Edit (depends on #142)</td>
+</tr>
+<tr>
+<td><strong>Story-of-the-Day Day-0 seed</strong> — first-session summary surfaces the earned wonder + &quot;ended calm&quot; to the parent that evening.</td>
+<td>parent dashboard / #166 wiring</td>
+<td>Edit (depends on #166/daily-summary)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>4. New issue drafts</h2>
+<p><strong>Issue A — <code>feat(onboarding): trim to a &lt;2-minute Day-0 path + handoff primer</code></strong></p>
+<blockquote>
+<p>35.7% of our 14-day-trial cancels happen Day 0; Education has the lowest Day-0 conversion of any category. The current 8-step (&quot;10/10&quot;) child-profile form stands between install and the kid ever hearing LoLo. Cut the Day-0 path to name+age → avatar → one interest → <strong>Handoff Primer</strong> (&quot;Hand [Name] the phone, LoLo is awake and knows they love X&quot;). Defer PIN, quiet-hours, emergency-contact, phone, custom-interests, support-areas, chat-style to a post-first-session &quot;Finish setting up&quot; dashboard card. Instrument M1 (time-to-handoff &lt; 2:00). Files: <code>src/features/onboarding/model.ts</code>, <code>ui/onboarding-form.tsx</code>, <code>ui/interests-step</code>, new <code>ui/handoff-step</code>, <code>widgets/child-dashboard</code>.</p>
+</blockquote>
+<p><strong>Issue B — <code>feat(companion): First-Session Opener — closed ice-breaker that guarantees a first answer</code></strong></p>
+<blockquote>
+<p>~20% of conversational-agent users never send a first message; a shy child handed an open mic freezes. Add a Day-0 variant of <code>seedConversationOpener</code> that poses a <strong>binary/pick-one</strong> question built from the child&#39;s chosen interest + age tier (&quot;would you rather meet a T-Rex or a Triceratops?&quot;), reacts specifically, then delivers ONE surprising wonder that mints a visible Wonder-Shelf artifact within 3 min. Include a dead-mic safeguard (6-s → re-offer aloud + tap-chip fallback, ASR biased to the two keywords). Instrument M2/M3/M4. Files: <code>src/entities/ai-chat-conversation/api/seed-conversation-opener.ts</code>, <code>src/widgets/conversation</code>.</p>
+</blockquote>
+<p><strong>Issue C — <code>feat(parent): Day-0 Story-of-the-Day seed — the first-session receipt</code></strong></p>
+<blockquote>
+<p>An Education app can&#39;t win Day 0 on card capture (28.5% category conversion); it wins by making the parent <em>believe it&#39;s worth keeping</em> during a 14-day trial that converts 70% better than short ones. Same evening as the first session, surface a Story-of-the-Day card: the wonder the child earned + &quot;ended calm&quot;, never screen-time metrics. Instrument M5 (seed-view rate ≥ 50%, Day-0 cancel &lt; 30%). Depends on #166 / daily-summary. Files: parent dashboard, daily-summary wiring.</p>
+</blockquote>
+<hr>
+<h2>5. Sources</h2>
+<p><strong>Internal:</strong> <code>docs/research/SYNTHESIS-WINNING-PLAYBOOK.md</code>; <code>docs/research/gamified-ux-winning-mechanics.md</code> §3 (Daily Loop) — opening ritual, permanence beat, Tomorrow&#39;s Seed, #142 Wonder Shelf, #166 Story of the Day; <code>src/features/onboarding/ui/onboarding-form.tsx</code> + <code>model.ts</code> (current 8-step flow); <code>src/entities/ai-chat-conversation/api/seed-conversation-opener.ts</code> (existing opener mechanism).</p>
+<p><strong>Web (6):</strong></p>
+<ul>
+<li>RevenueCat, <em>State of Subscription Apps</em> — Day-0 conversion/cancel clustering, 14-day 35.7% Day-0 cancels, 17+ day trials +70%, Education 28.5% Day-0 / 6.5% download-to-trial. <a href="https://www.revenuecat.com/state-of-subscription-apps/">https://www.revenuecat.com/state-of-subscription-apps/</a></li>
+<li>SaaStr, <em>Top 10 Learnings from RevenueCat&#39;s State of Subscription Apps</em> — &quot;battle for the subscriber won or lost in the first session&quot;; 55% of 3-day cancels on Day 0. <a href="https://www.saastr.com/the-top-10-learnings-from-revenuecats-state-of-subscription-apps-how-115000-mobile-apps-deliver-16b-in-revenue-whats-working-whats-quietly-killing-growth/">https://www.saastr.com/the-top-10-learnings-from-revenuecats-state-of-subscription-apps-how-115000-mobile-apps-deliver-16b-in-revenue-whats-working-whats-quietly-killing-growth/</a></li>
+<li>Business of Apps, <em>App Subscription Trial Benchmarks (2026)</em>. <a href="https://www.businessofapps.com/data/app-subscription-trial-benchmarks/">https://www.businessofapps.com/data/app-subscription-trial-benchmarks/</a></li>
+<li>Unite.ai, <em>Buddy.ai — beating Google on kids&#39; speech recognition</em> — child ASR difficulty, kids talk to Buddy &quot;like a friend&quot;, shyness/confidence. <a href="https://www.unite.ai/buddy-ai-children-language-learning-speech-recognition/">https://www.unite.ai/buddy-ai-children-language-learning-speech-recognition/</a></li>
+<li>arXiv, <em>IceBreaker for Conversational Agents</em> — ~20% never start a conversation; proactive two-step handshake + small diverse starter list. <a href="https://arxiv.org/pdf/2604.18375">https://arxiv.org/pdf/2604.18375</a></li>
+<li>Lingokids Help Center — parental-gate-before-mic pattern (why gates between handoff and value break the flow). <a href="https://help.lingokids.com/hc/en-us/articles/115005129325-I-m-a-parent-how-do-I-use-the-app-">https://help.lingokids.com/hc/en-us/articles/115005129325-I-m-a-parent-how-do-I-use-the-app-</a></li>
+</ul>

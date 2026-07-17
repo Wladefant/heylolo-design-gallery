@@ -1,0 +1,197 @@
+<title>Onboarding + Paywall Teardowns (Psychology)</title>
+<style>
+:root { color-scheme: light; }
+body { font-family: "Segoe UI", -apple-system, sans-serif; background: #fbfdfc; color: #1e3a3a; line-height: 1.6; font-size: 15px; max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+h1 { color: #0d7377; font-size: 28px; border-bottom: 3px solid #14b8a6; padding-bottom: 8px; text-wrap: balance; }
+h2 { color: #0d7377; font-size: 21px; margin-top: 40px; border-bottom: 1px solid #99e2dc; padding-bottom: 5px; text-wrap: balance; }
+h3 { color: #115e59; font-size: 17px; margin-top: 26px; }
+a { color: #0d9488; text-decoration: none; border-bottom: 1px solid #99e2dc; }
+a:hover { border-bottom-color: #0d9488; }
+code { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 3px; padding: 0 4px; font-size: 13px; }
+pre { background: #f0fdfa; border: 1px solid #ccf3ee; border-radius: 8px; padding: 12px; font-size: 12.5px; white-space: pre-wrap; overflow-x: auto; }
+blockquote { border-left: 4px solid #14b8a6; margin-left: 0; padding: 6px 16px; background: #f4fbfa; color: #134e4a; border-radius: 0 6px 6px 0; }
+.table-wrap, table { width: 100%; }
+table { border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; display: block; overflow-x: auto; }
+th { background: #0d7377; color: #fff; text-align: left; padding: 7px 10px; white-space: nowrap; }
+td { border: 1px solid #d8f0ed; padding: 6px 10px; vertical-align: top; }
+tr:nth-child(even) td { background: #f7fdfc; }
+li { margin: 4px 0; }
+hr { border: none; border-top: 1px solid #99e2dc; margin: 32px 0; }
+strong { color: #0f4c4c; }
+</style>
+<h1>Onboarding + Paywall Teardowns — Top Parent-Paid Kids Apps</h1>
+<blockquote>
+<p>Research doc for HeyLolo (elumi-kids) W1–W2 build: onboarding trim (#178), paywall alignment, 14-day no-card trial.
+Screen-by-screen teardowns of 5 kids apps + 1 adult reference → HeyLolo onboarding+paywall <strong>spec v2</strong> + rejected dark patterns.
+Research wave 2026-07-05 · lean brief (~14 web sources). Builds on <code>day0-activation-playbook.md</code> (Day-0 flow) and <code>SYNTHESIS-WINNING-PLAYBOOK.md</code> (strategy) — does not repeat them. This doc is the <strong>funnel-mechanics</strong> layer: taps-to-value, paywall placement, trial framing, price anchoring.</p>
+</blockquote>
+<h2>Method &amp; caveat</h2>
+<p>Public teardown blogs (Adapty, Purchasely, PaywallPro, RevenueCat, growth/UX case studies), app-store + help-center pages, and parent-review sites. Kids-app funnels are under-documented screen-by-screen (most teardown libraries cover fitness/AI), so a few sequences are reconstructed from help-center + review evidence, flagged where inferred. Prices are US $ as listed 2025–26 and drift.</p>
+<hr>
+<h2>1. Lingokids — the subscription-conversion machine</h2>
+<p>Ages 2–8, ~$3M/mo revenue, 500k+ monthly downloads (Adapty). The category&#39;s best funnel.</p>
+<p><strong>Step sequence (taps to first kid moment ≈ 3–4):</strong></p>
+<ol>
+<li>Splash → <strong>playable demo immediately</strong> — the child taps into a game/activity within seconds; no signup gate first. Value-before-ask.</li>
+<li>Short <strong>personalization quiz</strong> (child&#39;s age → tailors content). Only questions that change the plan.</li>
+<li>Parent-gate (math/hold gate) protects the account/purchase area from the kid.</li>
+<li><strong>Paywall</strong> — appears <em>after</em> the child has already played, so the parent is deciding on a product they&#39;ve watched work.</li>
+</ol>
+<p><strong>Paywall / trial:</strong> 7-day free trial. <strong>Annual plan is the hero</strong>, shown with a per-month breakdown of the annual price so the big number is reframed as &quot;$X/month.&quot; Monthly shown as the expensive anchor beside it. Bold cartoon characters + brand-trust (Oxford University Press association) on the screen. In-app add-on packs $14.99–$89.99; core annual ~$71.99–$89.99, monthly ~$14.99–$15.99.</p>
+<p><strong>Objections pre-empted:</strong> &quot;will my kid actually use it?&quot; (they already played) · &quot;is it educational/legit?&quot; (Oxford badge) · &quot;am I trapped?&quot; (&quot;easy cancellation&quot; copy).</p>
+<p><strong>Done badly:</strong> the parent gate + immediate paywall after a fun demo reads to some parents as bait (&quot;let the kid get hooked, then charge me&quot;). Add-on IAP stack up to $89.99 muddies the &quot;one subscription&quot; story.</p>
+<hr>
+<h2>2. Duolingo ABC — best-funded kids onboarding</h2>
+<p>Ages 3–6, literacy/phonics. <strong>Notably: free, no ads, no IAP</strong> (funded by the main Duolingo business). So it is the reference for <em>onboarding craft without a paywall</em>, not for monetization.</p>
+<p><strong>Step sequence:</strong> open → pick child/age → straight into a lesson. Almost zero setup friction because there&#39;s nothing to sell. Onboarding and lesson code are deliberately separate modules (Duolingo eng blog). For kids specifically, Duolingo <strong>stripped streaks and leagues</strong> (loss-aversion mechanics) — validating our no-loss stance.</p>
+<p><strong>Trial / price:</strong> none (free).</p>
+<p><strong>Objections pre-empted:</strong> &quot;safe for a 4-year-old?&quot; — no ads, no purchases, walled garden is the entire pitch.</p>
+<p><strong>Done badly:</strong> limited scope (early literacy only), and being free means no urgency signal — parents don&#39;t value it as highly. Not a conversion template; a <em>craft + safety</em> template.</p>
+<p><strong>Takeaway for us:</strong> the child-facing flow must be a walled garden with zero purchase surface visible to the kid (see §6 FTC). The <em>selling</em> happens on a separate parent surface.</p>
+<hr>
+<h2>3. Pok Pok — the closest comparable (subscription-only + trial)</h2>
+<p>Ages 2–7, Apple Design Award &quot;digital playroom,&quot; Montessori open-ended play. Subscription-only, ad-free, explicitly <strong>no manipulative design</strong> — the brand parents trust.</p>
+<p><strong>Step sequence:</strong> download → <strong>7-day free trial starts</strong> → child plays the full playroom (all toys unlocked during trial) → after 7 days the chosen plan auto-starts and bills. Value is experienced <em>before</em> any charge; the trial <em>is</em> the onboarding.</p>
+<p><strong>Trial / price:</strong> 7-day free trial on <strong>both</strong> plans (card required via App Store). Monthly $6.99; <strong>annual $45.99</strong> (~$3.83/mo). A lifetime deal exists as a separate promo (StackSocial). Annual is the value anchor against monthly.</p>
+<p><strong>Objections pre-empted:</strong> the core pitch is <em>anti-dark-pattern</em> — &quot;hand it over without worrying about ads, pressure, or manipulative design&quot; (Cubby review). No ads, no pop-ups, no upsell to the child. Relentless A/B testing of messaging/value-prop/video on the paywall (RevenueCat).</p>
+<p><strong>Done badly:</strong> card-required trial → the standard &quot;forgot to cancel, got billed&quot; complaint pattern (inherent to App-Store trials). Open-ended play with no goals means some parents can&#39;t articulate the ROI vs a curriculum app.</p>
+<p><strong>Why it&#39;s our closest comp:</strong> premium, ad-free, trust-first, subscription-only, character/toy-led. Their positioning (&quot;no manipulative design&quot;) is exactly our brand guardrail — we should out-clean them by going <strong>no-card</strong>.</p>
+<hr>
+<h2>4. Epic! — the classic reading trial→annual funnel</h2>
+<p>40,000+ books; the mass-market reading subscription. Up to 4 child profiles.</p>
+<p><strong>Step sequence:</strong> signup (email/account up front — heavier gate than the kids apps above) → set up child profiles (up to 4) → <strong>instant catalog access</strong> → hits the trial/paywall quickly. Also runs an ad-supported &quot;Epic Free&quot; (2 hrs/week) as a permanent limited tier / soft funnel.</p>
+<p><strong>Trial / price:</strong> 7-day free trial → <strong>monthly $11.99–$13.99</strong> vs <strong>annual $79.99–$84.99</strong> (≈$7.08/mo). Annual framed as the ~40% saving. Multi-child (4 profiles) is a value multiplier on one price.</p>
+<p><strong>Objections pre-empted:</strong> &quot;enough content?&quot; (40k books) · &quot;for all my kids?&quot; (4 profiles, one price) · &quot;try before paying?&quot; (free tier + trial).</p>
+<p><strong>Done badly — the cautionary tale:</strong> reviews + FTC context flag &quot;very easy to sign up, but very hard to cancel.&quot; Epic&#39;s parent-company (Epic Games, separate entity but same reputational category) and ABCmouse (direct competitor) are the FTC&#39;s headline cases for <em>promising &quot;Easy Cancellation&quot; then trapping users</em> — the single reputational landmine for a kids subscription. <strong>Frictional cancel = the pattern we must visibly avoid.</strong></p>
+<hr>
+<h2>5. Moshi — calm onboarding (sleep)</h2>
+<p>Ages 0–12, sleep/meditation, 1,000+ stories. 67% daily-use in our SYNTHESIS notes; &quot;kids sleep 28 min faster&quot; science claim.</p>
+<p><strong>Step sequence:</strong> open → gentle, low-stimulation onboarding (recently A/B-tested a new onboarding + home) → sample content → paywall. Calm, quiet visual tone matches the product (sleep), the opposite of Lingokids&#39; loud carousel.</p>
+<p><strong>Trial / price:</strong> 7-day free trial → <strong>annual $59.99/yr</strong> vs <strong>monthly $9.99</strong>. Annual hero; monthly is the anchor that makes $59.99 (≈$5/mo) look reasonable. Science/award trust cues on screen.</p>
+<p><strong>Objections pre-empted:</strong> &quot;does it work?&quot; (28-min sleep science + awards) · &quot;age range?&quot; (0–12 span = long LTV).</p>
+<p><strong>Done badly:</strong> repeated review complaint that <strong>the trial sign-up implies a monthly subscription but actually converts to annual</strong> — &quot;the subscription language is clear, but it appears not to be.&quot; That ambiguity is a trust tax and a chargeback/refund driver. <strong>Our anti-pattern to name: never let trial→plan framing be ambiguous.</strong></p>
+<p><strong>Takeaway:</strong> Moshi&#39;s <strong>$59.99/yr annual hero is the exact price point our settled canon adopts</strong> — validated by a same-category, same-audience premium app.</p>
+<hr>
+<h2>6. Duolingo (adult) — the &quot;invest-then-ask&quot; reference</h2>
+<p>The canonical <em>sequence-commitment-before-paywall</em> pattern.</p>
+<p><strong>Mechanic:</strong> product first, account/paywall last. New user does a <strong>translation/lesson exercise before any signup</strong> → only after finishing does a <strong>dismissible soft-wall</strong> ask them to create a profile + pick a small daily goal (a commitment device) → a <strong>hard wall</strong> appears only after <em>several</em> lessons. Moving signup back a few steps produced <strong>~+20% DAUs / sign-ups</strong>. The paywall itself: 3-part value carousel <em>before</em> price, annual default/&quot;most popular,&quot; then post-purchase screens re-selling the 5 key benefits (&quot;aftercare&quot;).</p>
+<p><strong>Why it matters for us:</strong> commitment is manufactured by <em>investment</em>, not by demanding the card early. Every step of value experienced before the ask raises conversion and lowers cancels. This is the backbone of our spec: <strong>kid&#39;s first LoLo moment happens before the parent ever sees a price.</strong></p>
+<p><strong>The dark edge to avoid:</strong> Duolingo&#39;s 2025 &quot;pushy paywall&quot; push (Motley Fool) monetizes harder with aggressive interstitials — profitable for a viral adult app, corrosive for a kids-safety brand. We take the <em>sequence</em>, not the <em>pushiness</em>.</p>
+<hr>
+<h2>Synthesis</h2>
+<h3>A. Pattern table</h3>
+<table>
+<thead>
+<tr>
+<th>App</th>
+<th>Taps to first kid moment</th>
+<th>Paywall position</th>
+<th>Trial</th>
+<th>Price anchor</th>
+<th>Annual-share tactic</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Lingokids</strong></td>
+<td>~3–4 (plays almost first)</td>
+<td><strong>After</strong> free play, behind parent gate</td>
+<td>7-day, card</td>
+<td>Annual hero, <strong>per-month breakdown</strong>; monthly = anchor</td>
+<td>Annual as default, big number ÷12</td>
+</tr>
+<tr>
+<td><strong>Duolingo ABC</strong></td>
+<td>~2</td>
+<td><strong>None</strong> (free)</td>
+<td>—</td>
+<td>—</td>
+<td>— (craft/safety template only)</td>
+</tr>
+<tr>
+<td><strong>Pok Pok</strong></td>
+<td>~1 (trial unlocks all)</td>
+<td><strong>After</strong> 7-day full-access trial</td>
+<td>7-day, card</td>
+<td>Annual $45.99 vs monthly $6.99</td>
+<td>Trial-is-onboarding; annual = value</td>
+</tr>
+<tr>
+<td><strong>Epic!</strong></td>
+<td>~4 (account up front)</td>
+<td><strong>Early</strong>, after profile setup</td>
+<td>7-day, card (+free tier)</td>
+<td>Annual $79.99 vs monthly $13.99 (~40% off)</td>
+<td>Annual = saving; 4 profiles/one price</td>
+</tr>
+<tr>
+<td><strong>Moshi</strong></td>
+<td>~2–3</td>
+<td><strong>After</strong> sample content</td>
+<td>7-day, card</td>
+<td><strong>Annual $59.99</strong> vs monthly $9.99</td>
+<td>Annual hero, monthly anchor</td>
+</tr>
+<tr>
+<td><strong>Duolingo (adult)</strong></td>
+<td>~1 (lesson first)</td>
+<td><strong>Late</strong> — soft wall → hard wall after several lessons</td>
+<td>trial varies</td>
+<td>Annual default, &quot;most popular&quot;</td>
+<td>Invest-then-ask; +20% signups</td>
+</tr>
+</tbody></table>
+<p><strong>Cross-cutting winners:</strong> (1) <strong>value before paywall</strong> — every winner lets the child <em>do the thing</em> before the parent is asked; (2) <strong>annual is always the hero, monthly is the anchor</strong>, and the annual big number is reframed per-month; (3) <strong>trial length is 7 days everywhere</strong> — our <strong>14-day no-card</strong> trial is a <em>differentiator</em>, not a norm (and 17+ day trials convert +70% per <code>day0-activation-playbook</code>); (4) <strong>trust cues on the paywall</strong> (awards, science, Oxford, &quot;no manipulative design&quot;); (5) the recurring <strong>failure mode is cancellation friction + trial→plan ambiguity</strong> (Epic/ABCmouse FTC, Moshi reviews).</p>
+<h3>B. HeyLolo onboarding + paywall spec v2 (deltas to current code)</h3>
+<p>Builds on the #178 4-step trim already specced in <code>day0-activation-playbook.md</code> §1/§3 (<code>general → avatar → interests → handoffPrimer</code>). This adds <strong>where the trial screen sits and its copy</strong>, plus the <strong>price-page layout</strong>.</p>
+<p><strong>B1. Flow order — paywall AFTER the first kid moment, not before.</strong>
+Current <code>OnboardingSteps</code> (<code>src/features/onboarding/model.ts:32</code>) is an 8-step form ending at <code>pinCode</code>; subscription is a separate widget. Sequence must be:
+<code>general → avatar → interests → **handoffPrimer** → [KID&#39;S FIRST LOLO MOMENT + first wonder] → **Trial screen** (parent) → dashboard</code>.
+The trial/paywall is the <strong>first thing the parent sees after watching the kid&#39;s first wonder land</strong> — the Duolingo invest-then-ask position. Never show price before the aha. (Deferred config — PIN, quiet-hours, emergency-contact, phone, custom-interests, support-areas, chat-style — moves to a post-first-session &quot;Finish setting up&quot; dashboard card, per §3 of the playbook.)</p>
+<p><strong>B2. Trial screen sits here, and says this (EN copy):</strong></p>
+<blockquote>
+<p><strong>14 days free. No card. No catch.</strong>
+LoLo is all yours for two weeks — every story, every wonder, every voice chat. We won&#39;t ask for a card until you decide to stay.
+<em>(primary)</em> <strong>Start my 14 free days</strong>
+<em>(secondary, quiet)</em> Not now — keep exploring
+↓ <em>fine print:</em> On day 14 we&#39;ll email you first. Keep it for <strong>$59.99/year</strong> (≈$5/mo) or do nothing and it simply ends. Cancel in two taps, anytime.</p>
+</blockquote>
+<p>Rationale vs the field: no-card removes Pok Pok/Epic&#39;s &quot;forgot to cancel → billed&quot; trap; &quot;we&#39;ll email you first / it simply ends&quot; is the <strong>explicit anti-Moshi</strong> clarity; &quot;cancel in two taps&quot; is the visible <strong>anti-Epic/ABCmouse</strong> promise (and we must make it <em>true</em> — §C).</p>
+<p><strong>B3. Price-page layout (annual hero $59.99):</strong>
+Current pricing (<code>src/widgets/subscription/model/pricing.ts</code>) prices <strong>Adventurer at $14.99/mo → ~$143.90/yr</strong> (20% off 12mo). <strong>Delta: re-anchor to the settled canon.</strong></p>
+<ul>
+<li><strong>Annual is the hero card</strong>, pre-selected, badge &quot;Best Value&quot; (already the Adventurer badge, <code>plan-content.ts:24</code>): <strong>$59.99/year</strong>, subtitle <strong>&quot;just $4.99/month, billed yearly.&quot;</strong> (The ÷12 reframe every competitor uses.)</li>
+<li><strong>Monthly is the anchor</strong> beside it, visibly worse: <strong>$9.99/month</strong> → &quot;$119.88/year.&quot; Not pre-selected. (Matches Moshi&#39;s $59.99/$9.99 exactly.)</li>
+<li><strong>Family framing on the hero:</strong> &quot;one price · up to 4 kids&quot; (per SYNTHESIS standing validation — multi-profile is shipped; Epic&#39;s 4-profile lever).</li>
+<li><strong>Trust row</strong> under the cards: &quot;Made in EU · your child&#39;s data stays private · no ads, ever · no in-app purchases the kid can tap&quot; (our differentiators; directly answers the FTC unauthorized-charge fear).</li>
+<li><strong>Delta on Explorer copy:</strong> <code>plan-content.ts:39</code> says the trial is <strong>&quot;30 days&quot;</strong> — must read <strong>14 days</strong> to match canon. Reconcile the trial length in one place.</li>
+</ul>
+<p><strong>Three biggest concrete changes:</strong> (1) <strong>move the paywall to <em>after</em> the kid&#39;s first wonder</strong> (invest-then-ask) — not a pre-value gate; (2) <strong>re-price the annual hero to $59.99/yr with a $9.99/mo anchor</strong> and the ÷12 &quot;$4.99/mo&quot; reframe (current code is $14.99/mo → fix <code>pricing.ts</code>); (3) <strong>no-card trial screen with explicit &quot;we&#39;ll email you, it just ends, cancel in two taps&quot;</strong> copy (fix the 30-day→14-day drift in <code>plan-content.ts</code>).</p>
+<h3>C. The 5 conversion tactics we deliberately REJECT (with what we do instead)</h3>
+<ol>
+<li><strong>Card-required &quot;free&quot; trial that auto-bills silently.</strong> <em>(Pok Pok/Epic/App-Store default; the ABCmouse FTC case.)</em> → <strong>No-card 14-day trial; we email before it ends and it lapses to nothing unless the parent opts in.</strong> Costs some auto-conversions, buys trust + zero refund/chargeback risk.</li>
+<li><strong>Trial→plan framing ambiguity</strong> (implying monthly, billing annual). <em>(Moshi&#39;s live review complaint.)</em> → <strong>State the exact plan, price, and date on the trial screen</strong> (&quot;Keep it for $59.99/year on day 14, or it ends&quot;). One unambiguous sentence.</li>
+<li><strong>Cancellation friction / hidden cancel.</strong> <em>(Epic &quot;hard to cancel&quot;; ABCmouse &quot;Easy Cancellation&quot; lie → FTC action.)</em> → <strong>Two-tap cancel from the dashboard, surfaced in onboarding copy</strong>, and honor it. Our cancel path must be <em>shorter</em> than our subscribe path.</li>
+<li><strong>Any purchase surface or upsell visible to the child.</strong> <em>(Amazon/Epic Games unauthorized-charge cases; FTC + COPPA.)</em> → <strong>All commerce lives behind the parent gate; the kid&#39;s world is a walled garden</strong> (the Duolingo ABC standard). No &quot;ask a grown-up to unlock&quot; nag aimed at the child, no IAP the kid can tap.</li>
+<li><strong>Loss-aversion pressure aimed at the child</strong> — streaks-you-can-lose, countdown timers, &quot;your friend LoLo is sad you left,&quot; aggressive interstitials. <em>(Duolingo adult&#39;s 2025 &quot;pushy paywall&quot;; general engagement dark patterns.)</em> → <strong>No-loss journey + promise-of-delight</strong> (Tomorrow&#39;s Seed, per SYNTHESIS #157). Urgency, if any, lives only on the <em>parent&#39;s</em> trial screen (&quot;day 14&quot;), never on the kid.</li>
+</ol>
+<hr>
+<h2>Sources</h2>
+<p><strong>Internal:</strong> <code>docs/research/day0-activation-playbook.md</code>, <code>docs/research/SYNTHESIS-WINNING-PLAYBOOK.md</code>; <code>src/features/onboarding/model.ts</code>, <code>src/widgets/subscription/model/pricing.ts</code> + <code>plan-content.ts</code>.</p>
+<p><strong>Web:</strong></p>
+<ul>
+<li>Purchasely, <em>10 best kids-app paywall examples</em> (Lingokids, 7-day trials, annual emphasis). <a href="https://www.purchasely.com/blog/kids-apps-paywalls">https://www.purchasely.com/blog/kids-apps-paywalls</a></li>
+<li>Adapty, <em>Lingokids paywall library</em> (pricing $14.99–$89.99, ~$3M/mo, 500k downloads). <a href="https://adapty.io/mobile-paywall-library/lingokids-playlearning-tm/">https://adapty.io/mobile-paywall-library/lingokids-playlearning-tm/</a></li>
+<li>PaywallPro (DEV), <em>Complete Onboarding Breakdown: 9 Steps to Paywall</em> (annual-default, &quot;save 40%&quot;, 7-day framing). <a href="https://dev.to/paywallpro/complete-onboarding-breakdown-9-steps-from-first-screen-to-paywall-2j7">https://dev.to/paywallpro/complete-onboarding-breakdown-9-steps-from-first-screen-to-paywall-2j7</a></li>
+<li>Duolingo eng blog, <em>Building Duolingo ABC</em> (onboarding/lesson module split; free, no ads/IAP). <a href="https://blog.duolingo.com/a-good-read-building-duolingo-abc-for-android/">https://blog.duolingo.com/a-good-read-building-duolingo-abc-for-android/</a> · <a href="https://abc.duolingo.com/">https://abc.duolingo.com/</a></li>
+<li>Darling Mellow, <em>Duolingo for Kids review</em> (streaks/leagues removed for kids). <a href="https://darlingmellow.co.uk/duolingo-kids-review-home-education/">https://darlingmellow.co.uk/duolingo-kids-review-home-education/</a></li>
+<li>Pok Pok FAQs (7-day trial both plans, monthly $6.99 / annual $45.99). <a href="https://playpokpok.com/faqs/">https://playpokpok.com/faqs/</a></li>
+<li>Cubby, <em>Pok Pok review</em> (&quot;no ads, pressure, or manipulative design&quot;). <a href="https://www.cubbyathome.com/pok-pok-playroom-kids-app-review-80027995">https://www.cubbyathome.com/pok-pok-playroom-kids-app-review-80027995</a></li>
+<li>RevenueCat, <em>8 paywall test ideas</em> (Pok Pok relentless testing). <a href="https://www.revenuecat.com/blog/growth/paywall-tests-grow-app-revenue/">https://www.revenuecat.com/blog/growth/paywall-tests-grow-app-revenue/</a></li>
+<li>myeLearningWorld / getEpic, <em>Epic pricing</em> (7-day trial, $11.99–$13.99/mo, $79.99–$84.99/yr, 4 profiles, free tier). <a href="https://myelearningworld.com/epic-pricing/">https://myelearningworld.com/epic-pricing/</a> · <a href="https://www.getepic.com/plans">https://www.getepic.com/plans</a></li>
+<li>Educational App Store + Common Sense, <em>Moshi Kids</em> (7-day trial, $59.99/yr, $9.99/mo, 28-min sleep claim). <a href="https://www.educationalappstore.com/app/moshi-sleep-and-mindfulness">https://www.educationalappstore.com/app/moshi-sleep-and-mindfulness</a> · <a href="https://www.commonsensemedia.org/app-reviews/moshi-kids-sleep-meditation">https://www.commonsensemedia.org/app-reviews/moshi-kids-sleep-meditation</a></li>
+<li>JustUseApp, <em>Moshi reviews</em> (trial implies monthly, bills annual — ambiguity complaint). <a href="https://justuseapp.com/en/app/1306719339/moshi-sleep-and-mindfulness/reviews">https://justuseapp.com/en/app/1306719339/moshi-sleep-and-mindfulness/reviews</a></li>
+<li>Appcues GoodUX + UserGuiding, <em>Duolingo onboarding</em> (invest-then-ask, soft-wall→hard-wall, +20% signups). <a href="https://goodux.appcues.com/blog/duolingo-user-onboarding">https://goodux.appcues.com/blog/duolingo-user-onboarding</a> · <a href="https://userguiding.com/blog/duolingo-onboarding-ux">https://userguiding.com/blog/duolingo-onboarding-ux</a></li>
+<li>RevenueCat, <em>How top apps approach paywalls</em> (Blinkist honest paywall +23%/−55% complaints; annual default; anchor high). <a href="https://www.revenuecat.com/blog/growth/how-top-apps-approach-paywalls/">https://www.revenuecat.com/blog/growth/how-top-apps-approach-paywalls/</a></li>
+<li>Motley Fool, <em>Duolingo&#39;s pushy paywall play</em> (2025 aggressive monetization — the edge we avoid). <a href="https://www.fool.com/investing/2025/08/08/duolingos-pushy-paywall-play-smart-or-risky/">https://www.fool.com/investing/2025/08/08/duolingos-pushy-paywall-play-smart-or-risky/</a></li>
+<li>FTC, <em>Bringing Dark Patterns to Light</em> + ABCmouse &quot;Easy Cancellation&quot; case + Epic Games $275M COPPA. <a href="https://www.ftc.gov/system/files/ftc_gov/pdf/P214800+Dark+Patterns+Report+9.14.2022+-+FINAL.pdf">https://www.ftc.gov/system/files/ftc_gov/pdf/P214800+Dark+Patterns+Report+9.14.2022+-+FINAL.pdf</a></li>
+</ul>
