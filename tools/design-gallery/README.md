@@ -18,6 +18,9 @@ A zero-dependency Node.js server that hosts the PolySimulator design prototype g
 | `DB_PATH` | `/data/comments.json` | Path to the JSON persistence file. Parent dir is created if missing. |
 | `PORT` | `8080` | HTTP port to listen on |
 | `OWNER_KEY` | _(empty)_ | Secret key that identifies the operator. When set, comments submitted with this key are stamped `role: "owner"`; all others receive `role: "guest"`. When empty, all comments receive `role: "guest"` and owner-marking is disabled. **Never commit this value** — set it as a Dokploy / container env var. |
+| `BASIC_AUTH_USER` | `heylolo` | HTTP Basic Auth username to protect client prototypes. |
+| `BASIC_AUTH_PASS` | `heylolo` | HTTP Basic Auth password to protect client prototypes. |
+| `BASIC_AUTH_DISABLED` | _(empty)_ | Set to `true` to disable Basic Auth if public access is intended. |
 
 ## Local run
 
