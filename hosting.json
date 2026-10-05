@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "project": "heylolo-design-gallery",
+  "stage": "live",
+  "dns": {
+    "provider": "cloudflare",
+    "zones": [
+      "wladefant.de"
+    ]
+  },
+  "components": [
+    {
+      "name": "heylolo-design-gallery",
+      "kind": "web",
+      "host": "dokploy-app",
+      "url": "https://heylolodesign.wladefant.de",
+      "dokploy_app_id": "uoO1IquosQoxgE5LHC-eN",
+      "monthly_cost_usd": 0.0
+    }
+  ],
+  "supabase": {
+    "in_use": false,
+    "projects": [],
+    "used_for": []
+  },
+  "next_migration_step": null,
+  "exempt": null
+}
