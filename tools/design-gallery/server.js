@@ -19,6 +19,58 @@ const DB_PATH     = path.resolve(process.env.DB_PATH     || '/data/comments.json
 // Never stored in data file, never echoed back in responses.
 const OWNER_KEY   = process.env.OWNER_KEY || '';
 
+// Basic Auth credentials (protects unreleased client prototypes)
+const BASIC_AUTH_USER = process.env.BASIC_AUTH_USER || process.env.AUTH_USER || 'heylolo';
+const BASIC_AUTH_PASS = process.env.BASIC_AUTH_PASS || process.env.BASIC_AUTH_PASSWORD || process.env.AUTH_PASS || 'heylolo';
+
+// ─── Basic Auth helper ────────────────────────────────────────────────────────
+function checkBasicAuth(req, res) {
+  if (process.env.BASIC_AUTH_DISABLED === 'true') {
+    return true;
+  }
+  const authHeader = req.headers['authorization'];
+  if (!authHeader || !authHeader.startsWith('Basic ')) {
+    res.writeHead(401, {
+      'WWW-Authenticate': 'Basic realm="HeyLolo Design Gallery"',
+      'Content-Type': 'text/plain; charset=utf-8',
+    });
+    res.end('Authentication required');
+    return false;
+  }
+  const b64 = authHeader.slice(6).trim();
+  let decoded = '';
+  try {
+    decoded = Buffer.from(b64, 'base64').toString('utf8');
+  } catch (_) {
+    res.writeHead(401, {
+      'WWW-Authenticate': 'Basic realm="HeyLolo Design Gallery"',
+      'Content-Type': 'text/plain; charset=utf-8',
+    });
+    res.end('Authentication required');
+    return false;
+  }
+  const colon = decoded.indexOf(':');
+  if (colon === -1) {
+    res.writeHead(401, {
+      'WWW-Authenticate': 'Basic realm="HeyLolo Design Gallery"',
+      'Content-Type': 'text/plain; charset=utf-8',
+    });
+    res.end('Authentication required');
+    return false;
+  }
+  const user = decoded.slice(0, colon);
+  const pass = decoded.slice(colon + 1);
+  if (user === BASIC_AUTH_USER && pass === BASIC_AUTH_PASS) {
+    return true;
+  }
+  res.writeHead(401, {
+    'WWW-Authenticate': 'Basic realm="HeyLolo Design Gallery"',
+    'Content-Type': 'text/plain; charset=utf-8',
+  });
+  res.end('Authentication required');
+  return false;
+}
+
 // ─── In-memory store + persistence ───────────────────────────────────────────
 // threads: Map<id, thread>
 // thread: { id, page, xPct, yPct, resolved, createdAt, author, comments: [{author,text,createdAt,role}] }
@@ -260,7 +312,7 @@ const server = http.createServer((req, res) => {
   // CORS for local dev
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,X-Owner-Key');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,X-Owner-Key,Authorization');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
 
   let urlObj;
@@ -272,6 +324,16 @@ const server = http.createServer((req, res) => {
 
   const p = urlObj.pathname;
 
+  // Health check endpoints (no auth required)
+  if (p === '/healthz' || p === '/ping') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    return res.end(JSON.stringify({ status: 'ok' }));
+  }
+
+  // Protect gallery pages, assets, and APIs behind Basic Auth
+  if (!checkBasicAuth(req, res)) {
+    return;
+  }
   // Overlay assets
   if (p === '/__c/overlay.js') {
     res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8' });
