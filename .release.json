@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "branch": "main",
+  "tagPrefix": "v",
+  "versionFiles": [
+    "package.json"
+  ],
+  "baseline": {
+    "version": "0.1.0"
+  }
+}
